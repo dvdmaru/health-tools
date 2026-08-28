@@ -180,6 +180,56 @@ class TestExtraction(unittest.TestCase):
         result = drift.check_source(src, set(), timeout=5)
         self.assertIs(True, result["tls_verified"])
 
+    def test_body_bytes_and_text_chars_are_populated_on_every_reached_result(self):
+        """2026-08-28 CI 第二輪教訓（iec-a1c-report-2009）：HTTP 200、引句全缺，
+        但當時的結果完全沒有『這次到底抓到多少東西』這種基本診斷欄位。body_bytes／
+        text_chars 現在應該在每一份『抓得到』的結果上都算出來，不只 drift 那份。"""
+        body = "<p>The quick brown fox jumps over the lazy dog.</p>".encode("utf-8")
+        url = "https://example.org/body-bytes-doc"
+        drift.curl_with_headers = fake_curl({url: {"code": "200", "body": body}})
+        src = {"id": "body-bytes-doc", "title": "t", "url": url, "doc_type": "html"}
+        result = drift.check_source(src, set(), timeout=5)
+
+        self.assertEqual(len(body), result["body_bytes"])
+        self.assertGreater(result["text_chars"], 0)
+        # 正規化文字長度：全部空白吃光,一定 <= 原始去 tag 文字長度
+        self.assertLessEqual(result["text_chars"], len(body))
+
+    def test_body_bytes_is_none_when_unreachable(self):
+        """沒抓到任何 body 時,body_bytes 老實留 None,不要假裝算出了 0。"""
+        url = "https://example.org/never-connects"
+        drift.curl_with_headers = fake_curl({url: {"raise": "curl exit 28: timeout"}})
+        src = {"id": "never-connects", "title": "t", "url": url, "doc_type": "html"}
+        result = drift.check_source(src, set(), timeout=5)
+        self.assertIsNone(result["body_bytes"])
+        self.assertIsNone(result["text_chars"])
+
+    def test_page_title_extracted_from_raw_title_tag(self):
+        """抽的是原始 body 的 <title>，不是 extract_text() 去 tag 後的版本——
+        title 本身就含 tag 語意（例如攔截頁跟原文件的 <title> 通常不一樣）。"""
+        body = ("<html><head><title>  Some Interstitial   Page  </title></head>"
+                "<body><p>nothing here</p></body></html>").encode("utf-8")
+        url = "https://example.org/titled-doc"
+        drift.curl_with_headers = fake_curl({url: {"code": "200", "body": body}})
+        src = {"id": "titled-doc", "title": "t", "url": url, "doc_type": "html"}
+        result = drift.check_source(src, set(), timeout=5)
+        self.assertEqual("Some Interstitial Page", result["_page_title"])
+
+    def test_page_title_is_empty_string_when_no_title_tag_or_pdf(self):
+        body = b"<html><body><p>no title here</p></body></html>"
+        url = "https://example.org/no-title-doc"
+        drift.curl_with_headers = fake_curl({url: {"code": "200", "body": body}})
+        src = {"id": "no-title-doc", "title": "t", "url": url, "doc_type": "html"}
+        result = drift.check_source(src, set(), timeout=5)
+        self.assertEqual("", result["_page_title"])
+
+        pdf_bytes = make_pdf_bytes(["irrelevant"])
+        url2 = "https://example.org/no-title.pdf"
+        drift.curl_with_headers = fake_curl({url2: {"code": "200", "body": pdf_bytes}})
+        src2 = {"id": "no-title-pdf", "title": "t", "url": url2, "doc_type": "pdf"}
+        result2 = drift.check_source(src2, set(), timeout=5)
+        self.assertEqual("", result2["_page_title"])
+
 
 class TestCurlExit60RetriesInsecure(unittest.TestCase):
     """2026-08-28 CI 實測：hpa.gov.tw 在 Ubuntu runner 上對 curl 回 exit 60
@@ -640,6 +690,151 @@ class TestMainEndToEnd(unittest.TestCase):
         self.assertTrue((self.tmp / ".drift" / "report.json").exists())
         self.assertFalse((fake_cwd / "report.md").exists(),
                          "沒給 --report 時不該落到 CWD")
+
+    def test_ok_row_carries_body_bytes_and_text_chars_in_json(self):
+        """body_bytes／text_chars 是『每份結果』的欄位，不是只有 drift 才有——
+        隨便挑一份 ok 的來源，JSON 裡也該看得到。"""
+        quote = "A1C threshold is 6.5%."
+        body = f"<p>{quote}</p>".encode("utf-8")
+        url = "https://example.org/diag-ok"
+        self._write_manifest([{"id": "diag-ok", "title": "OK", "url": url, "doc_type": "html"}])
+        self._write_criteria([{"doc_id": "diag-ok", "quote": quote}])
+        self._write_baseline([{
+            "id": "diag-ok", "url": url, "doc_type": "html",
+            "checked_at": "2026-08-01T00:00:00Z", "http_code": "200", "status": "ok",
+            "etag": None, "last_modified": None,
+            "remote_sha256": "x", "text_sha256": "y",
+            "quotes_total": 1, "quotes_verified": [quote], "quotes_never_verified": [],
+        }])
+        drift.curl_with_headers = fake_curl({url: {"code": "200", "body": body}})
+
+        code, out = self._run_main(["--workers", "1", "--timeout", "5"])
+        self.assertEqual(0, code, out)
+        rows = json.loads((drift.DEFAULT_OUT_DIR / "report.json").read_text(encoding="utf-8"))
+        row = next(r for r in rows if r["id"] == "diag-ok")
+        self.assertEqual(len(body), row["body_bytes"])
+        self.assertGreater(row["text_chars"], 0)
+        self.assertNotIn("text_excerpt", row, "非 drift 列不該背 text_excerpt")
+        self.assertNotIn("page_title", row, "非 drift 列不該背 page_title")
+
+    def test_drift_row_carries_diagnostics_and_all_quotes_missing_warning_fires(self):
+        """2026-08-28 CI 第二輪教訓：iec-a1c-report-2009 HTTP 200、4/4 引句全缺，
+        baseline 4 句全驗過——這正是警語該觸發的情境。"""
+        url = "https://example.org/interstitial"
+        self._write_manifest([{"id": "doc-j", "title": "J", "url": url, "doc_type": "html"}])
+        self._write_criteria([
+            {"doc_id": "doc-j", "quote": "first threshold sentence"},
+            {"doc_id": "doc-j", "quote": "second threshold sentence"},
+        ])
+        self._write_baseline([{
+            "id": "doc-j", "url": url, "doc_type": "html",
+            "checked_at": "2026-08-01T00:00:00Z", "http_code": "200", "status": "ok",
+            "etag": None, "last_modified": None,
+            "remote_sha256": "old", "text_sha256": "old-text",
+            "quotes_total": 2,
+            "quotes_verified": ["first threshold sentence", "second threshold sentence"],
+            "quotes_never_verified": [],
+        }])
+        # 標題刻意不用「Just a moment」「Attention Required」這類已經被
+        # blocked_reason() 認得的既有 WAF 指紋——這裡要測的是「連現有指紋都認不出
+        # 來的陌生替代頁面」，那正是這批診斷欄位存在的理由（已知指紋早就被判
+        # blocked，不會走到這裡）。
+        interstitial = ("<html><head><title>PMC Article Viewer — Loading</title></head>"
+                        "<body><p>This content requires a modern browser session.</p>"
+                        "</body></html>").encode("utf-8")
+        drift.curl_with_headers = fake_curl({url: {"code": "200", "body": interstitial}})
+
+        code, out = self._run_main(["--workers", "1", "--timeout", "5"])
+        self.assertEqual(1, code, out)
+        self.assertIn("PMC Article Viewer — Loading", out, "drift 明細該印出 <title>")
+        self.assertIn("body_bytes", out)
+        self.assertIn("text_chars", out)
+        self.assertIn("This content requires a modern browser session", out,
+                      "drift 明細該印出抽出文字前 300 字")
+        self.assertIn("全部引句同時消失，較可能是攔截頁或替代頁面", out)
+
+        rows = json.loads((drift.DEFAULT_OUT_DIR / "report.json").read_text(encoding="utf-8"))
+        row = next(r for r in rows if r["id"] == "doc-j")
+        self.assertEqual(len(interstitial), row["body_bytes"])
+        self.assertEqual("PMC Article Viewer — Loading", row["page_title"])
+        self.assertIn("This content requires a modern browser session", row["text_excerpt"])
+        self.assertEqual(2, row["quotes_verified_at_baseline"])
+
+    def test_warning_suppressed_when_some_quotes_still_found(self):
+        """只有部分引句消失（quotes_found > 0）就不是『全部同時消失』，警語不該
+        出現——即使整份仍然判 drift。"""
+        url = "https://example.org/partial-drift"
+        self._write_manifest([{"id": "doc-k", "title": "K", "url": url, "doc_type": "html"}])
+        self._write_criteria([
+            {"doc_id": "doc-k", "quote": "quote one stays"},
+            {"doc_id": "doc-k", "quote": "quote two vanished"},
+        ])
+        self._write_baseline([{
+            "id": "doc-k", "url": url, "doc_type": "html",
+            "checked_at": "2026-08-01T00:00:00Z", "http_code": "200", "status": "ok",
+            "etag": None, "last_modified": None,
+            "remote_sha256": "old", "text_sha256": "old-text",
+            "quotes_total": 2,
+            "quotes_verified": ["quote one stays", "quote two vanished"],
+            "quotes_never_verified": [],
+        }])
+        body = b"<p>quote one stays, but the other sentence is gone now.</p>"
+        drift.curl_with_headers = fake_curl({url: {"code": "200", "body": body}})
+
+        code, out = self._run_main(["--workers", "1", "--timeout", "5"])
+        self.assertEqual(1, code, out)
+        self.assertNotIn("全部引句同時消失", out)
+
+    def test_warning_suppressed_when_only_one_quote_total(self):
+        """只有 1 句判準的文件，就算那 1 句消失也不算『全部引句同時消失』這種
+        多引句一致性訊號——quotes_total >= 2 才有意義，警語不該出現。"""
+        url = "https://example.org/single-quote-drift"
+        self._write_manifest([{"id": "doc-l", "title": "L", "url": url, "doc_type": "html"}])
+        self._write_criteria([{"doc_id": "doc-l", "quote": "the only sentence"}])
+        self._write_baseline([{
+            "id": "doc-l", "url": url, "doc_type": "html",
+            "checked_at": "2026-08-01T00:00:00Z", "http_code": "200", "status": "ok",
+            "etag": None, "last_modified": None,
+            "remote_sha256": "old", "text_sha256": "old-text",
+            "quotes_total": 1, "quotes_verified": ["the only sentence"],
+            "quotes_never_verified": [],
+        }])
+        body = b"<p>completely different content now.</p>"
+        drift.curl_with_headers = fake_curl({url: {"code": "200", "body": body}})
+
+        code, out = self._run_main(["--workers", "1", "--timeout", "5"])
+        self.assertEqual(1, code, out)
+        self.assertNotIn("全部引句同時消失", out)
+
+    def test_warning_suppressed_when_baseline_did_not_verify_all_quotes(self):
+        """baseline 當初就不是『全部驗過』（其中一句本來就是 never-verified）——
+        就算這次全缺，也不能說『baseline 全找得到』，警語不該出現。"""
+        url = "https://example.org/partial-baseline"
+        self._write_manifest([{"id": "doc-m", "title": "M", "url": url, "doc_type": "html"}])
+        self._write_criteria([
+            {"doc_id": "doc-m", "quote": "verified quote"},
+            {"doc_id": "doc-m", "quote": "never verified quote"},
+        ])
+        self._write_baseline([{
+            "id": "doc-m", "url": url, "doc_type": "html",
+            "checked_at": "2026-08-01T00:00:00Z", "http_code": "200", "status": "never-verified",
+            "etag": None, "last_modified": None,
+            "remote_sha256": "old", "text_sha256": "old-text",
+            "quotes_total": 2,
+            "quotes_verified": ["verified quote"],
+            "quotes_never_verified": ["never verified quote"],
+        }])
+        body = b"<p>totally unrelated replacement content.</p>"
+        drift.curl_with_headers = fake_curl({url: {"code": "200", "body": body}})
+
+        code, out = self._run_main(["--workers", "1", "--timeout", "5"])
+        self.assertEqual(1, code, out)
+        self.assertNotIn("全部引句同時消失", out)
+
+        rows = json.loads((drift.DEFAULT_OUT_DIR / "report.json").read_text(encoding="utf-8"))
+        row = next(r for r in rows if r["id"] == "doc-m")
+        self.assertEqual(1, row["quotes_verified_at_baseline"],
+                         "baseline 只驗過 1 句，不是 2 句")
 
 
 if __name__ == "__main__":
