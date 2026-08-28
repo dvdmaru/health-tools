@@ -83,14 +83,29 @@ def make_pdf_bytes(lines: list) -> bytes:
 
 def fake_curl(url_map: dict):
     """回一個取代 drift.curl_with_headers 的函式：查表回假回應，查不到就丟 OSError
-    （模擬 unreachable）。"""
+    （模擬 unreachable）。回傳是 (code, body, headers, tls_verified)——tls_verified
+    預設 True，情境需要時用 entry["tls_verified"]=False 覆寫（見 fake_run_curl，
+    exit-60 重抓那條真正的路徑則另外用它測，不靠這裡覆寫）。"""
     def _fn(url, timeout):
         if url not in url_map:
             raise OSError(f"fixture 沒有這個 url 的回應：{url}")
         entry = url_map[url]
         if "raise" in entry:
             raise OSError(entry["raise"])
-        return entry["code"], entry["body"], entry.get("headers", {})
+        return (entry["code"], entry["body"], entry.get("headers", {}),
+                entry.get("tls_verified", True))
+    return _fn
+
+
+def fake_run_curl(url_map: dict):
+    """回一個取代 drift._run_curl 的函式，讓 drift.curl_with_headers 本尊的
+    exit-60 重抓邏輯照跑，只是底層那次「真的打 curl」換成查表。
+    url_map[url] = {"secure": (rc, stderr, code, body, headers),
+                     "insecure": (...)}（沒給 insecure 就兩次都吃 secure 那組）。"""
+    def _fn(url, timeout, insecure):
+        entry = url_map[url]
+        key = "insecure" if insecure and "insecure" in entry else "secure"
+        return entry[key]
     return _fn
 
 
@@ -156,6 +171,74 @@ class TestExtraction(unittest.TestCase):
         result = drift.check_source(src, {"anything"}, timeout=5)
         self.assertEqual("unreachable", result["fetch_status"])
 
+    def test_reachable_response_marks_tls_verified_true(self):
+        """對照組：正常一次就成功的情境，tls_verified 該是 True（沒有繞過憑證）。"""
+        url = "https://example.org/normal-tls"
+        body = b"<p>fine</p>"
+        drift.curl_with_headers = fake_curl({url: {"code": "200", "body": body}})
+        src = {"id": "normal-doc", "title": "t", "url": url, "doc_type": "html"}
+        result = drift.check_source(src, set(), timeout=5)
+        self.assertIs(True, result["tls_verified"])
+
+
+class TestCurlExit60RetriesInsecure(unittest.TestCase):
+    """2026-08-28 CI 實測：hpa.gov.tw 在 Ubuntu runner 上對 curl 回 exit 60
+    （SSL certificate problem: unable to get local issuer certificate），本機
+    macOS 靠系統鑰匙圈矇混過去、Ubuntu 沒有那個中繼憑證就不通。這裡直接 monkeypatch
+    `drift._run_curl`（curl_with_headers 內部真正呼叫 curl 的那一層），讓
+    curl_with_headers 本尊的重抓判斷邏輯照跑，不是繞過它。"""
+
+    def setUp(self):
+        self._orig_run_curl = drift._run_curl
+        self.addCleanup(setattr, drift, "_run_curl", self._orig_run_curl)
+
+    def test_exit_60_then_insecure_retry_succeeds_marks_tls_unverified(self):
+        quote = "A1C threshold is 6.5%."
+        body = f"<p>{quote}</p>".encode("utf-8")
+        url = "https://hpa.example.gov.tw/page"
+        drift._run_curl = fake_run_curl({
+            url: {
+                "secure": (60, b"SSL certificate problem: unable to get local "
+                              b"issuer certificate", "", b"", {}),
+                "insecure": (0, b"", "200", body, {}),
+            }
+        })
+        src = {"id": "tls-doc", "title": "t", "url": url, "doc_type": "html"}
+        result = drift.check_source(src, {quote}, timeout=5)
+
+        self.assertEqual("reached", result["fetch_status"])
+        self.assertIs(False, result["tls_verified"],
+                      "exit 60 重抓成功後應該老實標記『沒驗證憑證』")
+        self.assertEqual(1, result["quotes_found"])
+        self.assertEqual("200", result["http_code"])
+
+    def test_exit_60_then_insecure_retry_also_fails_is_unreachable(self):
+        url = "https://hpa.example.gov.tw/still-broken"
+        drift._run_curl = fake_run_curl({
+            url: {
+                "secure": (60, b"SSL certificate problem", "", b"", {}),
+                "insecure": (35, b"SSL connect error", "", b"", {}),
+            }
+        })
+        src = {"id": "tls-doc-2", "title": "t", "url": url, "doc_type": "html"}
+        result = drift.check_source(src, set(), timeout=5)
+        self.assertEqual("unreachable", result["fetch_status"])
+
+    def test_non_60_curl_error_does_not_trigger_insecure_retry(self):
+        """只有 exit 60 才重抓——其他錯誤（例如逾時 28）不該多打一次 -k。"""
+        url = "https://example.org/timeout"
+        calls = []
+
+        def spy(url_, timeout, insecure):
+            calls.append(insecure)
+            return (28, b"Operation timed out", "", b"", {})
+
+        drift._run_curl = spy
+        src = {"id": "timeout-doc-2", "title": "t", "url": url, "doc_type": "html"}
+        result = drift.check_source(src, set(), timeout=5)
+        self.assertEqual("unreachable", result["fetch_status"])
+        self.assertEqual([False], calls, "exit 28 不該觸發 -k 重抓")
+
 
 # ---------------------------------------------------------------------------
 # 2. classify() 純函式的狀態判定
@@ -214,8 +297,8 @@ class TestClassify(unittest.TestCase):
         self.assertEqual("drift", drift.classify(c, b, building=False))
 
     def test_pdf_raw_sha_change_with_same_text_is_not_drift(self):
-        """2026-08-28 裁決：PDF 的 raw sha 變了但抽出來的正文(text_sha256)沒變，
-        只算 changed-quotes-intact，不是 drift——實測 eular-gout-recommendations-2016
+        """PDF 的 raw sha 變了但抽出來的正文(text_sha256)沒變，只算
+        changed-quotes-intact，不是 drift——實測 eular-gout-recommendations-2016
         這份 PDF 連續 curl 三次會出現兩種不同 raw sha256（size 相同），但三次的
         text_sha256 都一樣，證明 raw bytes 本身就不穩定，拿它當 drift 訊號只會
         天天假警報。"""
@@ -223,10 +306,23 @@ class TestClassify(unittest.TestCase):
         self.assertEqual("changed-quotes-intact",
                          drift.classify(c, baseline(remote_sha256="pdf-a"), building=False))
 
-    def test_pdf_text_sha_change_is_drift(self):
-        """跟上一條對照：raw sha 變不算數，但 text_sha256（pdftotext 抽出、正規化
-        後的正文）真的變了——這才是『PDF 改版一定要人看』該抓的訊號。"""
+    def test_pdf_text_sha_change_alone_is_also_not_drift(self):
+        """2026-08-28 CI 首次實跑推翻了『text_sha256 變＝PDF drift』：baseline 在
+        本機 macOS 建、CI 在 Ubuntu 跑，兩邊 pdftotext(poppler-utils)版本不保證
+        一致，同一份沒改版的 PDF 抽出來的文字本身就可能不同，5 份 PDF
+        （jsgna／jnc7／atp3／who-trs894／who-waist）因此被本機規則誤判 drift。
+        改成跟 HTML 同一條規則：sha（raw 或 text）變了只算 changed-quotes-intact，
+        drift 只認『baseline 驗過在的引句現在找不到』。"""
         c = cur(doc_type="pdf", remote_sha256="pdf-a", text_sha256="text-b")
+        self.assertEqual("changed-quotes-intact",
+                         drift.classify(c, baseline(remote_sha256="pdf-a", text_sha256="text-a"),
+                                        building=False))
+
+    def test_pdf_quote_missing_is_still_drift_regardless_of_sha(self):
+        """sha 不再是 PDF 的 drift 訊號，但『引句消失』這條 HTML／PDF 共用的規則
+        對 PDF 一樣有效——不能因為拿掉 sha 規則就連這條也弱化了。"""
+        c = cur(doc_type="pdf", _found=set(), _missing={"Q1"},
+               remote_sha256="pdf-a", text_sha256="text-a")
         self.assertEqual("drift",
                          drift.classify(c, baseline(remote_sha256="pdf-a", text_sha256="text-a"),
                                         building=False))

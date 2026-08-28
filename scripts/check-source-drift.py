@@ -2,14 +2,23 @@
 # -*- coding: utf-8 -*-
 """check-source-drift.py — 來源改版監測:判準列引用的那句話,線上版還在不在。
 
-☠️ 為什麼不是「重抓比 sha256」
---------------------------------
+☠️ 為什麼不是「重抓比 sha256」(連正規化後的文字 sha 也不行)
+------------------------------------------------------------
 data/sources/manifest.json 46 份來源裡,有 13 份是 browser-text／manual（瀏覽器抽出
 的純文字,前 3 行是 SOURCE_URL／FETCHED_AT／METHOD 標頭）與 html-text,跟線上 raw
 bytes 永遠對不上;線上 HTML 每次抓都可能因 nonce／時間戳／廣告位變,raw sha 比對
-＝天天假警報,警報疲勞後沒人看＝等於沒監測。站的唯一承諾是「每個數字都能回查原
-文」,改版真正會傷到的是「判準列引用的那句話從線上版消失了」,所以監測定在這一
-層(D6:驗在缺陷顯現那層),而不是位元組層。
+＝天天假警報,警報疲勞後沒人看＝等於沒監測。PDF 也一樣不穩——EULAR 的 PDF 實測連續
+curl 三次,同 size 卻出現兩種不同 raw sha256。
+
+2026-08-28 CI 首次實跑(Ubuntu runner)又推翻了「那就比正規化後的文字 sha」這個退而
+求其次的方案:5 份 PDF(jsgna／jnc7／atp3／who-trs894／who-waist)被判 drift,但人工
+複查那 5 份文件內容根本沒變——baseline 是在本機 macOS 建的,CI 在 Ubuntu 跑,兩邊的
+`pdftotext`(poppler-utils)版本不保證一致,同一份 PDF 抽出來的文字本身就可能有斷行
+／空白差異,text_sha256 因此不同,跟文件有沒有改版無關。sha 類欄位(remote_sha256／
+text_sha256)在本檔裡因此**只當資訊,不當 drift 訊號**——drift 只看一件事:baseline
+裡驗過在的那句話,現在還在不在。站的唯一承諾是「每個數字都能回查原文」,改版真正
+會傷到的是「判準列引用的那句話從線上版消失了」,所以監測定在這一層(D6:驗在缺陷
+顯現那層),而不是位元組層,也不是抽字結果層——HTML／PDF 用同一條規則,不分家。
 
 做的事
 ------
@@ -30,18 +39,20 @@ bytes 永遠對不上;線上 HTML 每次抓都可能因 nonce／時間戳／廣�
 
 狀態語意(一個欄位一種語意,不准混)
 ----------------------------------
-  ok                     可抓、所有引句都在、text_sha256 與 baseline 相同。
-  changed-quotes-intact  raw／text sha 與 baseline 不同,但引句全在——資訊級,不算 drift。
-                          (PDF 的 raw sha 常因來源端塞時間戳／流水號等雜訊而在內容
-                          沒變時就跳動,見下方 classify() 內的實測記錄,所以 PDF 只看
-                          raw sha 沒用,一律落這一格,不算 drift。)
-  drift                  baseline 裡驗過在的引句現在找不到;或 PDF 的 text_sha256
-                          (pdftotext 抽出、正規化後的正文)與 baseline 不同
-                          (正文真的變了,不是位元組雜訊,一定要人看)。
+  ok                     可抓、baseline 裡驗過在的引句這次全在。
+  changed-quotes-intact  引句全在,但 remote_sha256／text_sha256 跟 baseline 不同——
+                          純資訊,不算 drift。sha 類欄位天生不穩(HTML 的 nonce／
+                          廣告位、PDF 重新打包時 raw bytes 本身就會變、甚至只是換一台
+                          機器跑 pdftotext 版本不同就讓 text_sha 跟著變),不能拿來
+                          當改版訊號,只用來提醒「這裡曾經變過,人有空可以看一眼」。
+  drift                  baseline 裡驗過在的引句現在找不到——HTML／PDF 同一條規則,
+                          不看 sha(理由見上方 CI 實測記錄)。
   never-verified         baseline 當初就沒驗到的引句(或本次新增、baseline 沒有記錄
                           的引句)仍然找不到——不納入 drift,但要單獨列出,不准吞掉。
   blocked                403／WAF 頁——「無法確認,需瀏覽器」,不是 ok。
-  unreachable            網路錯誤／逾時。
+  unreachable            網路錯誤／逾時;curl exit 60(SSL 憑證鏈驗不過)會先改用
+                          -k 不驗證憑證重抓一次,還是失敗才算 unreachable(見
+                          curl_with_headers())。
   no-quotes              manifest 有列、但沒有任何判準引用它——只比 sha,sha 變了會
                           在報告的總結行併入「changed」(sha 沒變則併入「ok」;真實
                           狀態仍完整保留在逐筆明細與 baseline 裡,不是被吞掉)。
@@ -103,24 +114,18 @@ def now_iso() -> str:
     return datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-def curl_with_headers(url: str, timeout: int) -> tuple:
-    """回 (http_code, body_bytes, headers_dict)。
-
-    UA／攔截判定沿用 fetch-health-source.py 的同一套指紋(見 blocked_reason)；
-    這裡另外用 -D 抓標頭、-o 抓 body 到暫存檔,分流避免 header／body 混在同一個
-    stdout 裡難以切開。headers 只留跟隨 redirect 後最後一組回應標頭,鍵統一小寫。
-    """
+def _run_curl(url: str, timeout: int, insecure: bool) -> tuple:
+    """實際跑一次 curl,回 (returncode, stderr_bytes, http_code, body_bytes,
+    headers_dict)。headers 只留跟隨 redirect 後最後一組回應標頭,鍵統一小寫。
+    body／headers 在暫存目錄消失前就讀出來,不對外洩漏路徑。"""
     with tempfile.TemporaryDirectory() as td:
         hdr_path = pathlib.Path(td) / "headers"
         body_path = pathlib.Path(td) / "body"
-        r = subprocess.run(
-            ["curl", "-sSL", "--max-time", str(timeout), "-A", UA,
-             "-D", str(hdr_path), "-o", str(body_path),
-             "-w", "%{http_code}", url],
-            capture_output=True)
-        if r.returncode != 0:
-            raise OSError(f"curl exit {r.returncode}: "
-                          f"{r.stderr.decode('utf-8', 'replace').strip()}")
+        cmd = ["curl", "-sSL", "--max-time", str(timeout), "-A", UA]
+        if insecure:
+            cmd.append("-k")
+        cmd += ["-D", str(hdr_path), "-o", str(body_path), "-w", "%{http_code}", url]
+        r = subprocess.run(cmd, capture_output=True)
         code = r.stdout.decode("ascii", "replace").strip()
         body = body_path.read_bytes() if body_path.exists() else b""
         headers = {}
@@ -132,7 +137,32 @@ def curl_with_headers(url: str, timeout: int) -> tuple:
                 if ":" in line:
                     k, _, v = line.partition(":")
                     headers[k.strip().lower()] = v.strip()
-        return code, body, headers
+        return r.returncode, r.stderr, code, body, headers
+
+
+def curl_with_headers(url: str, timeout: int) -> tuple:
+    """回 (http_code, body_bytes, headers_dict, tls_verified)。
+
+    UA／攔截判定沿用 fetch-health-source.py 的同一套指紋(見 blocked_reason)；
+    這裡另外用 -D 抓標頭、-o 抓 body 到暫存檔,分流避免 header／body 混在同一個
+    stdout 裡難以切開。
+
+    ☠️ 2026-08-28 CI 首次實跑:hpa.gov.tw 在 Ubuntu runner 上對 curl 回 exit 60
+    (SSL certificate problem: unable to get local issuer certificate)——hpa 的
+    憑證鏈缺中繼憑證,本機 macOS 靠系統鑰匙圈(額外信任存放區)矇混過去,Ubuntu 的
+    curl 只認標準 CA bundle,沒有那個中繼憑證就驗不過,連 10 份都判 unreachable。
+    exit 60 時改用 -k(不驗證憑證)重抓一次,成功就正常分類,但把 tls_verified
+    標 False,讓報告老實列出「這份是繞過憑證驗證抓到的」；兩次都失敗才是真的
+    unreachable。tls_verified 只影響回報,不影響 drift 判定(判定只看引句)。
+    """
+    rc, stderr, code, body, headers = _run_curl(url, timeout, insecure=False)
+    tls_verified = True
+    if rc == 60:
+        rc, stderr, code, body, headers = _run_curl(url, timeout, insecure=True)
+        tls_verified = False
+    if rc != 0:
+        raise OSError(f"curl exit {rc}: {stderr.decode('utf-8', 'replace').strip()}")
+    return code, body, headers, tls_verified
 
 
 def extract_text(doc_type: str, body: bytes) -> str:
@@ -188,15 +218,16 @@ def check_source(src: dict, required: set, timeout: int) -> dict:
         "remote_sha256": None, "text_sha256": None,
         "quotes_total": len(required), "quotes_found": 0,
         "_found": set(), "_missing": set(),
-        "fetch_status": None, "error": "",
+        "fetch_status": None, "error": "", "tls_verified": None,
     }
     try:
-        code, body, headers = curl_with_headers(url, timeout)
+        code, body, headers, tls_verified = curl_with_headers(url, timeout)
     except OSError as e:
         result["fetch_status"] = "unreachable"
         result["error"] = str(e)
         return result
 
+    result["tls_verified"] = tls_verified
     result["http_code"] = code
     result["etag"] = headers.get("etag")
     result["last_modified"] = headers.get("last-modified")
@@ -248,22 +279,19 @@ def classify(cur: dict, baseline_entry, building: bool) -> str:
 
     verified_before = set(baseline_entry.get("quotes_verified", []))
     drift_missing = missing_now & verified_before
-    # ☠️ 2026-08-28 實測推翻了「PDF raw sha 變＝一定要人看」：對同一份
-    # eular-gout-recommendations-2016 PDF 連續 curl 三次，size 完全一樣但出現兩種
-    # 不同的 raw sha256——bytes 本身不穩定（八成是發布方在頁尾／中繼資料塞了時間戳
-    # 或流水號一類的東西），但三次 pdftotext -layout 抽出來正規化後的文字 sha256
-    # 完全相同。用 raw sha 當 PDF 的 drift 訊號會在這份文件上天天假警報，
-    # 正是本檔開頭那條「raw sha 比對＝警報疲勞」的教訓，只是換成 PDF 而已。
-    # 所以 PDF 的 drift 訊號改用 text_sha256（跟 HTML 同一種「找得到的引句消失」
-    # 邏輯的加強版）：text_sha 變了(代表抽出來的正文變了，不只是不可控的位元組雜訊)
-    # 才算 drift；raw sha 變但 text_sha 沒變＝changed-quotes-intact（資訊級)。
-    pdf_text_changed = (
-        cur["doc_type"] == "pdf"
-        and baseline_entry.get("text_sha256")
-        and cur.get("text_sha256")
-        and baseline_entry["text_sha256"] != cur["text_sha256"]
-    )
-    if drift_missing or pdf_text_changed:
+    # ☠️ 2026-08-28 兩輪實測都推翻了「拿 sha 當 PDF 的 drift 訊號」：
+    #   第一輪(本機)：eular-gout-recommendations-2016 連續 curl 三次，size 相同
+    #   卻出現兩種不同 raw sha256——bytes 本身不穩定，用 raw sha 判 drift 天天假警報，
+    #   所以改成比對正規化後的文字 text_sha256。
+    #   第二輪(CI 首次實跑，Ubuntu runner)：5 份 PDF(jsgna／jnc7／atp3／
+    #   who-trs894／who-waist)又被判 drift，人工複查內容根本沒變——baseline 在本機
+    #   macOS 建、CI 在 Ubuntu 比，兩邊的 pdftotext(poppler-utils)版本不保證一致，
+    #   同一份 PDF 抽出來的文字本身就可能有斷行／空白差異，text_sha256 因此不同，
+    #   跟文件有沒有改版無關。
+    # 兩輪教訓合起來：sha 類欄位(raw 或 text)在任何一種 doc_type 上都不可信，一律
+    # 只當資訊(見下方 changed-quotes-intact)，drift 只認一件事——
+    # baseline 裡驗過在的引句，現在還在不在。HTML／PDF 用同一條規則，不分家。
+    if drift_missing:
         return "drift"
 
     nv_missing = missing_now - drift_missing
@@ -337,6 +365,10 @@ def run(manifest: list, baseline_map: dict, timeout: int, workers: int,
             "quotes_total": cur["quotes_total"], "quotes_found": cur["quotes_found"],
             "quotes_missing": missing_sample(cur["_missing"]),
             "status": status, "error": cur["error"],
+            # tls_verified：只是這一次怎麼抓到資料的診斷資訊(見 curl_with_headers()
+            # 的 exit 60 重抓)，不是「上次驗過什麼」的事實，所以只放在這次的報告／
+            # JSON，不進 baseline——加進 baseline 沒有意義，也不用為了它重建 baseline。
+            "tls_verified": cur["tls_verified"],
             "baseline_checked_at": baseline_entry.get("checked_at") if baseline_entry else None,
             "_baseline_entry_for_write": build_baseline_entry(cur, status),
         }
@@ -380,8 +412,8 @@ def render_report(results: list, total_in_manifest: int) -> str:
             lines.append(f"- **{r['id']}**「{r['title']}」")
             lines.append(f"  - url：{r['url']}")
             lines.append(f"  - baseline checked_at → 現在：{r['baseline_checked_at']} → {r['checked_at']}")
-            if r["doc_type"] == "pdf":
-                lines.append(f"  - PDF raw sha 改變（改版）")
+            # 只印缺的引句——drift 只認引句消失這一件事(不看 sha，見 classify() 的
+            # 實測記錄)，這裡不該再暗示「PDF raw sha 改變」之類已經廢棄的舊規則。
             if r["quotes_missing"]:
                 lines.append(f"  - 缺的引句（前 3 句）：")
                 for q in r["quotes_missing"]:
@@ -389,6 +421,24 @@ def render_report(results: list, total_in_manifest: int) -> str:
     else:
         lines.append("（無）")
     lines.append("")
+
+    changed_rows = [r for r in results if r["status"] == "changed-quotes-intact"]
+    if changed_rows:
+        lines.append(f"## changed-quotes-intact（{len(changed_rows)} 份，資訊級，不算 drift）")
+        for r in changed_rows:
+            if r["quotes_total"] == 0:
+                note = "sha 變了(本來就沒有判準引用它，只是留紀錄)"
+            else:
+                note = "文字 sha 變、引句全在"
+            lines.append(f"- **{r['id']}**「{r['title']}」：{note}")
+        lines.append("")
+
+    tls_rows = [r for r in results if r.get("tls_verified") is False]
+    if tls_rows:
+        lines.append(f"## TLS 憑證鏈驗不過、已改不驗證憑證重抓（{len(tls_rows)} 份）")
+        for r in tls_rows:
+            lines.append(f"- **{r['id']}**「{r['title']}」：{r['url']}")
+        lines.append("")
 
     blocked_rows = [r for r in results if r["status"] == "blocked"]
     lines.append(f"## blocked 清單（{len(blocked_rows)} 份，需要人拿瀏覽器去看）")

@@ -131,12 +131,19 @@ python3 scripts/fetch-health-source.py --id <id> --url <url> \
 `scripts/check-source-drift.py` 由 `.github/workflows/source-drift.yml` 每週一
 01:00 UTC（台北 09:00）跑一次，也能 `workflow_dispatch` 手動觸發。
 
-**驗的不是 raw bytes 的 sha256，是判準列引用的那句話還在不在**。理由跟上面「快照不
-入版控只留 sha256」是同一個：46 份來源裡 13 份是瀏覽器抽出的純文字快照，跟線上 raw
-bytes 本來就對不上；線上 HTML 每次抓也可能因 nonce／時間戳／廣告位變動，raw sha 比對
-只會天天假警報，警報疲勞後沒人看＝等於沒監測。站的唯一承諾是「每個數字都能回查原
-文」，會傷到這個承諾的只有一種事——判準列引用的那句話從線上版消失了。監測就定在
-這一層（D6：驗在缺陷顯現那層）。
+**驗的不是任何一種 sha256（raw bytes 也好、正規化後的文字也好），是判準列引用的那句
+話還在不在**。理由跟上面「快照不入版控只留 sha256」是同一個：46 份來源裡 13 份是
+瀏覽器抽出的純文字快照，跟線上 raw bytes 本來就對不上；線上 HTML 每次抓也可能因
+nonce／時間戳／廣告位變動，raw sha 比對只會天天假警報。PDF 也一樣不穩——EULAR 的
+PDF 實測連續 curl 三次，同 size 卻出現兩種不同 raw sha256。2026-08-28 CI 首次實跑
+（Ubuntu runner）又推翻了「那就比正規化後的文字 sha」這個退而求其次的方案：5 份 PDF
+被判 drift，但內容根本沒變——**baseline 是在本機 macOS 建的，CI 在 Ubuntu 比對，兩邊
+的 `pdftotext`（poppler-utils）版本不保證一致，同一份 PDF 抽出來的文字本身就可能有
+斷行／空白差異**，跟文件有沒有改版無關。所以 `remote_sha256`／`text_sha256` 這兩個
+欄位在監測裡只當資訊，不當 drift 訊號——警報疲勞後沒人看＝等於沒監測，HTML 跟 PDF
+用同一條規則，不分家。站的唯一承諾是「每個數字都能回查原文」，會傷到這個承諾的只
+有一種事——判準列引用的那句話從線上版消失了。監測就定在這一層（D6：驗在缺陷顯現
+那層）。
 
 ```bash
 # 全量檢查，印摘要表，寫報告（預設寫到 ROOT/.drift/，該目錄已 .gitignore）
@@ -156,16 +163,26 @@ python3 scripts/check-source-drift.py --report PATH.md --json PATH.json
 
 | 狀態 | 意思 |
 |---|---|
-| `ok` | 可抓、baseline 裡的引句全在、正規化文字的 sha 跟 baseline 相同 |
-| `changed-quotes-intact` | raw bytes 變了但正規化文字沒變（HTML 的 nonce、PDF 的重新打包——EULAR 的 PDF 實測同 size 每次下載 bytes 都不同），或 HTML 文字變了但引句全在——資訊級，不算 drift |
-| `drift` | baseline 裡找得到的引句現在找不到；或 PDF 的正規化文字 sha 跟 baseline 不同（PDF 內文改版一定要人看，即使引句還在） |
+| `ok` | 可抓、baseline 裡驗過在的引句這次全在 |
+| `changed-quotes-intact` | 引句全在，但 `remote_sha256`／`text_sha256` 跟 baseline 不同——純資訊，不算 drift。sha 類欄位天生不穩（HTML 的 nonce／廣告位、PDF 重新打包時 raw bytes 本身就會變、甚至只是換一台機器跑 `pdftotext` 版本不同就讓 `text_sha256` 跟著變），不能拿來當改版訊號 |
+| `drift` | baseline 裡驗過在的引句現在找不到——HTML／PDF 同一條規則，不看 sha |
 | `never-verified` | baseline 建立當下這份文件的引句本來就沒對齊（通常是 JS 渲染或 PDF 抽字差異）——這些引句不納入 drift 判定，但報告會單獨列出，不准默默吞掉 |
 | `blocked` | 403／WAF 攔截頁（hpa.gov.tw `Detail.aspx`、diabetesjournals.org 這一類）——監測不到，報告寫「無法確認，需瀏覽器」，**不是** `ok` |
-| `unreachable` | 網路錯誤或逾時 |
+| `unreachable` | 網路錯誤或逾時；curl exit 60（SSL 憑證鏈驗不過）會先改用 `-k` 不驗證憑證重抓一次，成功則正常分類（結果多一個 `tls_verified: false`，報告會單獨列一節），兩次都失敗才算 unreachable |
 | `no-quotes` | manifest 有登記、`data/criteria/` 沒引用到——只比 sha，變了記 `changed-quotes-intact`，不算 drift |
 
 exit code：`0` 無 drift；`1` 至少一份 `drift`；`2` 全部 `unreachable`／`blocked`（監測
 本身失效，CI 不准當綠燈）；`3` 設定錯（baseline 缺、manifest 壞）。
+
+**`tls_verified: false` 是什麼**：2026-08-28 CI 首次實跑發現 hpa.gov.tw 在 Ubuntu
+runner 上對 curl 回 `exit 60`（`SSL certificate problem: unable to get local issuer
+certificate`）——hpa 的憑證鏈缺中繼憑證，本機 macOS 靠系統鑰匙圈（額外信任存放區）
+矇混過去，Ubuntu 的 curl 只認標準 CA bundle，10 份全判成 unreachable。腳本改成 exit
+60 時自動改用 `-k` 重抓一次；成功的話正常判定狀態，但把 `tls_verified` 標 `false`，
+報告加一節列出「TLS 憑證鏈驗不過、已改不驗證憑證重抓」的 id，讓人知道這份資料是繞
+過憑證驗證抓到的（不影響 drift 判定，判定只看引句）。這個欄位只在當次報告／JSON
+裡，不進 `drift-baseline.json`——它是「這次怎麼抓到的」診斷資訊，不是「上次驗過
+什麼」的事實。
 
 ### 收到 drift issue 之後：人要做什麼
 
