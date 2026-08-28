@@ -14,6 +14,7 @@
 | `data/criteria/<slug>.json` | 判準**明細列**（一機構×一文件×一指標×一判定類別＝一列；一個檔可裝多個 `indicator_id`） | `indicator_id`／`org`／`doc_id`／`category`／`lower`／`upper`／`unit`／`population`／`page_or_table`／`quote` | **任何彙總欄**（正常值、建議值、平均、「多數機構認為」） |
 | `data/criteria/<slug>-history.json` | 判準變更事件 | `year`／`org`／`change`／`doc_id`／`quote`／`status` | 未證實的事件（`status` 不是 verified 就不渲染） |
 | `data/criteria/<slug>-interference.json` | 使數值失真的因素 | `direction`／`factor`／`org`／`doc_id`／`quote` | 猜的方向（來源沒說就 `unspecified`） |
+| `data/errata.json` | **公開後**的勘誤明細列（一次更正＝一列；站級一個檔，不掛在任何指標底下） | `id`／`date`／`slug`／`section`／`was`／`now`／`reason`；有 `doc_id` 就必須有 `quote`（互為必填） | 彙總欄（勘誤次數、最後勘誤日）；**上線前的內部修正**（沒有讀者看過的版本，就沒有東西要勘） |
 
 - **頁面上的每個數字都必須回指到某一列，該列的 `quote` 必須 grep 得回該來源的快照**（`scripts/check-receipts.py`）。沒有列＝不渲染，不是「先寫再補」。
 - `quote` 逐字照抄來源，含來源自己的 ≧／≥、mg/dl／mg/dL 不一致；**不美化、不翻譯、不合併兩段**（不連續的原文用 `quote_extra`）。
@@ -47,6 +48,7 @@
 
 - `config/site.json` `published:false`＝dormant：頁面照生，但不進 sitemap／llms.txt／導覽。翻開關前 build 必須 byte-identical，翻開關後才接線；兩態都有測試。
 - 生成器跑兩次 SHA-256 必須全同（禁時間戳）。
+- **公開後改動要留痕**：頁面上的數字或說明文字改過，就在 `data/errata.json` 加一列（`was` 照舊頁抄、`now`、`reason`；有依據文件就附 `doc_id`＋`quote`，同樣受收據 gate）。有勘誤的指標頁在第⑥段之後多一段「勘誤紀錄」，站級清單在 `/errata/`。☠️ 不是「改完再寫一段話說明」——沒有那一列，頁面上就不會有痕跡。
 - 個資：本站**不蒐集任何民眾健康資料**（個資法 §6 特種個資）。任何要民眾輸入數值的功能都是另一個產品決策，先過律師再動。
 
 ## 5. 交接條款

@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://health.twtools.cc/schema/errata.json",
+  "title": "勘誤紀錄明細列（data/errata.json）",
+  "description": "一列＝本站公開之後，某一頁上的某一個數字或某一句話被改過的一次紀錄。\n\n☠️ 只存明細，不存彙總：本檔禁止任何統計或彙總欄位（勘誤次數、最後勘誤日、「本頁已修正 N 次」…）。頁面要顯示「三次勘誤」就對明細做 len()。\n\n☠️ 上線前的修改不是勘誤：本檔初始值是 []，M4 以前的內部修正不得補記進來。勘誤是對讀者的承諾——「你當時看到的是別的字」——沒有讀者看過的版本，就沒有東西要勘。\n\n☠️ was 照舊頁抄，不是照印象重寫：抄錯了，讀者會找不到自己看過的那一句，這頁就變成第二個要被勘誤的東西。now／reason 是我們寫的；doc_id／quote 是來源原文，quote 必須 grep 得回快照（scripts/check-receipts.py 對本檔逐句驗，沒有 doc_id 的列跳過不驗）。",
+  "type": "array",
+  "items": {
+    "$ref": "#/$defs/erratum"
+  },
+  "$defs": {
+    "erratum": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "date",
+        "slug",
+        "section",
+        "was",
+        "now",
+        "reason"
+      ],
+      "dependentRequired": {
+        "doc_id": [
+          "quote"
+        ],
+        "quote": [
+          "doc_id"
+        ]
+      },
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^E[0-9]{1,4}$",
+          "description": "本檔內的列號（E1、E2…）。一經公開不得改號、不得回收再用——讀者可能已經引用過它。"
+        },
+        "date": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "勘誤發布日＝更正真的改上頁面的那一天，不是發現錯誤那天，也不是來源文件的日期。"
+        },
+        "slug": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$",
+          "description": "被更正的頁面 slug，必須對應 articles/indicators/<slug>.md 存在的頁。指不到任何一頁＝這筆勘誤沒有落點，生成器中止（測試也會紅）。"
+        },
+        "section": {
+          "enum": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "table",
+            "chart",
+            "history",
+            "interference",
+            "sources"
+          ],
+          "description": "錯的是哪一段或哪個元件。1–6＝指標頁固定六段的正文（是什麼／各機構判準並列／何時改過／何時失真／可以和醫師討論什麼／來源與版本）；table＝第②段的判準表；chart＝判準數線；history＝判準沿革時間軸；interference＝失真卡；sources＝第⑥段的來源清單。☠️ 分不清就選正文那一段，不要為了看起來精確而猜元件。"
+        },
+        "was": {
+          "type": "string",
+          "minLength": 1,
+          "description": "原本頁面上的文字或數值，照舊頁逐字抄。不是憑印象重寫的版本。"
+        },
+        "now": {
+          "type": "string",
+          "minLength": 1,
+          "description": "改正後頁面上的文字或數值。"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "description": "為什麼改，一句話。這是我們寫的敘述，不是來源原文——原文在 quote。"
+        },
+        "doc_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]{1,63}$",
+          "description": "選填。這次更正所依據的文件，指向 data/sources/manifest.json 的 id。填了就必須一起給 quote（dependentRequired）——「依據某份文件」而拿不出那份文件的原文，等於沒有依據。"
+        },
+        "quote": {
+          "type": "string",
+          "minLength": 1,
+          "description": "選填，但有 doc_id 就必填（反向也綁：有 quote 就必須說是哪份文件的）。原文引句，照抄不美化，必須 grep 得回該來源的快照。"
+        },
+        "note": {
+          "type": "string",
+          "description": "選填。限定條件、與其他勘誤列的關係、為什麼這次更正只動一頁不動別頁。"
+        }
+      }
+    }
+  }
+}

@@ -24,6 +24,9 @@ data/criteria/，md 只留敘事。所以：
   sources；md 裡不寫（寫了就是第二份會過期的清單）。
 - direction／inclusive 這類旗標一律照資料渲染，生成器不做二次判斷、不猜方向；
   資料沒給數值區間就在頁面上說「原文未給數值區間」，不留空白也不腦補。
+- **勘誤紀錄**（data/errata.json，站級一個檔）：公開後改過的數字或說明留痕給讀者看。
+  有勘誤的指標頁在第⑥段之後多一段「勘誤紀錄」（零列＝整段不存在，連 CSS 都不多）；
+  站級頁 /errata/ 列全站，最新在前，只在全量 build 生成。
 
 dormant（config/site.json 的 published 為 false）：
     頁面照生（要能看、能審），但不寫 sitemap part、不進 llms.txt、導覽不連。
@@ -68,6 +71,34 @@ CATEGORY_LABEL = {
     "classification": "分級",
     "risk_threshold": "風險門檻",
     "no_criterion_stated": "未訂判準",
+}
+
+# ---------- 勘誤紀錄（公開後改過什麼，留給讀者看的痕跡） ----------
+# 資料在 data/errata.json（站級，一個檔管全站；不在 data/criteria/ 底下——它不屬於
+# 任何一個指標）。☠️ 上線前的修改不是勘誤：初始值 []，不得把 M4 的內部修正補記進來。
+ERRATA_PATH = ROOT / "data" / "errata.json"
+ERRATA_TITLE = "勘誤紀錄"
+ERRATA_URL = f"{hl.BASE}/errata/"
+# 這頁的用途說明（站級頁的第一句）。零列時另外加一句「目前沒有勘誤紀錄。」——
+# 「沒有勘誤」與「還沒有這個機制」是兩件事，頁面要說得出是前者。
+ERRATA_LEDE = "這頁列出本站公開後改過的判準數字或說明文字，逐筆記下原本寫什麼、改成什麼、為什麼改。"
+ERRATA_EMPTY = "目前沒有勘誤紀錄。"
+ERRATA_LLMS_DESC = "本站公開後的更正明細，最新在前。"
+
+# section → 中文標籤。1–6 是指標頁固定六段（每頁的實際標題各自不同，所以這裡用
+# MODEL.md §3 登記的那六個段落角色當簡稱，不抄任何一頁的標題）；其餘是元件。
+ERRATA_SECTION_LABEL = {
+    "1": "第①段（是什麼）",
+    "2": "第②段（各機構判準並列）",
+    "3": "第③段（判準何時改過）",
+    "4": "第④段（何時失真）",
+    "5": "第⑤段（可以和醫師討論什麼）",
+    "6": "第⑥段（來源與版本）",
+    "table": "判準表",
+    "chart": "判準數線",
+    "history": "判準沿革時間軸",
+    "interference": "失真卡",
+    "sources": "來源與版本清單",
 }
 
 # ---------- 呈現層設定（不是資料；資料一律在 data/ 下） ----------
@@ -425,6 +456,19 @@ figure.chart svg.narrow-only{ display:none; }
 /* 窄螢幕：表格橫向捲動而不是把欄位擠成一字一行（五欄表擠到 390px 等於沒得讀）。
    .tbl-scroll 本身是 overflow-x:auto，給表格一個 min-width 就會在容器內捲。 */
 @media (max-width:620px){ .tbl-scroll > .std-table{ min-width:600px; } }
+/* 判準表分組折疊：原生 details 元素（無 JS）。組的外框與組名用外殼的
+   --line／--surface／--dim／--accent（跟著配色切換走）；☠️ 不用 --c-* 系列色——
+   那組色票在這幾張圖承載的語意是「這條判準是誰發布的」，拿來當組框會讓同一個
+   視覺通道多背一種意思。 */
+.crit-sum{ font-size:13px; color:var(--dim); margin:10px 0 8px; }
+details.crit-grp{ border:1px solid var(--line); border-radius:var(--radius-sm);
+                  background:var(--surface); margin:0 0 8px; }
+details.crit-grp > summary{ cursor:pointer; font-weight:700; font-size:14px;
+                            padding:10px 12px; line-height:1.6; }
+details.crit-grp > summary:hover{ color:var(--accent); }
+details.crit-grp[open] > summary{ border-bottom:1px solid var(--line); }
+details.crit-grp > .tbl-scroll{ padding:0 12px; }
+details.crit-grp .std-table{ margin:10px 0 12px; }
 .ind-note{ font-size:13px; color:var(--dim); margin:6px 0 0; }
 .ind-foot{ font-size:12.5px; color:var(--dim); border-top:1px solid var(--line);
            padding-top:10px; margin-top:34px; }
@@ -435,25 +479,76 @@ figure.chart svg.narrow-only{ display:none; }
 
 # ---------- ② 判準表（唯一數字來源） ----------
 
+# 一頁進表列數 ≤ 這個數就全部展開：組數本來就少的時候（hba1c 10 列 4 組），
+# 折疊只是多一次點擊才看得到全貌，省不到捲動。
+CRIT_OPEN_ALL_MAX = 12
+# 預設展開的類別：診斷、分級、風險門檻是讀者翻到這頁要找的數字（腰圍頁只有風險門檻
+# 一種，不開就整段看不到腰圍的值——M5 拍板加進來）。其餘（篩檢分流、未訂判準）
+# 預設收合——但收合的內容仍在 DOM 裡（原生 <details>，無 JS），爬蟲與 RAG 讀得到。
+CRIT_OPEN_CATEGORIES = ("diagnosis", "classification", "risk_threshold")
+
+
+def group_criteria_rows(rows: list, multi: bool = False, labels: dict = None) -> list:
+    """分組：回 [(indicator_id 或 None, category, 該組的列)]。
+
+    多指標頁＝先 indicator_id 再 category；單指標頁＝只 category（一頁只有一個
+    指標，再分一層等於每組的指標欄只有一個值）。
+
+    indicator_id 的順序取 labels 的鍵序——frontmatter 的 `indicator_labels`
+    與 `indicator_ids` 是同一份清單的兩種寫法，render_page 畫數線走 ids，這裡走
+    labels，兩邊要對齊。☠️ 若有人只改其中一個的順序，表的組序會與數線順序不同；
+    rows 裡出現但 labels 沒列到的 indicator_id 補在最後（不靜默丟列）。
+    category 順序照 TABLE_CATEGORIES；組內維持原始 json 行序，不重排。沒列的組不出現。
+    """
+    labels = labels or {}
+    if multi:
+        present = list(dict.fromkeys(r["indicator_id"] for r in rows))
+        order = [i for i in labels if i in present]
+        order += [i for i in present if i not in order]
+    else:
+        order = [None]
+    out = []
+    for iid in order:
+        for cat in TABLE_CATEGORIES:
+            grp = [r for r in rows if r["category"] == cat
+                   and (iid is None or r["indicator_id"] == iid)]
+            if grp:
+                out.append((iid, cat, grp))
+    return out
+
+
 def render_criteria_table(rows: list, mf: dict, multi: bool = False,
                           labels: dict = None) -> str:
-    """多指標頁在最前面多一欄「指標」；單指標頁不加（一欄只有一個值＝白佔寬度）。"""
+    """一組一張表，各包在一個原生 <details> 裡（無 JS）。
+
+    為什麼不是一張平表：血脂 51 列、BMI 腰圍 58 列，讀者要找「我這個指標的分級」
+    得在同一張表裡捲過別的指標。分組後組名就是路標。
+
+    多指標頁**不再有「指標」欄**——指標已經寫在組名上，每列再重複一次是白佔一欄寬。
+    """
     labels = labels or {}
-    ind_th = "<th>指標</th>" if multi else ""
-    head = (f"<thead><tr>{ind_th}<th>機構</th><th>判準值</th><th>族群</th>"
+    groups = group_criteria_rows(rows, multi, labels)
+    open_all = len(rows) <= CRIT_OPEN_ALL_MAX
+    head = ("<thead><tr><th>機構</th><th>判準值</th><th>族群</th>"
             "<th>依據文件與版本（含頁碼或表號）</th></tr></thead>")
-    body = []
-    for r in rows:
-        body.append(
+    out = [f'<p class="crit-sum">共 {len(rows)} 列，分 {len(groups)} 組；'
+           "點組名可展開或收合。</p>"]
+    for iid, cat, grp in groups:
+        body = "".join(
             "<tr>"
-            + (f"<td>{esc(labels[r['indicator_id']])}</td>" if multi else "")
-            + f"<td>{esc(org_label(r['org']))}</td>"
+            f"<td>{esc(org_label(r['org']))}</td>"
             f"<td>{esc(criteria_cell(r))}</td>"
             f"<td>{esc(r['population'])}</td>"
             f"<td>{esc(source_ref(r['doc_id'], mf, r['page_or_table']))}</td>"
-            "</tr>")
-    return ('<div class="tbl-scroll"><table class="std-table">'
-            + head + "<tbody>" + "".join(body) + "</tbody></table></div>")
+            "</tr>" for r in grp)
+        name = (f"{esc(labels.get(iid, iid))}｜" if iid else "") + esc(CATEGORY_LABEL[cat])
+        op = " open" if (open_all or cat in CRIT_OPEN_CATEGORIES) else ""
+        out.append(
+            f'<details class="crit-grp"{op}>'
+            f'<summary>{name}（{len(grp)} 列）</summary>'
+            '<div class="tbl-scroll"><table class="std-table">'
+            + head + "<tbody>" + body + "</tbody></table></div></details>")
+    return "".join(out)
 
 
 # ---------- 圖一：判準數線 ----------
@@ -747,14 +842,100 @@ def render_sources(source_ids: list, mf: dict) -> str:
     return f'<ol class="src-list">{"".join(items)}</ol>'
 
 
+# ---------- 勘誤紀錄（指標頁的段落＋站級頁） ----------
+
+# 只在真的有勘誤列時才注入（零列的頁面連 CSS 都不多一個 byte——加了就是全站
+# 每一頁都因為「有這個功能」而改變，公開後那是一次沒有內容變化的全站 diff）。
+ERRATA_CSS = """
+ol.errata{ margin:10px 0 0; padding-left:1.4em; }
+ol.errata li{ font-size:14.5px; line-height:1.85; margin:0 0 10px; }
+ol.errata .er-src{ display:block; font-size:12.5px; color:var(--dim); line-height:1.7; }
+"""
+
+# 站級勘誤頁沒有圖表，不載 CHART_CSS，但共用同一句免責聲明，樣式要一致。
+# ☠️ 下面的 .ind-foot 是 CHART_CSS 裡那條規則的副本：抽成共用常數會改到指標頁的
+# CSS bytes（M5 的驗收條件是既有頁面 byte-identical），所以刻意留兩份——
+# 兩份會不會偷偷長歪，由測試盯（test_errata_page_reuses_the_indicator_foot_rule）。
+ERRATA_FOOT_CSS = """
+.ind-foot{ font-size:12.5px; color:var(--dim); border-top:1px solid var(--line);
+           padding-top:10px; margin-top:34px; }
+.lede{ font-size:15px; line-height:1.9; margin:0 0 14px; }
+"""
+
+
+def load_errata(path=None) -> list:
+    """讀 data/errata.json。檔案不存在＝這站還沒有勘誤層，回 []（不是錯）。"""
+    p = pathlib.Path(path) if path else ERRATA_PATH
+    return load_json(p) if p.exists() else []
+
+
+def errata_order(rows: list) -> list:
+    """最新在前：date 由新到舊，同一天由 id 的數字由大到小（id 遞增＝越後面越新）。
+
+    ☠️ id 不能照字串排（E10 會排在 E2 前面），取數字部分。排序鍵完全來自資料，
+    不含檔案順序也不含時間，所以重跑仍 byte-identical。
+    """
+    return sorted(rows, key=lambda r: (r["date"], int(r["id"][1:])), reverse=True)
+
+
+def errata_line(r: dict, mf: dict) -> str:
+    """一列勘誤的文字。有 doc_id 才有「依據」，沒有就不編一個出來。"""
+    out = (f"{esc(r['date'])}｜{esc(ERRATA_SECTION_LABEL[r['section']])}："
+           f"原寫「{esc(r['was'])}」，改為「{esc(r['now'])}」。{esc(r['reason'])}")
+    if r.get("doc_id"):
+        out += f'<span class="er-src">依據：{esc(source_ref(r["doc_id"], mf, ""))}</span>'
+    return out
+
+
+def render_errata_list(rows: list, mf: dict, titles: dict = None) -> str:
+    """勘誤清單。titles 有給（站級頁）就在每列前面加該頁標題連結；指標頁不加
+    （讀者已經在那一頁上了，再連一次是繞回原地）。"""
+    items = []
+    for r in errata_order(rows):
+        prefix = ""
+        if titles is not None:
+            prefix = (f'<a href="/indicators/{esc(r["slug"])}/">'
+                      f'{esc(titles[r["slug"]])}</a>｜')
+        items.append(f"<li>{prefix}{errata_line(r, mf)}</li>")
+    return f'<ol class="errata">{"".join(items)}</ol>'
+
+
+def render_errata_page(rows: list, mf: dict, titles: dict, published: bool) -> str:
+    """站級勘誤頁 /errata/：列出全站所有勘誤，最新在前。零列也照生（頁面要能說出
+    「目前沒有勘誤」，那與「還沒有這個機制」是兩件事）。"""
+    body_parts = [f'<p class="lede">{esc(ERRATA_LEDE)}</p>']
+    if rows:
+        body_parts.append(render_errata_list(rows, mf, titles))
+    else:
+        body_parts.append(f"<p>{esc(ERRATA_EMPTY)}</p>")
+    body = ('  <main>\n'
+            f'  <h1 class="pg-h1">{esc(ERRATA_TITLE)}</h1>\n'
+            + "\n".join(body_parts)
+            + f'\n  <p class="ind-foot">{esc(FOOT_LINE)}</p>\n  </main>')
+
+    # ☠️ 這裡不放 dateModified／勘誤筆數：那是彙總欄，資料層明令不存，頁面層也不生。
+    page_node = {
+        "@type": "WebPage", "@id": f"{ERRATA_URL}#page",
+        "name": ERRATA_TITLE, "description": ERRATA_LEDE, "url": ERRATA_URL,
+        "inLanguage": "zh-Hant", "isAccessibleForFree": True,
+        "mainEntityOfPage": ERRATA_URL,
+        "publisher": {"@id": f"{hl.BASE}/#org"},
+    }
+    jsonld = hl.graph_ld([
+        hl.org_node(), hl.website_node(), page_node,
+        hl.breadcrumb_node([("首頁", f"{hl.BASE}/"), (ERRATA_TITLE, ERRATA_URL)])])
+    return hl.page_shell(ERRATA_TITLE, ERRATA_LEDE, ERRATA_URL, jsonld, body,
+                         "errata", extra_css=ERRATA_CSS + ERRATA_FOOT_CSS)
+
+
 # ---------- 頁面組裝 ----------
 
 FOOT_LINE = "本站不提供診斷或治療建議。頁面整理的是各機構公開文件寫了什麼，個人數值的意義請與您的醫師討論。"
 
 
 def render_page(meta: dict, h1: str, sections: list, crit: list, hist: list,
-                intf: list, mf: dict, ids: list, labels: dict, slug: str,
-                published: bool) -> str:
+                intf: list, errata: list, mf: dict, ids: list, labels: dict,
+                slug: str, published: bool) -> str:
     url = f"{hl.BASE}/indicators/{slug}/"
     title = meta.get("title", h1)
     desc = (sections[0][1][0] if sections[0][1] else "")[:120]
@@ -792,6 +973,12 @@ def render_page(meta: dict, h1: str, sections: list, crit: list, hist: list,
             elif i == 5:                             # ⑥ 來源與版本
                 blocks.append(render_sources(meta["sources"], mf))
 
+    # 勘誤紀錄：這一頁有被改過才出現。零列時整段不存在（連 CSS 都不多一個 byte）——
+    # 空的「勘誤紀錄（0 筆）」看起來像功能沒接好，而且會讓每一頁都因為別頁的更正而變。
+    if errata:
+        blocks.append(f'<h2 class="sec-h">{esc(ERRATA_TITLE)}</h2>')
+        blocks.append(render_errata_list(errata, mf))
+
     body = ('  <main>\n'
             f'  <h1 class="pg-h1">{esc(h1)}</h1>\n'
             + "\n".join(blocks)
@@ -819,7 +1006,7 @@ def render_page(meta: dict, h1: str, sections: list, crit: list, hist: list,
                             (title, url)])])
 
     return hl.page_shell(title, desc, url, jsonld, body, "indicators",
-                         extra_css=CHART_CSS)
+                         extra_css=CHART_CSS + (ERRATA_CSS if errata else ""))
 
 
 # ---------- dormant 接線 ----------
@@ -827,11 +1014,16 @@ def render_page(meta: dict, h1: str, sections: list, crit: list, hist: list,
 LLMS_HEAD = "## 指標頁"
 
 
-def wire_llms(pages: list, llms_path: pathlib.Path, published: bool):
+def wire_llms(pages: list, llms_path: pathlib.Path, published: bool,
+              extra: list = None):
     """llms.txt 的指標頁區塊：dormant 時整塊不存在，翻開關才出現。
 
     做法是「先移除既有區塊再視情況重寫」，所以重跑幾次都一樣（build-articles.py
     每次重寫 llms.txt，本函式跑在它之後）。翻回 false 也會把區塊收乾淨。
+
+    extra＝[(標題, URL, 說明)]，接在區塊最後（站級的 /errata/ 走這裡）。☠️ 不把它
+    併進 pages：那份清單的說明句是「各機構判準並列、判準沿革與已知限制」，勘誤頁
+    不是那種頁，共用會讓 llms.txt 對它說錯話。
     """
     if not llms_path.exists():
         return
@@ -841,8 +1033,9 @@ def wire_llms(pages: list, llms_path: pathlib.Path, published: bool):
         nxt = tail.find("\n## ")
         text = head + (tail[nxt:] if nxt >= 0 else "\n")
     if published and pages:
-        lines = "\n".join(f"- [{t}]({u})：各機構判準並列、判準沿革與已知限制。"
-                          for t, u in pages)
+        rows = [(t, u, "各機構判準並列、判準沿革與已知限制。") for t, u in pages]
+        rows += list(extra or [])
+        lines = "\n".join(f"- [{t}]({u})：{d}" for t, u, d in rows)
         text = text.rstrip("\n") + f"\n\n{LLMS_HEAD}\n\n{lines}\n"
     if text != llms_path.read_text(encoding="utf-8"):
         llms_path.write_text(text, encoding="utf-8")
@@ -893,6 +1086,7 @@ def build(slugs=None, out_root=None, parts_dir=None, llms_path=None, published=N
     hl.PUBLISHED = published
 
     mf = manifest_index()
+    errata_all = load_errata()
     files = sorted(SRC_DIR.glob("*.md")) if SRC_DIR.exists() else []
     if slugs:
         files = [f for f in files if f.stem in set(slugs)]
@@ -900,7 +1094,7 @@ def build(slugs=None, out_root=None, parts_dir=None, llms_path=None, published=N
         print("ℹ️  articles/indicators/ 沒有正文檔，未生成任何指標頁。")
         return []
 
-    pages = []
+    pages, titles = [], {}
     for f in files:
         meta, h1, sections = parse_article(f)
         slug = meta.get("slug") or f.stem
@@ -925,18 +1119,37 @@ def build(slugs=None, out_root=None, parts_dir=None, llms_path=None, published=N
         ip = CRITERIA_DIR / f"{slug}-interference.json"
         intf = load_json(ip) if ip.exists() else []
 
-        html_out = render_page(meta, h1, sections, crit, hist, intf, mf,
+        errata = [e for e in errata_all if e["slug"] == slug]
+        html_out = render_page(meta, h1, sections, crit, hist, intf, errata, mf,
                                ids, labels, slug, published)
         out_dir = out_root / "indicators" / slug
         out_dir.mkdir(parents=True, exist_ok=True)
         (out_dir / "index.html").write_text(html_out, encoding="utf-8")
-        pages.append((meta.get("title", h1), f"{hl.BASE}/indicators/{slug}/"))
-        print(f"✅ /indicators/{slug}/　判準 {len(crit)} 列／沿革 {len(hist)} 列／限制 {len(intf)} 列")
+        titles[slug] = meta.get("title", h1)
+        pages.append((titles[slug], f"{hl.BASE}/indicators/{slug}/"))
+        print(f"✅ /indicators/{slug}/　判準 {len(crit)} 列／沿革 {len(hist)} 列／"
+              f"限制 {len(intf)} 列／勘誤 {len(errata)} 列")
 
+    extra = []
     if not slugs:  # 只跑部分 slug 時不清別人的輸出（平行寫手互刪頁的坑）
         prune_stale(out_root, {u.rstrip("/").rsplit("/", 1)[-1] for _, u in pages})
-    wire_sitemap(pages, parts_dir, published)
-    wire_llms(pages, llms_path, published)
+        # 站級勘誤頁只在全量 build 生成：它列的是全站，只跑一個 slug 時手上沒有
+        # 別頁的標題，生出來會是一份殘缺的清單。也不刪它（上一次全量 build 的仍有效）。
+        missing = sorted({e["slug"] for e in errata_all} - set(titles))
+        if missing:
+            raise SystemExit(
+                f"❌ data/errata.json 的 slug 指不到任何指標頁：{missing}"
+                "（勘誤要有落點；改錯 slug 的那一列會在站級頁上連到 404）。")
+        errata_dir = out_root / "errata"
+        errata_dir.mkdir(parents=True, exist_ok=True)
+        (errata_dir / "index.html").write_text(
+            render_errata_page(errata_all, mf, titles, published), encoding="utf-8")
+        print(f"✅ /errata/　勘誤 {len(errata_all)} 列")
+        extra = [(ERRATA_TITLE, ERRATA_URL, ERRATA_LLMS_DESC)]
+
+    # 勘誤頁排在最後一行：sitemap 與 llms 的指標頁區塊都以指標頁為主，站級頁墊底。
+    wire_sitemap(pages + [(t, u) for t, u, _ in extra], parts_dir, published)
+    wire_llms(pages, llms_path, published, extra)
     if not published:
         print("🔒 dormant（config/site.json published=false）：頁面已生成，"
               "但不進 sitemap／llms.txt，導覽不連。")

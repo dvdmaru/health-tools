@@ -154,7 +154,8 @@ class TestRealData(unittest.TestCase):
 class GateFixtureCase(unittest.TestCase):
     """把 gate 腳本複製到暫存目錄，餵它假資料，看它紅不紅。"""
 
-    def run_gate(self, criteria_rows, sources=None, snapshot=SNAPSHOT_BODY):
+    def run_gate(self, criteria_rows, sources=None, snapshot=SNAPSHOT_BODY,
+                 errata=None):
         tmp = pathlib.Path(tempfile.mkdtemp())
         try:
             (tmp / "scripts").mkdir()
@@ -179,6 +180,11 @@ class GateFixtureCase(unittest.TestCase):
                 json.dumps(criteria_rows, ensure_ascii=False), encoding="utf-8")
             for f in ("hba1c-history.json", "hba1c-interference.json"):
                 (tmp / "data" / "criteria" / f).write_text("[]", encoding="utf-8")
+            # errata=None＝這個 fixture 根目錄沒有 data/errata.json。gate 對「檔不在」
+            # 是不掃也不報錯（其他所有 fixture 都走這條路，等於同時驗了那個分支）。
+            if errata is not None:
+                (tmp / "data" / "errata.json").write_text(
+                    json.dumps(errata, ensure_ascii=False), encoding="utf-8")
             return subprocess.run(
                 [sys.executable, str(tmp / "scripts" / "check-receipts.py")],
                 capture_output=True, text=True, cwd=tmp)
@@ -238,6 +244,56 @@ class TestGateGoesRed(GateFixtureCase):
         self.assertEqual(1, r.returncode, r.stdout + r.stderr)
         self.assertIn("PASS 2", r.stdout)
         self.assertIn("FAIL 1", r.stdout)
+
+
+def make_erratum(**over):
+    """勘誤列的最小形狀（doc_id／quote 是選填，所以預設不給）。"""
+    row = {"id": "E1", "date": "2026-09-15", "slug": "hba1c", "section": "table",
+           "was": "篩檢分流：≥5.9%", "now": "篩檢分流（非診斷判準）：≥5.9%",
+           "reason": "原標籤沒在表上寫明這不是診斷線。"}
+    row.update(over)
+    return row
+
+
+class TestErrataReceipts(GateFixtureCase):
+    """勘誤列也要收據：填了 doc_id 就得拿得出那份文件的原文。
+
+    ☠️ 但沒填 doc_id 的列是「跳過」不是 FAIL——多數勘誤是我們自己的筆誤，本來就
+    沒有外部依據。把它判 FAIL 會逼人編一個 doc_id 出來，那才是把出處變成事後編的。
+    """
+
+    def test_document_backed_erratum_with_the_right_quote_passes(self):
+        r = self.run_gate([make_row()],
+                          errata=[make_erratum(doc_id="fixture-doc", quote=GOOD_QUOTE)])
+        self.assertEqual(0, r.returncode, r.stdout + r.stderr)
+        self.assertIn("PASS 2", r.stdout)
+        self.assertIn("FAIL 0", r.stdout)
+
+    def test_document_backed_erratum_with_a_wrong_quote_fails(self):
+        r = self.run_gate([make_row()],
+                          errata=[make_erratum(doc_id="fixture-doc", quote=BAD_QUOTE)])
+        self.assertEqual(1, r.returncode, r.stdout + r.stderr)
+        self.assertIn("errata:E1", r.stdout)
+        self.assertIn("引句在快照中找不到", r.stdout)
+
+    def test_erratum_without_a_document_is_skipped_not_failed(self):
+        r = self.run_gate([make_row()], errata=[make_erratum()])
+        self.assertEqual(0, r.returncode, r.stdout + r.stderr)
+        self.assertIn("PASS 1", r.stdout)
+        self.assertIn("FAIL 0", r.stdout)
+        self.assertNotIn("errata:E1", r.stdout)
+
+    def test_an_empty_errata_file_is_fine(self):
+        r = self.run_gate([make_row()], errata=[])
+        self.assertEqual(0, r.returncode, r.stdout + r.stderr)
+        self.assertIn("FAIL 0", r.stdout)
+
+    def test_erratum_pointing_at_an_unknown_source_fails(self):
+        r = self.run_gate([make_row()],
+                          errata=[make_erratum(doc_id="no-such-source",
+                                               quote=GOOD_QUOTE)])
+        self.assertEqual(1, r.returncode, r.stdout + r.stderr)
+        self.assertIn("不在 manifest", r.stdout)
 
 
 class TestGateSkipsHonestly(GateFixtureCase):
