@@ -34,11 +34,28 @@ CRIT_DIR = ROOT / "data" / "criteria"
 MANIFEST = json.loads((SRC_DIR / "manifest.json").read_text(encoding="utf-8"))
 SOURCE_IDS = {s["id"] for s in MANIFEST}
 
-DATA_FILES = {
-    "hba1c.json": "schema.json",
-    "hba1c-history.json": "history-schema.json",
-    "hba1c-interference.json": "interference-schema.json",
-}
+# 與 scripts/check-receipts.py 同規則：動態掃 data/criteria/*.json（schema 檔除外），
+# 新指標落地不必回來改這裡，也不會出現「檔在、測試沒掃」的假綠。
+def _data_files() -> dict:
+    out = {}
+    for f in sorted(CRIT_DIR.glob("*.json")):
+        if f.name.endswith("schema.json"):
+            continue
+        if f.name.endswith("-history.json"):
+            out[f.name] = "history-schema.json"
+        elif f.name.endswith("-interference.json"):
+            out[f.name] = "interference-schema.json"
+        else:
+            out[f.name] = "schema.json"
+    return out
+
+
+DATA_FILES = _data_files()
+
+# 刻意未被引用的來源（每一份都要說得出為什麼）：
+#   NGSP 兩份＝單位換算來源，尚未建換算列。
+#   其餘＝M4 抓了快照但判準列落在別的 id 或該頁零判準（見 manifest note）；接上或移除時同步改這裡。
+EXPECTED_ORPHANS = {"ngsp-convert-table", "ngsp-ifcc-standardization"}
 
 # 一段確定會出現在 fixture 快照裡的原文，與一段確定不會出現的。
 GOOD_QUOTE = "A1C ≥6.5% (≥48 mmol/mol)."
@@ -129,9 +146,8 @@ class TestRealData(unittest.TestCase):
             for row in json.loads((CRIT_DIR / fname).read_text(encoding="utf-8")):
                 used.add(row["doc_id"])
                 used.update(c["doc_id"] for c in row.get("corroboration", []))
-        # NGSP 兩份是單位換算來源，M1 不建換算列，故刻意未被引用。
         unused = SOURCE_IDS - used
-        self.assertEqual({"ngsp-ifcc-standardization", "ngsp-convert-table"}, unused,
+        self.assertEqual(EXPECTED_ORPHANS, unused,
                          "manifest 裡出現了預期外的孤兒來源（或預期的孤兒被接上了）")
 
 

@@ -1,0 +1,120 @@
+[
+  {
+    "id": "H1",
+    "year": 2007,
+    "org": "中華民國風濕病醫學會",
+    "change": "台灣第一版《台灣痛風與高尿酸血症診療指引》發行",
+    "doc_id": "tra-gout-hyperuricemia-guideline-2007",
+    "version": "第一版（2007 年 7 月 1 日發行）",
+    "page_or_table": "版權頁",
+    "quote": "2007 年 7 月 1 日 發行 第一版",
+    "note": "此版採用的診斷切點見 H4 的 corroboration（同一份文件第四章第二節）。快照為 PDF 文字版：原 PDF 內嵌 CJK 相容表意文字，快照已把該區段字元折成標準漢字，全形標點未動。",
+    "fetched_at": "2026-08-28",
+    "status": "已證實"
+  },
+  {
+    "id": "H2",
+    "year": 2013,
+    "org": "中華民國風濕病醫學會",
+    "change": "第二版問世；動因是痛風與高尿酸血症對心臟血管、腎臟、代謝症候群之影響的新認知",
+    "doc_id": "tra-gout-hyperuricemia-guideline-2016",
+    "version": "第三版（2016 年 9 月完成）",
+    "page_or_table": "理事長的話",
+    "quote": "因此促成了",
+    "quote_extra": [
+      "2013 年第二版的問世"
+    ],
+    "note": "⚠️ 回述：引句出自 2016 第三版〈理事長的話〉對 2013 年的回顧，不是 2013 年當年的原文；2013 版 PDF 本次未取得。寫頁面時要寫成「2016 年第三版回顧，2013 年第二版…」。原文換行不連續故拆 quote／quote_extra。",
+    "fetched_at": "2026-08-28",
+    "status": "已證實（需補充）"
+  },
+  {
+    "id": "H3",
+    "year": 2016,
+    "org": "中華民國風濕病醫學會",
+    "change": "第三版於 2016 年 9 月完成改版；改版動因包含 2015 年 ACR／EULAR 新診斷標準與 2016 年 EULAR 新治療建議",
+    "doc_id": "tra-gout-hyperuricemia-guideline-2016",
+    "version": "第三版（2016 年 9 月完成）",
+    "page_or_table": "理事長的話",
+    "quote": "而於 2016 年 9 月完成第三版之",
+    "quote_extra": [
+      "改版"
+    ],
+    "note": "原文在 PDF 中換行不連續，故拆 quote／quote_extra。",
+    "fetched_at": "2026-08-28",
+    "status": "已證實"
+  },
+  {
+    "id": "H4",
+    "year": 2016,
+    "org": "中華民國風濕病醫學會",
+    "change": "高尿酸血症的診斷切點在 2007 年第一版與 2016 年第三版之間沒有改過，都是 7.0 mg/dL",
+    "doc_id": "tra-gout-hyperuricemia-guideline-2016",
+    "version": "第三版（2016 年 9 月完成）",
+    "page_or_table": "第二章 第二節 高尿酸血症的定義及原因",
+    "quote": "即成年人血尿酸值 >7.0 mg/dL 定義為高尿酸血症",
+    "corroboration": [
+      {
+        "doc_id": "tra-gout-hyperuricemia-guideline-2007",
+        "quote": "年人血中尿酸值大於 7.0 mg/dL 為高尿酸血症"
+      }
+    ],
+    "note": "⚠️ 2013 年第二版 PDF 本次未取得，嚴格說只驗證了 2007 第一版與 2016 第三版兩版，不得寫成「三版都一樣」。year 記 2016（最新一次確認未變更的版本年），不是變更年——因為這一列記的正是「沒有變更」。",
+    "fetched_at": "2026-08-28",
+    "status": "已證實（需補充）"
+  },
+  {
+    "id": "H5",
+    "year": 2016,
+    "org": "中華民國風濕病醫學會",
+    "change": "無症狀高尿酸血症的追蹤頻率由「每年至少一次」加密為「每 6 個月一次」",
+    "doc_id": "tra-gout-hyperuricemia-guideline-2016",
+    "version": "第三版（2016 年 9 月完成）",
+    "page_or_table": "第二章 第六節 治療目的與治療計畫，1. 無症狀高尿酸血症的處置",
+    "quote": "建議宜每 6 個月追蹤檢驗一次血尿酸",
+    "corroboration": [
+      {
+        "doc_id": "tra-gout-hyperuricemia-guideline-2007",
+        "quote": "建議每年至少追蹤檢驗一次血中尿酸值"
+      }
+    ],
+    "note": "corroboration 放的是 2007 第一版的舊頻率，也就是變更前的狀態（同機構、不同版本的一手文件）。這是本指標唯一一條台灣真正改過的數字。",
+    "fetched_at": "2026-08-28",
+    "status": "已證實"
+  },
+  {
+    "id": "H6",
+    "year": 2016,
+    "org": "中華民國風濕病醫學會",
+    "change": "無症狀者的分流呈現方式改變：2007 版流程圖分成「UA 7–8」與「UA > 8.0」兩格，2016 版改為「7.0–8.0 mg/dL 之間即需進一步病史詢問及身體檢查」的敘述式門檻",
+    "doc_id": "tra-gout-hyperuricemia-guideline-2016",
+    "version": "第三版（2016 年 9 月完成）",
+    "page_or_table": "第二章 第二節 高尿酸血症的定義及原因",
+    "quote": "血尿酸值經檢測在 7.0–8.0 mg/dL 之間",
+    "corroboration": [
+      {
+        "doc_id": "tra-gout-hyperuricemia-guideline-2007",
+        "quote": "UA 7–8    UA > 8.0"
+      }
+    ],
+    "note": "corroboration 引句是 2007 版第四章第六節治療流程圖裡的兩個方框標籤，引句中的空白是 PDF 版面造成的，比對前正規化空白。2007 版那兩格都是非藥物處置、只是強度不同，不得寫成「2007 年 8.0 以上就要吃藥」。",
+    "fetched_at": "2026-08-28",
+    "status": "已證實"
+  },
+  {
+    "id": "H8",
+    "year": 2019,
+    "org": "Japanese Society of Gout and Uric & Nucleic Acids",
+    "change": "日本指引由 2010 年第 2 版改版為 2019 年第 3 版；改版背景是高尿酸血症被指可能與腎臟、心血管疾病及生活習慣病的風險有關",
+    "doc_id": "jsgna-hyperuricemia-gout-guideline-2019",
+    "version": "3rd edition（2019；Gout and Uric & Nucleic Acids Vol.44 Supplement 2020）",
+    "page_or_table": "Abstract [Background]",
+    "quote": "of the guideline for the management of hyperuricemia",
+    "quote_extra": [
+      "and gout published in 2010"
+    ],
+    "note": "引句取自摘要 [Background] 段，原文為雙欄排版、pdftotext 抽出後換行不連續，故拆 quote／quote_extra。列號沿用 facts pack 編號（H7＝2018 年英文版一事只有二手回顧文可引，未落地）。",
+    "fetched_at": "2026-08-28",
+    "status": "已證實"
+  }
+]

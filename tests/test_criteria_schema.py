@@ -141,5 +141,79 @@ class TestAssertions(unittest.TestCase):
             ITEM_VALIDATOR.validate(bad)
 
 
+# M4 新增的兩個 category。fixture 用真的來源會裝的形狀（血壓分級、腰圍風險門檻），
+# 不是剛好符合 schema 的假資料。
+FIXTURE_CLASSIFICATION = {
+    "indicator_id": "sbp",
+    "org": "衛生福利部國民健康署",
+    "doc_id": "hpa-hypertension-topic-page",
+    "version": "2025",
+    "category": "classification",
+    "lower": 130,
+    "upper": 139,
+    "unit": "mmHg",
+    "population": "成人",
+    "page_or_table": "高血壓分類表",
+    "quote": "收縮壓 130-139 mmHg",
+    "fetched_at": "2026-08-28",
+}
+
+FIXTURE_RISK_THRESHOLD = {
+    "indicator_id": "waist",
+    "org": "衛生福利部國民健康署",
+    "doc_id": "hpa-metabolic-syndrome-topic-page",
+    "version": "2025",
+    "category": "risk_threshold",
+    "lower": 90,
+    "upper": None,
+    "unit": "cm",
+    "population": "男性",
+    "page_or_table": "代謝症候群判定標準",
+    "quote": "腰圍：男性 ≥90cm",
+    "fetched_at": "2026-08-28",
+}
+
+
+class TestNewCategories(unittest.TestCase):
+    """classification／risk_threshold：M4 的血壓分級與腰圍風險線要裝得進來。
+
+    ☠️ 這兩類與 diagnosis 的分界寫在 category 的 description 裡，不是口耳相傳的：
+    把腰圍 ≥90 cm 標成 diagnosis，頁面就會把「腰圍超標」講成一個診斷。
+    """
+
+    ENUM = SCHEMA["$defs"]["criterion"]["properties"]["category"]["enum"]
+    DESC = SCHEMA["$defs"]["criterion"]["properties"]["category"]["description"]
+
+    def test_both_are_in_the_whitelist(self):
+        for c in ("classification", "risk_threshold"):
+            with self.subTest(category=c):
+                self.assertIn(c, self.ENUM)
+
+    def test_each_new_fixture_validates(self):
+        for fx in (FIXTURE_CLASSIFICATION, FIXTURE_RISK_THRESHOLD):
+            with self.subTest(category=fx["category"]):
+                ITEM_VALIDATOR.validate(fx)
+
+    def test_open_ended_risk_threshold_keeps_null_upper(self):
+        self.assertIsNone(FIXTURE_RISK_THRESHOLD["upper"])
+        ITEM_VALIDATOR.validate(FIXTURE_RISK_THRESHOLD)
+
+    def test_description_draws_the_line_against_diagnosis_and_triage(self):
+        """新類別的 description 必須說清楚它跟哪些既有類別不一樣，否則白名單只是清單。"""
+        for c in ("classification", "risk_threshold"):
+            with self.subTest(category=c):
+                self.assertIn(c, self.DESC, f"{c} 沒有在 description 裡說明分界")
+        self.assertIn("diagnosis", self.DESC)
+        self.assertIn("screening_triage", self.DESC)
+
+    def test_a_typo_of_the_new_categories_is_still_rejected(self):
+        """陰性對照：白名單沒放寬，只是多了兩個具名值。"""
+        for bad_value in ("分級", "risk-threshold", "classifications"):
+            with self.subTest(value=bad_value):
+                with self.assertRaises(Exception):
+                    ITEM_VALIDATOR.validate(
+                        {**FIXTURE_CLASSIFICATION, "category": bad_value})
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -11,14 +11,16 @@
 | 檔 | 是什麼 | 每列必有 | ⛔ 沒有、也不准加 |
 |---|---|---|---|
 | `data/sources/manifest.json` | 來源登記簿（一份文件一筆） | `id`／`org`／`url`／`version_or_date`／`fetched_at`／`sha256`／`license_bucket` | 摘要、我們對它的評價 |
-| `data/criteria/<indicator>.json` | 判準**明細列**（一機構×一文件×一判定類別＝一列） | `indicator_id`／`org`／`doc_id`／`category`／`lower`／`upper`／`unit`／`population`／`page_or_table`／`quote` | **任何彙總欄**（正常值、建議值、平均、「多數機構認為」） |
-| `data/criteria/<indicator>-history.json` | 判準變更事件 | `year`／`org`／`change`／`doc_id`／`quote`／`status` | 未證實的事件（`status` 不是 verified 就不渲染） |
-| `data/criteria/<indicator>-interference.json` | 使數值失真的因素 | `direction`／`factor`／`org`／`doc_id`／`quote` | 猜的方向（來源沒說就 `unspecified`） |
+| `data/criteria/<slug>.json` | 判準**明細列**（一機構×一文件×一指標×一判定類別＝一列；一個檔可裝多個 `indicator_id`） | `indicator_id`／`org`／`doc_id`／`category`／`lower`／`upper`／`unit`／`population`／`page_or_table`／`quote` | **任何彙總欄**（正常值、建議值、平均、「多數機構認為」） |
+| `data/criteria/<slug>-history.json` | 判準變更事件 | `year`／`org`／`change`／`doc_id`／`quote`／`status` | 未證實的事件（`status` 不是 verified 就不渲染） |
+| `data/criteria/<slug>-interference.json` | 使數值失真的因素 | `direction`／`factor`／`org`／`doc_id`／`quote` | 猜的方向（來源沒說就 `unspecified`） |
 
 - **頁面上的每個數字都必須回指到某一列，該列的 `quote` 必須 grep 得回該來源的快照**（`scripts/check-receipts.py`）。沒有列＝不渲染，不是「先寫再補」。
 - `quote` 逐字照抄來源，含來源自己的 ≧／≥、mg/dl／mg/dL 不一致；**不美化、不翻譯、不合併兩段**（不連續的原文用 `quote_extra`）。
 - 「正常／偏高」是對明細列 filter 出來的結果，**永遠不是一個存起來的欄位**。
 - 同一指標多機構判準不一致時**並列、各綁版本，不選邊**；WHO 沒訂前期＝`no_criterion_stated`，不是空白也不是套 ADA 的值。
+- **三個資料檔以「頁面 slug」定位，不是 indicator_id**；「這頁收哪些 `indicator_id`」是 `articles/indicators/<slug>.md` frontmatter 的 `indicator_ids` 決定的（單數 `indicator_id` 仍支援）。多指標頁的中文短標籤只能來自 frontmatter 的 `indicator_labels`，**缺一個就中止**——生成器不從 id 造中文，也不從單位猜。
+- **`classification` 與 `risk_threshold` 都不是 `diagnosis`**：前者＝來源把連續數值切成具名等級（高血壓第一期、BMI 過重），後者＝來源說超過此值風險升高但沒說它構成診斷（腰圍 ≥90 cm）。`risk_threshold` 也不是 `screening_triage`（那是指向下一項檢查的流程門檻）。☠️ 標錯就會在頁面上把「腰圍超標」講成一個診斷。
 
 ## 2. 來源契約 — 三桶授權，抓法有雷
 
@@ -38,6 +40,7 @@
 - **coverage window（不上線）**：治療建議、用藥、就醫科別／機構導引、保健品、任何商品名（試驗設計轉述除外）、民眾資料輸入。
 - 禁詞 gate `scripts/check-health-terms.py`（資料 `config/banned-terms.json`，五類）；`absolute` 命中 exit 1。**gate 擋不住的**：語意升級（「相關」→「導致」、「建議考慮」→「應該」）、品牌名窮舉、119 例外句前面有沒有真的列急症徵象——這些只能人審，寫手 brief 的語意強度鎖表是人審的依據。
 - 指標頁六段固定結構（是什麼／各機構判準並列／何時改過／何時失真／可以和醫師討論什麼／來源與版本）；判準表與來源段**由生成器從 `data/` 產出**，正文 md 內出現手寫表格＝build fail（防雙源）。
+- 圖上的顏色語意＝**機構屬性**（`tw-gov`／`tw-society`／`intl`／`us`／`other`），不是逐個機構挑色票；名單外的機構一律 fallback 灰＋機構全名。圖例上的類別文字（「淡色帶＝…」）由該頁的資料推導，**不得寫死**——寫死「糖尿病前期」，血壓頁就會安靜地說錯話。
 - 衛教句統一「可以和醫師討論」，不用「建議就診」。
 
 ## 4. 發布契約

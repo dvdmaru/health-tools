@@ -51,6 +51,8 @@
             "diagnosis",
             "prediabetes",
             "screening_triage",
+            "classification",
+            "risk_threshold",
             "method_requirement",
             "confirmation_procedure",
             "retest_timing",
@@ -63,7 +65,7 @@
             "policy_change",
             "definition"
           ],
-          "description": "判定類別白名單。☠️ 分類是判準的一部分，不是標籤：把『篩檢分流門檻』標成 diagnosis，就會在頁面上把操作門檻講成診斷線。要新增類別必須先改這份白名單並說明它與既有類別的差別，不得就地自創。\n\n兩個易混類別的分界：\n・no_criterion_stated＝來源明文說自己「證據不足、不作正式建議」，也就是該機構在這個區間根本沒有判準；exclusion_rule＝來源給出了一條規則（例：低於某值不排除診斷）。把 no_criterion_stated 標成 prediabetes 會憑空生出一條 WHO 從未訂過的前期判準。\n・definition＝來源對「這個數字量的是什麼」的定義敘述，不帶數值界線（lower/upper 為 null）；method_requirement 講的是「怎麼驗才算數」，兩者不可互換。"
+          "description": "判定類別白名單。☠️ 分類是判準的一部分，不是標籤：把『篩檢分流門檻』標成 diagnosis，就會在頁面上把操作門檻講成診斷線。要新增類別必須先改這份白名單並說明它與既有類別的差別，不得就地自創。\n\n兩個易混類別的分界：\n・no_criterion_stated＝來源明文說自己「證據不足、不作正式建議」，也就是該機構在這個區間根本沒有判準；exclusion_rule＝來源給出了一條規則（例：低於某值不排除診斷）。把 no_criterion_stated 標成 prediabetes 會憑空生出一條 WHO 從未訂過的前期判準。\n・definition＝來源對「這個數字量的是什麼」的定義敘述，不帶數值界線（lower/upper 為 null）；method_requirement 講的是「怎麼驗才算數」，兩者不可互換。\n・classification＝來源自己把一段連續數值切成**具名的等級**並給了名字（高血壓第一期、BMI 過重、血脂『邊際高』）；一列＝一個等級。它不是 diagnosis：來源給的是這個數值落在哪一級的稱呼，不是「符合此值即診斷為某病」。也不是 prediabetes：那是糖尿病線專用的前期區間，不要拿來裝其他指標的等級。\n・risk_threshold＝來源說**超過此值風險升高／建議留意**，但明白地沒有把它當成診斷（腰圍 ≥90 cm 的代謝症候群風險線、非 HDL-C 的關注值）。它不是 diagnosis（來源沒說這是診斷），也不是 screening_triage（那是「要不要再做下一項檢查」的流程分流門檻，來源會指出接下來做什麼；risk_threshold 只講風險，不指向下一步）。☠️ 把 risk_threshold 標成 diagnosis，就會在頁面上把「腰圍超標」講成一個診斷。"
         },
         "lower": {
           "type": [

@@ -1,0 +1,250 @@
+[
+  {
+    "id": "H1",
+    "year": 2001,
+    "org": "National Cholesterol Education Program（National Heart, Lung, and Blood Institute, National Institutes of Health）",
+    "change": "NCEP ATP III 執行摘要發布（NIH Publication No. 01-3670，2001 年 5 月）；2002 年 9 月再發布 Final Report 全文（NIH Publication No. 02-5215）",
+    "doc_id": "nhlbi-ncep-atp3-executive-summary-2001",
+    "version": "2001（NIH Publication No. 01-3670）",
+    "page_or_table": "封面／版權頁",
+    "quote": "NIH Publication No. 01-3670",
+    "quote_extra": [
+      "May 2001"
+    ],
+    "corroboration": [
+      {
+        "doc_id": "nhlbi-ncep-atp3-final-report-2002",
+        "quote": "NIH Publication No. 02-5215"
+      },
+      {
+        "doc_id": "nhlbi-ncep-atp3-final-report-2002",
+        "quote": "September 2002"
+      }
+    ],
+    "status": "已證實",
+    "fetched_at": "2026-08-28",
+    "note": "一手：文件自身版權頁。corroboration 為 2002 年 Final Report 全文的版權頁。"
+  },
+  {
+    "id": "H2",
+    "year": 2001,
+    "org": "National Cholesterol Education Program（National Heart, Lung, and Blood Institute, National Institutes of Health）",
+    "change": "相對 ATP II，首次把 LDL 膽固醇 <100 mg/dL 定義為 optimal（理想）",
+    "doc_id": "nhlbi-ncep-atp3-executive-summary-2001",
+    "version": "2001（NIH Publication No. 01-3670）",
+    "page_or_table": "Table 1「New Features of ATP III」",
+    "quote": "■ Identifies LDL cholesterol <100 mg/dL as optimal.",
+    "status": "已證實",
+    "fetched_at": "2026-08-28",
+    "note": "一手：ATP III 自列的新增特點清單。"
+  },
+  {
+    "id": "H3",
+    "year": 2001,
+    "org": "National Cholesterol Education Program（National Heart, Lung, and Blood Institute, National Institutes of Health）",
+    "change": "HDL「偏低」的門檻由 ATP II 的 <35 mg/dL 上調為 <40 mg/dL",
+    "doc_id": "nhlbi-ncep-atp3-executive-summary-2001",
+    "version": "2001（NIH Publication No. 01-3670）",
+    "page_or_table": "Table 1「New Features of ATP III」",
+    "quote": "■ Raises categorical low HDL cholesterol from <35 mg/dL to <40 mg/dL because the latter is a better measure of a depressed HDL.",
+    "quote_extra": [
+      "low HDL cholesterol is defined categorically as a level <40 mg/dL, a change from the level of <35 mg/dL in ATP II."
+    ],
+    "status": "已證實",
+    "fetched_at": "2026-08-28",
+    "note": "⚠️ 方向最容易被寫反：35→40 是把門檻往上調（更多人被判為偏低），不是收緊。文件內兩處互證（quote_extra 為正文同義句）。"
+  },
+  {
+    "id": "H4",
+    "year": 2001,
+    "org": "National Cholesterol Education Program（National Heart, Lung, and Blood Institute, National Institutes of Health）",
+    "change": "三酸甘油酯的分級切點整體下修，以便對「中度升高」給予更多注意",
+    "doc_id": "nhlbi-ncep-atp3-executive-summary-2001",
+    "version": "2001（NIH Publication No. 01-3670）",
+    "page_or_table": "Table 1「New Features of ATP III」",
+    "quote": "■ Lowers the triglyceride classification cutpoints to give more attention to moderate elevations.",
+    "status": "已證實（需補充）",
+    "fetched_at": "2026-08-28",
+    "note": "⚠️ ATP III 未在此句列出 ATP II 的舊切點數字，本輪也未取得 ATP II 原文——不得寫「TG 從 ○○ 降到 150」，只能寫「下修了切點」。"
+  },
+  {
+    "id": "H5",
+    "year": 2001,
+    "org": "National Cholesterol Education Program（National Heart, Lung, and Blood Institute, National Institutes of Health）",
+    "change": "改為建議完整脂蛋白全套（總膽固醇＋LDL＋HDL＋三酸甘油酯）為首選初檢，取代只驗總膽固醇＋HDL",
+    "doc_id": "nhlbi-ncep-atp3-executive-summary-2001",
+    "version": "2001（NIH Publication No. 01-3670）",
+    "page_or_table": "Table 1「New Features of ATP III」",
+    "quote": "■ Recommends a complete lipoprotein profile (total cholesterol, LDL cholesterol, HDL cholesterol, and triglycerides) as the preferred initial test, rather than screening for total cholesterol and HDL alone.",
+    "status": "已證實",
+    "fetched_at": "2026-08-28",
+    "note": "一手。"
+  },
+  {
+    "id": "H6",
+    "year": 2013,
+    "org": "American College of Cardiology／American Heart Association",
+    "change": "2013 ACC/AHA 膽固醇指引放棄 LDL-C 目標值，改為固定強度 statin、不做劑量滴定至特定 LDL 值",
+    "doc_id": "ades-2013-acc-aha-cholesterol-commentary-2014",
+    "version": "2014（Coron Artery Dis 2014;25(4):360–363）",
+    "page_or_table": "節標題「Not treating to goal」及該節正文",
+    "quote": "Not treating to goal",
+    "quote_extra": [
+      "none of the RCTs that were used to establish the benefits of statins treated and titrated dosing to an LDL goal"
+    ],
+    "corroboration": [
+      {
+        "doc_id": "tas-taiwan-lipid-high-risk-2017",
+        "quote": "2013 ACC/AHA guidelines did not recommend the target"
+      },
+      {
+        "doc_id": "tas-taiwan-lipid-high-risk-2017",
+        "quote": "level of LDL-C."
+      }
+    ],
+    "status": "已證實（需補充）",
+    "fetched_at": "2026-08-28",
+    "note": "☠️ 回述，非一手：本輪未取得 2013 指引原文。quote 來自 2014 年的第三方評論（Ades PA），corroboration 來自 2017 台灣血脂指引的回顧句（該句在雙欄 PDF 被切成兩行，故拆兩則 corroboration）。寫頁面時必須寫成「依 2014 年的評論／2017 台灣指引回顧，2013 ACC/AHA…」，不要寫成「2013 指引說…」。"
+  },
+  {
+    "id": "H7",
+    "year": 2013,
+    "org": "American College of Cardiology／American Heart Association",
+    "change": "同一改變的另一面：既有 ASCVD 者不再被要求治到 LDL <100 或 <70，改為固定劑量 statin",
+    "doc_id": "ades-2013-acc-aha-cholesterol-commentary-2014",
+    "version": "2014（Coron Artery Dis 2014;25(4):360–363）",
+    "page_or_table": "正文（治療策略段）",
+    "quote": "treatment with an appropriate fixed dose of a statin, without titration to a specific low-density lipoprotein goal",
+    "status": "已證實（需補充）",
+    "fetched_at": "2026-08-28",
+    "note": "☠️ 回述，非一手：同 H6，來源是 2014 年的第三方評論。"
+  },
+  {
+    "id": "H8",
+    "year": 2018,
+    "org": "American Heart Association／American College of Cardiology 等多學會聯合（AHA/ACC/AACVPR/AAPA/ABC/ACPM/ADA/AGS/APhA/ASPC/NLA/PCNA）",
+    "change": "重新引入 LDL-C 數值門檻：極高風險 ASCVD 者以 LDL-C 70 mg/dL 作為「是否加上非 statin 藥物」的門檻",
+    "doc_id": "acc-aha-blood-cholesterol-guideline-2018",
+    "version": "2018",
+    "page_or_table": "Top 10 Take-Home Messages 第 5 條",
+    "quote": "In very high-risk ASCVD, use a LDL-C threshold of 70 mg/dL (1.8 mmol/L) to consider addition of nonstatins to statin therapy.",
+    "status": "已證實",
+    "fetched_at": "2026-08-28",
+    "note": "⚠️ 用字很重要：2018 原文用的是 threshold（門檻），不是 2001 式的 goal（目標值）。這是治療決策門檻，依主席裁決不進判準表，只登錄在變更史。"
+  },
+  {
+    "id": "H9",
+    "year": 2018,
+    "org": "American Heart Association／American College of Cardiology 等多學會聯合（AHA/ACC/AACVPR/AAPA/ABC/ACPM/ADA/AGS/APhA/ASPC/NLA/PCNA）",
+    "change": "二手摘要把 H8 描述為「分層 LDL-C 目標已被重新引入」",
+    "doc_id": "jama-blood-cholesterol-synopsis-2019",
+    "version": "2019（JAMA 2019;321(8):800–801）",
+    "page_or_table": "Synopsis 正文",
+    "quote": "Stratified LDL-C goals have been reintroduced for patients with clinical ASCVD.",
+    "status": "已證實（需補充）",
+    "fetched_at": "2026-08-28",
+    "note": "☠️ 這一列證實的是「該二手來源確實這樣寫」，不是「原指引這樣寫」。JAMA 摘要用 goals、原指引（H8）用 threshold。寫「2018 恢復了目標值」必須註明這是二手摘要的措辭。"
+  },
+  {
+    "id": "H10",
+    "year": 2018,
+    "org": "American Heart Association／American College of Cardiology 等多學會聯合（AHA/ACC/AACVPR/AAPA/ABC/ACPM/ADA/AGS/APhA/ASPC/NLA/PCNA）",
+    "change": "血脂篩檢改為空腹或非空腹皆可（相對 ATP III 2001 的必須空腹）",
+    "doc_id": "acc-aha-blood-cholesterol-guideline-2018",
+    "version": "2018",
+    "page_or_table": "4.4. Primary Prevention",
+    "quote": "Screening can be performed with fasting or nonfasting measurement of lipids.",
+    "corroboration": [
+      {
+        "doc_id": "nhlbi-ncep-atp3-executive-summary-2001",
+        "quote": "In all adults aged 20 years or older, a fasting lipoprotein profile (total cholesterol, LDL cholesterol, high density lipoprotein (HDL) cholesterol, and triglyceride) should be obtained once every 5 years."
+      }
+    ],
+    "status": "已證實",
+    "fetched_at": "2026-08-28",
+    "note": "兩端皆一手：舊規定見 corroboration（ATP III 2001）。台灣現行採檢作業規定本輪查無，不得斷言。"
+  },
+  {
+    "id": "H11",
+    "year": 2018,
+    "org": "American Heart Association／American College of Cardiology 等多學會聯合（AHA/ACC/AACVPR/AAPA/ABC/ACPM/ADA/AGS/APhA/ASPC/NLA/PCNA）",
+    "change": "代謝症候群的三酸甘油酯門檻由 ATP III 的 ≥150 mg/dL 改為 >175 mg/dL",
+    "doc_id": "acc-aha-blood-cholesterol-guideline-2018",
+    "version": "2018",
+    "page_or_table": "Table 6",
+    "quote": "Metabolic syndrome (increased waist circumference, elevated triglycerides [>175 mg/dL], elevated blood pressure, elevated glucose, and low HDL-C [<40 mg/dL in men; <50 in women mg/dL] are factors; tally of 3 makes the diagnosis)",
+    "corroboration": [
+      {
+        "doc_id": "nhlbi-ncep-atp3-executive-summary-2001",
+        "quote": "Triglycerides ≥150 mg/dL"
+      }
+    ],
+    "status": "已證實",
+    "fetched_at": "2026-08-28",
+    "note": "兩端皆一手：舊值見 corroboration（ATP III Table 8）。⚠️ 台灣（2022 TAS 指引與國健署）用的仍是 150，不是 175。"
+  },
+  {
+    "id": "H12",
+    "year": 2017,
+    "org": "台灣血脂及動脈硬化學會（Taiwan Society of Lipids and Atherosclerosis）等八學會",
+    "change": "台灣第一份現行血脂指引：2017 Taiwan Lipid Guidelines for High Risk Patients，只涵蓋高風險族群",
+    "doc_id": "tas-taiwan-lipid-primary-prevention-2022",
+    "version": "2022",
+    "page_or_table": "Introduction",
+    "quote": "The Taiwan Society of Lipids and Atherosclerosis, in asso-",
+    "quote_extra": [
+      "ciation with seven other major societies in Taiwan, pub-",
+      "lished the Taiwan Lipid Guidelines for High Risk Patients in",
+      "2017.10"
+    ],
+    "status": "已證實（需補充）",
+    "fetched_at": "2026-08-28",
+    "note": "☠️ 回述：引句取自 2022 初級預防指引對 2017 版沿革的敘述（2017 原文本身亦在手，可另行覆核）。原 PDF 為雙欄排版，pdftotext -layout 會把左右欄交錯，整句無法連續 grep；quote 與 quote_extra 是原文同一句在轉檔後被切開的相鄰片段，合起來即原句。原文的 ≥ 在轉檔後為控制字元 \\x15。"
+  },
+  {
+    "id": "H13",
+    "year": 2022,
+    "org": "台灣血脂及動脈硬化學會（Taiwan Society of Lipids and Atherosclerosis）等八學會",
+    "change": "2022 focused update：更新冠狀動脈疾病／周邊動脈疾病／缺血性中風的 LDL-C 目標",
+    "doc_id": "tas-taiwan-lipid-focused-update-2022",
+    "version": "2022",
+    "page_or_table": "標題頁",
+    "quote": "2022 focused update of the 2017 Taiwan lipid guidelines for high risk patients: Coronary artery disease, peripheral artery disease and ischemic stroke",
+    "status": "已證實",
+    "fetched_at": "2026-08-28",
+    "note": "一手：文件標題頁。"
+  },
+  {
+    "id": "H14",
+    "year": 2022,
+    "org": "台灣血脂及動脈硬化學會（Taiwan Society of Lipids and Atherosclerosis）等八學會",
+    "change": "2022 初級預防指引：首次補上「非高風險族群」——2017 版明言未涵蓋這群人",
+    "doc_id": "tas-taiwan-lipid-primary-prevention-2022",
+    "version": "2022",
+    "page_or_table": "Introduction",
+    "quote": "The management of dyslipidemia for subjects without",
+    "quote_extra": [
+      "the above-mentioned high risk features was not mentioned",
+      "in the 2017 guidelines."
+    ],
+    "status": "已證實",
+    "fetched_at": "2026-08-28",
+    "note": "一手。原 PDF 為雙欄排版，pdftotext -layout 會把左右欄交錯，整句無法連續 grep；quote 與 quote_extra 是原文同一句在轉檔後被切開的相鄰片段，合起來即原句。原文的 ≥ 在轉檔後為控制字元 \\x15。"
+  },
+  {
+    "id": "H15",
+    "year": 2022,
+    "org": "台灣血脂及動脈硬化學會（Taiwan Society of Lipids and Atherosclerosis）等八學會",
+    "change": "台灣刻意不跟 2013 ACC/AHA 的「不設目標」路線，維持傳統的目標值取向",
+    "doc_id": "tas-taiwan-lipid-primary-prevention-2022",
+    "version": "2022",
+    "page_or_table": "Risk category 段",
+    "quote": "This primary prevention guideline decides to keep a con-",
+    "quote_extra": [
+      "ventional target approach and the LDL-C treatment targets"
+    ],
+    "status": "已證實",
+    "fetched_at": "2026-08-28",
+    "note": "一手。這是台灣與美國路線分歧的關鍵一句。原 PDF 為雙欄排版，pdftotext -layout 會把左右欄交錯，整句無法連續 grep；quote 與 quote_extra 是原文同一句在轉檔後被切開的相鄰片段，合起來即原句。原文的 ≥ 在轉檔後為控制字元 \\x15。"
+  }
+]

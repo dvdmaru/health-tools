@@ -191,8 +191,8 @@ class DormantWiring(unittest.TestCase):
     def test_published_writes_sitemap_part_and_llms_entry(self):
         with tempfile.TemporaryDirectory() as d:
             html, pages, out, parts, llms = build_into(pathlib.Path(d), published=True)
-            self.assertEqual((parts / "indicators.txt").read_text(encoding="utf-8"),
-                             f"https://health.twtools.cc/indicators/{SLUG}/\n")
+            self.assertIn(f"https://health.twtools.cc/indicators/{SLUG}/\n",
+                          (parts / "indicators.txt").read_text(encoding="utf-8"))
             self.assertIn(f"/indicators/{SLUG}/", llms.read_text(encoding="utf-8"))
             self.assertIn('<a href="/indicators/"', html)
 
@@ -327,6 +327,286 @@ class TextWrapping(unittest.TestCase):
         for width in (10, 15, 22, 30):
             for line in gen.wrap_cjk(src, width):
                 self.assertNotIn(line[-1], "（「《")
+
+
+# ---------- 一頁多指標（M4：blood-pressure／lipids／bmi-waist） ----------
+
+# fixture 用真的 doc_id（manifest 裡有）與真的 category 白名單值，只有指標與數值是造的：
+# 造一份「剛好符合生成器」的假資料，驗不到 source_ref 與 category 這兩條會炸的路。
+MULTI_SLUG = "bp-fixture"
+MULTI_DOC = "ada-standards-of-care-2026"
+
+MULTI_MD = """---
+title: 血壓（收縮壓／舒張壓）
+indicator_ids: [sbp, dbp]
+indicator_labels: {sbp: 收縮壓, dbp: 舒張壓}
+slug: bp-fixture
+status: draft
+updated: 2026-08-28
+sources: [ada-standards-of-care-2026]
+---
+
+# 血壓（收縮壓／舒張壓）
+
+## 一段
+
+第一段。
+
+## 二段
+
+第二段。
+
+## 三段
+
+第三段。
+
+## 四段
+
+第四段。
+
+## 五段
+
+第五段。
+
+## 六段
+
+第六段。
+"""
+
+
+def _fixture_row(iid, category, lower, upper, unit):
+    return {
+        "indicator_id": iid, "org": "American Diabetes Association",
+        "doc_id": MULTI_DOC, "version": "2026", "category": category,
+        "lower": lower, "upper": upper, "unit": unit, "population": "成人",
+        "page_or_table": "Sec. 10", "quote": "fixture quote",
+        "fetched_at": "2026-08-28",
+    }
+
+
+MULTI_ROWS = [
+    _fixture_row("sbp", "classification", 130, 139, "mmHg"),
+    _fixture_row("sbp", "risk_threshold", 140, None, "mmHg"),
+    _fixture_row("dbp", "classification", 80, 89, "mmHg"),
+    # 不在 TABLE_CATEGORIES 的列：不得進表，也不得畫上數線。
+    _fixture_row("sbp", "method_requirement", None, None, None),
+    # 這頁沒宣告的 indicator_id：同一個檔可以放別的指標，但不屬於這一頁。
+    _fixture_row("map", "classification", 90, 99, "mmHg"),
+]
+
+
+def build_fixture_page(tmp: pathlib.Path, md: str, rows: list, slug: str = MULTI_SLUG):
+    """把 fixture 的 md 與 criteria 餵給 build()，回傳生成的 HTML。不動 repo 內的檔。"""
+    src = tmp / "articles"
+    src.mkdir(parents=True, exist_ok=True)
+    (src / f"{slug}.md").write_text(md, encoding="utf-8")
+    crit = tmp / "criteria"
+    crit.mkdir(parents=True, exist_ok=True)
+    (crit / f"{slug}.json").write_text(
+        json.dumps(rows, ensure_ascii=False, indent=2), encoding="utf-8")
+    out = tmp / "public-health"
+    out.mkdir(parents=True, exist_ok=True)
+    llms = out / "llms.txt"
+    llms.write_text("# 健檢數據誌\n\n## 引用說明\n\n- 一行。\n", encoding="utf-8")
+
+    keep = (gen.SRC_DIR, gen.CRITERIA_DIR)
+    gen.SRC_DIR, gen.CRITERIA_DIR = src, crit
+    try:
+        gen.build(out_root=out, parts_dir=tmp / "parts", llms_path=llms, published=False)
+    finally:
+        gen.SRC_DIR, gen.CRITERIA_DIR = keep
+    return (out / "indicators" / slug / "index.html").read_text(encoding="utf-8")
+
+
+class MultiIndicatorPage(unittest.TestCase):
+    """一頁多指標：判準表多一欄「指標」，每個 indicator_id 各一條數線。"""
+
+    def setUp(self):
+        self.tmp = pathlib.Path(tempfile.mkdtemp())
+        self.html = build_fixture_page(self.tmp, MULTI_MD, MULTI_ROWS)
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def test_table_gains_an_indicator_column_from_the_frontmatter_labels(self):
+        self.assertIn("<th>指標</th>", self.html)
+        cells = table_cells(self.html)
+        self.assertEqual(["收縮壓", "收縮壓", "舒張壓"], [c[0] for c in cells])
+        for row in cells:
+            self.assertEqual(5, len(row), "多指標頁的判準表是五欄（指標在最前）")
+
+    def test_only_declared_indicators_and_table_categories_are_rendered(self):
+        cells = table_cells(self.html)
+        self.assertEqual(3, len(cells), "只收 indicator_ids 內、category 在白名單的列")
+        self.assertNotIn("90–99", self.html, "未宣告的 indicator_id 不得進這一頁")
+
+    def test_one_number_line_per_indicator_titled_by_label_and_unit(self):
+        self.assertEqual(2, self.html.count('<figure class="chart">'))
+        self.assertIn('<figcaption class="ct">收縮壓（mmHg）</figcaption>', self.html)
+        self.assertIn('<figcaption class="ct">舒張壓（mmHg）</figcaption>', self.html)
+
+    def test_axis_is_derived_per_indicator_when_not_named_in_AXIS(self):
+        """AXIS 沒列名的指標由該指標自己的 min／max 推導，不借用別的指標的視窗。"""
+        saved = {k: gen.AXIS.pop(k) for k in ("sbp", "dbp") if k in gen.AXIS}
+        try:
+            with tempfile.TemporaryDirectory() as d:
+                html = build_fixture_page(pathlib.Path(d), MULTI_MD, MULTI_ROWS)
+        finally:
+            gen.AXIS.update(saved)
+        self.assertIn("130", html)
+        self.assertIn("80", html)
+
+    def test_legend_category_text_comes_from_data_not_a_hardcoded_string(self):
+        """血壓頁不得出現「糖尿病前期」：圖例的類別字是從這頁的資料推導出來的。"""
+        self.assertIn("淡色帶＝分級／風險門檻", self.html)
+        self.assertIn("淡色帶＝分級<", self.html)
+        self.assertNotIn("糖尿病", self.html)
+
+    def test_new_categories_render_with_their_own_labels(self):
+        self.assertIn("分級：130–139 mmHg", self.html)
+        self.assertIn("風險門檻：≥140 mmHg", self.html)
+
+    def test_data_files_are_located_by_slug_not_indicator_id(self):
+        self.assertIn(f"data/criteria/{MULTI_SLUG}.json", self.html)
+
+    def test_two_runs_are_byte_identical(self):
+        with tempfile.TemporaryDirectory() as d:
+            self.assertEqual(
+                self.html, build_fixture_page(pathlib.Path(d), MULTI_MD, MULTI_ROWS))
+
+
+class MissingIndicatorLabelsAborts(unittest.TestCase):
+    """短標籤缺一個就中止：生成器不從 indicator_id 造中文，也不從單位猜。"""
+
+    def _build(self, md, rows=None):
+        with tempfile.TemporaryDirectory() as d:
+            return build_fixture_page(pathlib.Path(d), md, rows or MULTI_ROWS)
+
+    def test_no_indicator_labels_at_all_aborts(self):
+        md = MULTI_MD.replace("indicator_labels: {sbp: 收縮壓, dbp: 舒張壓}\n", "")
+        with self.assertRaises(SystemExit):
+            self._build(md)
+
+    def test_partial_indicator_labels_abort(self):
+        md = MULTI_MD.replace("{sbp: 收縮壓, dbp: 舒張壓}", "{sbp: 收縮壓}")
+        with self.assertRaises(SystemExit):
+            self._build(md)
+
+    def test_declared_indicator_without_any_criteria_row_aborts(self):
+        """宣告了卻沒有資料列＝頁面在宣稱一個空指標，中止而不是靜默少畫一條數線。"""
+        with self.assertRaises(SystemExit):
+            self._build(MULTI_MD,
+                        [r for r in MULTI_ROWS if r["indicator_id"] != "dbp"])
+
+    def test_complete_labels_do_not_abort(self):
+        """陽性對照：補齊就要過，否則上面三條可能是別的原因紅的。"""
+        self.assertIn("<th>指標</th>", self._build(MULTI_MD))
+
+
+class SingleIndicatorPageKeepsItsShape(unittest.TestCase):
+    """hba1c 是單指標頁：不加「指標」欄、只有一條數線、標題走 frontmatter。"""
+
+    def setUp(self):
+        self.tmp = pathlib.Path(tempfile.mkdtemp())
+        self.html, *_ = build_into(self.tmp, published=False)
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def test_no_indicator_column(self):
+        self.assertNotIn("<th>指標</th>", self.html)
+        for row in table_cells(self.html):
+            self.assertEqual(4, len(row), "單指標頁的判準表維持四欄")
+
+    def test_exactly_one_number_line(self):
+        meta, _, _ = gen.parse_article(ARTICLE)
+        self.assertEqual([SLUG], gen.page_indicators(meta, SLUG)[0])
+        self.assertEqual(1, self.html.count(f"data/criteria/{SLUG}.json"))
+
+    def test_chart_caption_comes_from_frontmatter(self):
+        meta, _, _ = gen.parse_article(ARTICLE)
+        self.assertIn(
+            f'<figcaption class="ct">{meta["criteria_chart_caption"]}</figcaption>',
+            self.html)
+
+    def test_missing_caption_aborts_instead_of_rendering_an_empty_title(self):
+        md = ARTICLE.read_text(encoding="utf-8")
+        md = re.sub(r"(?m)^criteria_chart_caption:.*\n", "", md)
+        with tempfile.TemporaryDirectory() as d:
+            tmp = pathlib.Path(d)
+            (tmp / "criteria").mkdir(parents=True)
+            shutil.copy(CRITERIA, tmp / "criteria" / f"{SLUG}.json")
+            with self.assertRaises(SystemExit):
+                build_fixture_page(tmp, md, json.loads(
+                    CRITERIA.read_text(encoding="utf-8")), slug=SLUG)
+
+
+class FrontmatterIndicatorFields(unittest.TestCase):
+    def test_plural_list_and_label_map_parse(self):
+        self.assertEqual(
+            (["sbp", "dbp"], {"sbp": "收縮壓", "dbp": "舒張壓"}),
+            gen.page_indicators({"indicator_ids": "[sbp, dbp]",
+                                 "indicator_labels": "{sbp: 收縮壓, dbp: 舒張壓}"}, "bp"))
+
+    def test_singular_indicator_id_is_still_supported(self):
+        self.assertEqual(["hba1c"], gen.page_indicators({"indicator_id": "hba1c"}, "x")[0])
+
+    def test_neither_field_falls_back_to_slug(self):
+        self.assertEqual(["uric-acid"], gen.page_indicators({}, "uric-acid")[0])
+
+
+class OrgColourIsKeyedByFamily(unittest.TestCase):
+    """配色語意＝機構屬性（tw-gov／tw-society／intl／us／other），不是逐一挑色票。"""
+
+    EXPECTED = {
+        "American Diabetes Association": ("us", "--c-ada"),
+        "World Health Organization": ("intl", "--c-who"),
+        "衛生福利部國民健康署": ("tw-gov", "--c-hpa"),
+        "行政院衛生署國民健康局": ("tw-gov", "--c-hpa"),
+        "社團法人中華民國糖尿病學會／中華民國內分泌暨糖尿病學會": ("tw-society", "--c-daroc"),
+        "International Expert Committee": ("other", "--c-other"),
+        "MedlinePlus（美國國家醫學圖書館 NLM，NIH 旗下）": ("other", "--c-other"),
+        "National Glycohemoglobin Standardization Program": ("other", "--c-other"),
+    }
+
+    def test_every_named_org_keeps_its_family_and_colour(self):
+        for org, (family, var) in self.EXPECTED.items():
+            with self.subTest(org=org):
+                self.assertEqual(family, gen.org_family(org))
+                self.assertEqual(f"var({var})", gen.org_color(org))
+
+    def test_every_family_in_the_roster_maps_to_a_declared_colour(self):
+        for _, family in gen.ORG_DISPLAY.values():
+            with self.subTest(family=family):
+                self.assertIn(family, gen.ORG_FAMILY_COLOR)
+
+    def test_unlisted_org_falls_back_to_grey_and_keeps_its_full_name(self):
+        unknown = "某個還沒登記的學會"
+        self.assertEqual(gen.ORG_FALLBACK_FAMILY, gen.org_family(unknown))
+        self.assertEqual("var(--c-other)", gen.org_color(unknown))
+        self.assertEqual(unknown, gen.org_label(unknown))
+
+
+class NewTableCategories(unittest.TestCase):
+    def test_classification_and_risk_threshold_are_table_categories(self):
+        for c in ("classification", "risk_threshold"):
+            with self.subTest(category=c):
+                self.assertIn(c, gen.TABLE_CATEGORIES)
+        self.assertEqual("分級", gen.CATEGORY_LABEL["classification"])
+        self.assertEqual("風險門檻", gen.CATEGORY_LABEL["risk_threshold"])
+
+    def test_every_table_category_has_a_label(self):
+        for c in gen.TABLE_CATEGORIES:
+            with self.subTest(category=c):
+                self.assertIn(c, gen.CATEGORY_LABEL)
+
+    def test_table_categories_are_a_subset_of_the_schema_whitelist(self):
+        schema = json.loads(
+            (ROOT / "data" / "criteria" / "schema.json").read_text(encoding="utf-8"))
+        enum = schema["$defs"]["criterion"]["properties"]["category"]["enum"]
+        for c in gen.TABLE_CATEGORIES:
+            with self.subTest(category=c):
+                self.assertIn(c, enum, "生成器收的類別不在 schema 白名單裡（兩邊各長各的）")
 
 
 if __name__ == "__main__":

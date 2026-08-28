@@ -1,0 +1,235 @@
+[
+  {
+    "id": "L1",
+    "direction": "high",
+    "factor": "白袍高血壓：在醫院面對穿白袍的醫護人員緊張，導致量到的血壓升高",
+    "org": "衛生福利部國民健康署",
+    "doc_id": "hpa-home-bp-722-press-release-2025",
+    "version": "2025/02/25",
+    "page_or_table": "新聞稿本文（居家量測必要性說明段）",
+    "quote": "為掌握血壓狀況且避免發生白袍高血壓(在醫院量測血壓時，因面對穿著白袍醫護人員而產生緊張，導致血壓升高）的情形",
+    "note": "與隱蔽性高血壓（方向相反）是一組，不要只寫一邊。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L2",
+    "direction": "low",
+    "factor": "隱蔽性高血壓（masked hypertension）：診間量起來正常、實際上是高血壓；其心血管風險與持續性高血壓相當",
+    "org": "Taiwan Society of Cardiology／Taiwan Hypertension Society",
+    "doc_id": "ths-tsoc-hypertension-guideline-2022",
+    "version": "2022",
+    "page_or_table": "§3.5 White-coat hypertension and masked hypertension 本文",
+    "quote": "masked hypertension carry a comparable CV risk to those",
+    "quote_extra": [
+      "with sustained hypertension."
+    ],
+    "note": "方向是「診間值偏低於真實血壓」，與白袍高血壓相反。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L3",
+    "direction": "both",
+    "factor": "台灣本土資料：以診間與家用血壓 130/80 為診斷標準時，白袍高血壓與隱蔽性高血壓的盛行率分別為 21% 與 11%",
+    "org": "Taiwan Society of Cardiology／Taiwan Hypertension Society",
+    "doc_id": "ths-tsoc-hypertension-guideline-2022",
+    "version": "2022",
+    "page_or_table": "§3.5 White-coat hypertension and masked hypertension 本文",
+    "quote": "the prevalence of white-coat hypertension and masked",
+    "quote_extra": [
+      "hypertension were 21% and 11%, respectively, based on",
+      "the diagnostic criteria of office and home BP of 130/80"
+    ],
+    "note": "兩個方向各有一個數字，故 direction=both。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L4",
+    "direction": "high",
+    "factor": "例行診間血壓（ROBP）系統性偏高：收縮壓比自動診間血壓（AOBP）平均高 14.5 mmHg，比標準化診間血壓高 7.0 mmHg",
+    "org": "Taiwan Society of Cardiology／Taiwan Hypertension Society",
+    "doc_id": "ths-tsoc-hypertension-guideline-2022",
+    "version": "2022",
+    "page_or_table": "§2.1 本文（ROBP／AOBP／標準化診間血壓比較段）",
+    "quote": "differences of 14.5 mmHg (p < 0.001) and 7.0 mmHg (p",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L5",
+    "direction": "unsuitable",
+    "factor": "例行診間血壓不得用於高血壓的診斷與管理（除非依建議流程量測）",
+    "org": "Taiwan Society of Cardiology／Taiwan Hypertension Society",
+    "doc_id": "ths-tsoc-hypertension-guideline-2022",
+    "version": "2022",
+    "page_or_table": "§3 Recommendations/Keypoints",
+    "quote": "Routine office BP should not be used for the diagnosis",
+    "quote_extra": [
+      "and management of hypertension, unless the recom-"
+    ],
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L6",
+    "direction": "unspecified",
+    "factor": "心房顫動會影響血壓量測的準確度；心房顫動者一次要量 ≥3 遍並使用專門驗證過的機器",
+    "org": "Taiwan Society of Cardiology／Taiwan Hypertension Society",
+    "doc_id": "ths-tsoc-hypertension-guideline-2022",
+    "version": "2022",
+    "page_or_table": "§3.6 本文（心房顫動偵測段）；§3 Recommendations/Keypoints",
+    "quote": "could influence the accuracy of BP measurement",
+    "quote_extra": [
+      "Multiple (³ 3) measurements on one occasion and use",
+      "of a specially validated device are recommended to"
+    ],
+    "note": "原文只說會影響準確度，未指方向，故 unspecified。PDF 轉檔（pdftotext -layout）把 ≥ 顯示為 ³、≤ 顯示為 £，引句照抄轉檔原樣。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L7",
+    "direction": "unspecified",
+    "factor": "捲袖子會造成局部止血帶效應；衣物要脫掉而不是捲起來",
+    "org": "Taiwan Society of Cardiology／Taiwan Hypertension Society",
+    "doc_id": "ths-tsoc-hypertension-guideline-2022",
+    "version": "2022",
+    "page_or_table": "Table 6, Stage 1: Preparation",
+    "quote": "Remove clothing covering the location of cuff placement. Be sure to avoid rolling up sleeves; this may",
+    "quote_extra": [
+      "cause a (partial) tourniquet effect."
+    ],
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L8",
+    "direction": "unspecified",
+    "factor": "壓脈帶尺寸不對：氣囊寬度／長度需達上臂圍的 40%／80%",
+    "org": "Taiwan Society of Cardiology／Taiwan Hypertension Society",
+    "doc_id": "ths-tsoc-hypertension-guideline-2022",
+    "version": "2022",
+    "page_or_table": "Table 6, Stage 2",
+    "quote": "Use the correct cuff size, following the manufacturer’s instructions (cuff bladder width and length are",
+    "quote_extra": [
+      "at least 40% and 80% of the mid-arm circumference, respectively)."
+    ],
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L9",
+    "direction": "both",
+    "factor": "兩手血壓不一樣：首次要左右手都量；兩手差 < 15 mmHg 時取較高的那一手",
+    "org": "Taiwan Society of Cardiology／Taiwan Hypertension Society",
+    "doc_id": "ths-tsoc-hypertension-guideline-2022",
+    "version": "2022",
+    "page_or_table": "Table 6, Stage 3",
+    "quote": "If BP is measured for the first time, check the BP in right and left upper arms. If the between-arm BP",
+    "quote_extra": [
+      "difference is < 15 mmHg, use the higher BP for further management."
+    ],
+    "note": "量錯手可能偏高也可能偏低，故 both；原文本身沒有指單一方向。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L10",
+    "direction": "unspecified",
+    "factor": "量測前 30 分鐘內的咖啡因、運動、抽菸",
+    "org": "Taiwan Society of Cardiology／Taiwan Hypertension Society",
+    "doc_id": "ths-tsoc-hypertension-guideline-2022",
+    "version": "2022",
+    "page_or_table": "Table 6, Stage 1: Preparation",
+    "quote": "Before the measurement procedure, subjects should avoid caffeine, exercise, and smoking for at",
+    "quote_extra": [
+      "least 30 minutes."
+    ],
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L11",
+    "direction": "unspecified",
+    "factor": "講話與姿勢：休息期間與量測全程都不能講話，要坐有靠背的椅子、雙腳平放",
+    "org": "Taiwan Society of Cardiology／Taiwan Hypertension Society",
+    "doc_id": "ths-tsoc-hypertension-guideline-2022",
+    "version": "2022",
+    "page_or_table": "Table 6, Stage 1: Preparation",
+    "quote": "Sit calmly for at least 5 minutes and avoid talking during the rest period and the whole measurement",
+    "quote_extra": [
+      "process."
+    ],
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L12",
+    "direction": "unspecified",
+    "factor": "722 取平均時第 1 天的讀數要剔除（第 1 天的值不納入平均）",
+    "org": "Taiwan Society of Cardiology／Taiwan Hypertension Society",
+    "doc_id": "ths-tsoc-hypertension-guideline-2022",
+    "version": "2022",
+    "page_or_table": "§3.6 Home blood pressure measurement 本文（722 協定說明段）",
+    "quote": "BP readings, respectively, except those obtained on the",
+    "quote_extra": [
+      "first day."
+    ],
+    "note": "這一點只有 TSOC／THS 2022 指引有，國健署衛教版沒有。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L13",
+    "direction": "unspecified",
+    "factor": "機器未定期校正：自動電子血壓計校正間隔不得超過 12 個月",
+    "org": "Taiwan Society of Cardiology／Taiwan Hypertension Society",
+    "doc_id": "ths-tsoc-hypertension-guideline-2022",
+    "version": "2022",
+    "page_or_table": "§3 Recommendations/Keypoints",
+    "quote": "Periodic calibration of automated electronic sphygmo-",
+    "quote_extra": [
+      "manometer should be performed at an interval not",
+      "greater than 12 months (COR I, LOE C)."
+    ],
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L14",
+    "direction": "both",
+    "factor": "血壓本來就會隨一天中的活動變動，單次讀數不能定生死",
+    "org": "National Heart, Lung, and Blood Institute（National Institutes of Health）",
+    "doc_id": "nhlbi-high-blood-pressure-page",
+    "version": "頁面標示 Last updated on 2024-04-25",
+    "page_or_table": "What is blood pressure? 段",
+    "quote": "Your blood pressure changes throughout the day based on your activities.",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L15",
+    "direction": "both",
+    "factor": "透析病人：透析前傾向高估、透析後傾向低估，兩者都較不建議用來診斷或調藥",
+    "org": "Taiwan Society of Cardiology／Taiwan Hypertension Society",
+    "doc_id": "ths-tsoc-hypertension-guideline-2022",
+    "version": "2022",
+    "page_or_table": "§14.2 Blood pressure targets for patients with dialytic chronic kidney disease 本文",
+    "quote": "Pre-dialysis (tend to overestimate) and post-dialysis (tend",
+    "quote_extra": [
+      "to underestimate) BP measurements are less recom-"
+    ],
+    "note": "同一列的原文同時給了偏高與偏低兩種情況，故 both。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L16",
+    "direction": "unspecified",
+    "factor": "高血壓初期多數人沒有明顯症狀，沒有症狀不等於沒有高血壓",
+    "org": "衛生福利部國民健康署",
+    "doc_id": "hpa-hypertension-topic-page",
+    "version": "頁面更新日 2026/08/28",
+    "page_or_table": "主題頁本文第 1 段",
+    "quote": "由於血壓升高時，多數人沒有明顯症狀，因此容易被忽視。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L17",
+    "direction": "unspecified",
+    "factor": "美國約每 3 個有高血壓的成人就有 1 人不知道自己有",
+    "org": "National Heart, Lung, and Blood Institute（National Institutes of Health）",
+    "doc_id": "nhlbi-high-blood-pressure-page",
+    "version": "頁面標示 Last updated on 2024-04-25",
+    "page_or_table": "本文（高血壓盛行與知曉率段）",
+    "quote": "About 1 in 3 U.S. adults with high blood pressure aren’t even aware they have it",
+    "fetched_at": "2026-08-28"
+  }
+]

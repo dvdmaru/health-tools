@@ -1,0 +1,239 @@
+[
+  {
+    "id": "L1",
+    "direction": "both",
+    "factor": "量測位置各國不同：WHO STEPS 量肋骨下緣與腸骨稜頂端的中點，美國 NIH 量腸骨稜頂端——同一個人用不同 protocol 量出來的腰圍不會一樣",
+    "org": "World Health Organization",
+    "doc_id": "who-waist-circumference-report-2011",
+    "version": "2011（會議 Geneva, 8–11 December 2008）",
+    "page_or_table": "2.1.1 Placement of tape（第 5 頁）",
+    "quote": "The WHO STEPS protocol for measuring waist circumference instructs that the measurement be made at the approximate midpoint between the lower margin of the last palpable rib and the top of the iliac crest (WHO, 2008b). The United States (US) National Institutes of Health (NIH) protocol",
+    "quote_extra": [
+      "indicate that the waist circumference measurement should be made at the top of the iliac crest."
+    ],
+    "note": "direction=both：位置不同會讓數字往哪邊跑，取決於個案體型，原文沒有指定單一方向。🔴 必須與 L19 一起寫——量法差異對個人數字有影響，但對族群層級的風險關聯沒有實質影響，只寫一邊會誤導。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L2",
+    "direction": "low",
+    "factor": "在肚臍高度量腰圍",
+    "org": "World Health Organization",
+    "doc_id": "who-waist-circumference-report-2011",
+    "version": "2011（會議 Geneva, 8–11 December 2008）",
+    "page_or_table": "2.1.1 Placement of tape（第 5 頁）",
+    "quote": "measurements of waist circumference made at the level of the umbilicus may underestimate the true waist circumference (Croft et al., 1995)",
+    "note": "原文明說是低估（underestimate），故 direction=low。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L3",
+    "direction": "both",
+    "factor": "呼吸相不同：WHO 要求在正常呼氣末量，NHANES III 要求在最小呼氣時量",
+    "org": "World Health Organization",
+    "doc_id": "who-waist-circumference-report-2011",
+    "version": "2011（會議 Geneva, 8–11 December 2008）",
+    "page_or_table": "2.2.2 Phase of respiration at the exact point of measurement（第 6 頁）",
+    "quote": "The WHO STEPS protocol suggests that the waist circumference should be measured at the end of a normal expiration",
+    "quote_extra": [
+      "The NHANES III protocol states that the waist circumference should be measured at minimal expiration"
+    ],
+    "note": "direction=both：原文列出兩種不同 protocol，未指哪一種會讓數字偏高或偏低。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L4",
+    "direction": "both",
+    "factor": "腹壁張力：放鬆腹壁會讓腰圍變大，縮腹會讓腰圍變小",
+    "org": "World Health Organization",
+    "doc_id": "who-waist-circumference-report-2011",
+    "version": "2011（會議 Geneva, 8–11 December 2008）",
+    "page_or_table": "2.2.3 Abdominal tension at the point of measurement（第 6 頁）",
+    "quote": "Lowering the tension of the abdominal wall increases waist circumference, whereas increasing the tension (by sucking in) reduces waist circumference.",
+    "note": "direction=both：同一句原文同時給出兩個方向（放鬆→變大、縮腹→變小），不得化簡成單一方向。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L5",
+    "direction": "unspecified",
+    "factor": "姿勢、呼吸相、腹壁張力、胃內容物與衣物都會影響量測結果",
+    "org": "World Health Organization",
+    "doc_id": "who-waist-circumference-report-2011",
+    "version": "2011（會議 Geneva, 8–11 December 2008）",
+    "page_or_table": "第 2 章 Methods for measuring waist and hip 開頭列舉段（第 5 頁）",
+    "quote": "the subject’s posture, phase of respiration, abdominal tension, stomach contents and clothing",
+    "note": "原文只是列舉會影響量測的因素，未指方向，故 unspecified。⚠️ 引句中的撇號是 U+2019，不是 ASCII `'`。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L6",
+    "direction": "unspecified",
+    "factor": "同一位量測者重複量、以及不同量測者之間，都會有變異",
+    "org": "World Health Organization",
+    "doc_id": "who-waist-circumference-report-2011",
+    "version": "2011（會議 Geneva, 8–11 December 2008）",
+    "page_or_table": "2.4 Implications of differences in methodology（第 7 頁）",
+    "quote": "there may be variability within and between measurers when more than one measurement is made",
+    "note": "原文只說有變異，未指方向。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L7",
+    "direction": "high",
+    "factor": "肌肉量高的運動員：肌肉比脂肪重，BMI 會落到過重區間，但其實不是胖",
+    "org": "World Health Organization Regional Office for the Western Pacific／International Association for the Study of Obesity／International Obesity Task Force",
+    "doc_id": "who-asia-pacific-obesity-2000",
+    "version": "2000",
+    "page_or_table": "2.1 節 Measurement of obesity（第 18 頁）",
+    "quote": "athletes who are muscular have a high BMI, due to muscle weighing more than fat, and will have BMIs within the overweight range, even though they are not fat",
+    "note": "原文明說 BMI 偏高（high BMI／within the overweight range），故 direction=high。引句取自本站自製 OCR。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L8",
+    "direction": "high",
+    "factor": "身高最矮與最高的人容易被 BMI 錯誤分類為肥胖",
+    "org": "World Health Organization Regional Office for the Western Pacific／International Association for the Study of Obesity／International Obesity Task Force",
+    "doc_id": "who-asia-pacific-obesity-2000",
+    "version": "2000",
+    "page_or_table": "2.1 節 Measurement of obesity（第 18 頁）",
+    "quote": "The shortest and tallest subjects also tend to be misclassified as obese (Freeman et a/ 1995)",
+    "note": "原文說被誤分類為 obese（往肥胖那一側），故 direction=high。☠️ 引句中的 `et a/` 是 OCR 對 `et al` 的誤識，照抄。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L9",
+    "direction": "both",
+    "factor": "水腫、高肌肉量、肌肉流失、身高受限者，BMI 作為體脂指標的準確度受影響，需臨床判斷",
+    "org": "National Institutes of Health／National Heart, Lung, and Blood Institute",
+    "doc_id": "nhlbi-practical-guide-obesity-2000",
+    "version": "2000 年 10 月（NIH Publication No. 00-4084）",
+    "page_or_table": "印刷版第 9 頁正文（BMI 段）",
+    "quote": "Clinical judgment must be used in interpreting BMI in situations that may affect its accuracy as an indicator of total body fat. Examples of these situations include the presence of edema, high muscularity, muscle wasting, and individuals who are limited in stature.",
+    "quote_extra": [
+      "older persons often have lost muscle mass; thus, they have more fat for a given BMI than younger persons. Women may have more body fat for a given BMI than men, whereas patients with clinical edema may have less fat for a given BMI"
+    ],
+    "note": "direction=both：緊接的下一句同時給出兩個方向——肌肉流失／女性在相同 BMI 下體脂較高，水腫者在相同 BMI 下體脂較低；兩方向的原文都放在 quote_extra，不得化簡成單一方向。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L10",
+    "direction": "both",
+    "factor": "老年人肌肉流失使相同 BMI 下體脂較高；女性相同 BMI 下體脂高於男性；臨床水腫者相同 BMI 下體脂較低",
+    "org": "National Institutes of Health／National Heart, Lung, and Blood Institute",
+    "doc_id": "nhlbi-practical-guide-obesity-2000",
+    "version": "2000 年 10 月（NIH Publication No. 00-4084）",
+    "page_or_table": "印刷版第 9 頁正文（BMI 段）",
+    "quote": "older persons often have lost muscle mass; thus, they have more fat for a given BMI than younger persons. Women may have more body fat for a given BMI than men, whereas patients with clinical edema may have less fat for a given BMI",
+    "note": "direction=both：同一句原文同時給出偏高（老年人、女性）與偏低（水腫）兩側。與 L9 是同一段的兩句，L9 講的是「要用臨床判斷」、本列講的是具體方向；兩列並存，不合併。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L11",
+    "direction": "unsuitable",
+    "factor": "BMI ≥ 35 時，腰圍幾乎不再增加 BMI 疾病風險分級的判別力",
+    "org": "National Institutes of Health／National Heart, Lung, and Blood Institute",
+    "doc_id": "nhlbi-practical-guide-obesity-2000",
+    "version": "2000 年 10 月（NIH Publication No. 00-4084）",
+    "page_or_table": "印刷版第 9 頁正文（Waist Circumference 段）",
+    "quote": "For individuals with a BMI ≥ 35, waist circumference adds little to the predictive power of the disease risk classification of BMI.",
+    "note": "direction=unsuitable：不是方向問題，是這個區間裡腰圍不再適合用來再分層。與 L12（IDF 的 BMI >30）同方向但門檻不同，兩列並存不合併。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L12",
+    "direction": "unsuitable",
+    "factor": "BMI > 30 kg/m² 時可直接假定中央肥胖，不必量腰圍",
+    "org": "International Diabetes Federation",
+    "doc_id": "idf-metabolic-syndrome-consensus-2006",
+    "version": "2006",
+    "page_or_table": "Table 1 註 *（第 10 頁）",
+    "quote": "If BMI is >30kg/m², central obesity can be assumed and waist circumference does not need to be measured.",
+    "note": "direction=unsuitable：來源說這個情況下不必量腰圍，不是說腰圍會偏高或偏低。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L13",
+    "direction": "unspecified",
+    "factor": "BMI 是「粗糙但最有用的族群層級肥胖指標」，不是個人的體脂測量",
+    "org": "World Health Organization",
+    "doc_id": "who-trs894-obesity-report-2000",
+    "version": "2000（WHO Technical Report Series 894）",
+    "page_or_table": "2.3.3 Use of BMI to classify obesity（第 9 頁）",
+    "quote": "BMI ·can be considered to provide the most useful, albeit crude, population-level measure of obesity",
+    "note": "☠️ 引句中 `BMI` 與 `can` 之間多出來的 `·` 是掃描件 OCR 的雜訊，照抄才 grep 得回快照。這條是定位問題不是方向問題，故 unspecified。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L14",
+    "direction": "unspecified",
+    "factor": "需要體脂估計時，BMI 的跨族群比較要謹慎解讀",
+    "org": "World Health Organization",
+    "doc_id": "who-trs894-obesity-report-2000",
+    "version": "2000（WHO Technical Report Series 894）",
+    "page_or_table": "2.3.2 Variation in the relationship between BMI and body fat（第 8 頁）",
+    "quote": "In cross-sectional comparisons, therefore, BMI values should be interpreted with cau- tion if estimates of body fat are required.",
+    "note": "⚠️ 引句中的 `cau- tion` 是原文換行處的連字斷行，照抄才 grep 得回快照，正文寫 caution。原文只說要謹慎，未指方向。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L15",
+    "direction": "unspecified",
+    "factor": "現行常用的腰圍與腰臀比切點，其研究人口以歐裔為主",
+    "org": "World Health Organization",
+    "doc_id": "who-waist-circumference-report-2011",
+    "version": "2011（會議 Geneva, 8–11 December 2008）",
+    "page_or_table": "第 3 章開頭（第 8 頁）",
+    "quote": "Commonly used cut‐off points for waist circumference and waist–hip ratio are based on studies undertaken predominantly in populations of European origin.",
+    "note": "原文只陳述切點的資料來源，未直接說對非歐裔會偏高或偏低（那一步在 L16），故 unspecified。⚠️ `cut‐off` 是 U+2010 連字號、`waist–hip` 是 U+2013 en dash。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L16",
+    "direction": "low",
+    "factor": "族群差異可能導致特定族群的風險被低估",
+    "org": "World Health Organization",
+    "doc_id": "who-waist-circumference-report-2011",
+    "version": "2011（會議 Geneva, 8–11 December 2008）",
+    "page_or_table": "第 3 章開頭（第 8 頁）",
+    "quote": "particularly if such differences could lead to underestimation of risk in certain populations",
+    "note": "direction=low 指的是風險被低估（原文 underestimation of risk），不是數值偏低。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L17",
+    "direction": "unspecified",
+    "factor": "國健署自己標註：BMI 是簡易方法，對不同個案可能有所差異",
+    "org": "衛生福利部國民健康署",
+    "doc_id": "hpa-adult-healthy-body-weight-standard",
+    "version": "發布 2018/10/24，更新 2025/09/11",
+    "page_or_table": "頁面 BMI 表下方註記",
+    "quote": "※根據世界衛生組織指出，BMI是判定體位常用的簡易方法，然而對於不同個案可能有所差異。",
+    "note": "台灣官方在同一頁自標的個案差異提醒，未指方向。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L18",
+    "direction": "unspecified",
+    "factor": "BMI 無法完全反映內臟脂肪堆積的程度",
+    "org": "衛生福利部國民健康署",
+    "doc_id": "hpa-metabolic-syndrome-topic-page",
+    "version": "頁面更新日 2026/08/28（資料來源標「代謝症候群學習手冊」105年版）",
+    "page_or_table": "「四、以腹部肥胖偵測代謝症候群」段",
+    "quote": "身體質量指數(BMI)是國際通用的肥胖指標，但尚無法完全反應內臟脂肪堆積的程度",
+    "note": "原文用「反應」不是「反映」，照抄。未指方向。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L19",
+    "direction": "unspecified",
+    "factor": "反向證據：一篇系統性回顧發現，不同腰圍量測 protocol 對「腰圍與全因死亡、心血管死亡、心血管疾病與糖尿病風險的關聯」沒有實質影響",
+    "org": "World Health Organization",
+    "doc_id": "who-waist-circumference-report-2011",
+    "version": "2011（會議 Geneva, 8–11 December 2008）",
+    "page_or_table": "2.4 Implications of differences in methodology（第 7 頁）",
+    "quote": "The review concluded that waist circumference measurement protocol had no substantial influence on the association between waist circumference, all‐cause and CVD‐specific mortality, and risk of CVD and diabetes (Ross, et al., 2008).",
+    "note": "🔴 這一列是 L1／L2／L3 的反面，兩邊必須一起寫：量法差異對個人數字有影響，對族群層級的風險關聯則沒有實質影響。原文是「沒有影響」的結論，不是方向，故 unspecified。⚠️ `all‐cause`／`CVD‐specific` 的連字號是 U+2010。",
+    "fetched_at": "2026-08-28"
+  }
+]
