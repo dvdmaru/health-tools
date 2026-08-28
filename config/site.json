@@ -1,7 +1,7 @@
 {
   "_comment": "health.twtools.cc 站身分單一資料源（org/website JSON-LD + 頁面 chrome）。base 無尾斜線。ga_id 為空字串＝GA property 尚未申請，不輸出 GA tag（填入 id 即全站生效）。published:false＝M0 dormant wiring：地基接好但尚未公開，翻開關前不得生成任何指標頁。nav 目前只有首頁與指標索引，其餘入口等對應里程碑再加。指標入口帶 requires:published——/indicators/ 索引頁要到 M5 才生成，翻開關前連過去就是死連結。",
   "base": "https://health.twtools.cc",
-  "published": false,
+  "published": true,
   "org_name": "健檢數據誌",
   "org_same_as": [],
   "website_name": "健檢數據誌",

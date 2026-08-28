@@ -11,7 +11,7 @@
 **M5 加了三件事**：`/indicators/` 索引頁（`scripts/gen-indicators-index.py`，卡片上的列數／機構數／來源數
 ／沿革年份全由資料算，跑在 `gen-indicator.py` 之後）；判準表改成「指標→判定類別」分組的原生 `<details>`
 折疊（診斷／分級／風險門檻預設展開，整頁 ≤12 列全展開，無 JS、內容都在 DOM）；勘誤機制（見下）。
-`published` 仍為 false，三者皆 dormant 感知。
+`published` 已於 2026-08-28 翻 true（Story 6，Charlie 授權公開）；翻開關前後 186 tests 皆綠。
 
 **5 個指標頁已生成（dormant，未部署）**：`/indicators/hba1c/`（M3 定調）、`/indicators/blood-pressure/`
 （sbp＋dbp）、`/indicators/lipids/`（total-chol／ldl-c／hdl-c／tg）、`/indicators/uric-acid/`、
