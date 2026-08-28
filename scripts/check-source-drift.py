@@ -30,7 +30,10 @@ text_sha256)在本檔裡因此**只當資訊,不當 drift 訊號**——drift �
   3. 抽文字:doc_type=pdf 用 pdftotext -layout;html／html-text 去
      <script>/<style>、去 tag、entity unescape,再正規化空白比對。
   4. 每份文件算出 remote_sha256／text_sha256／quotes_total／quotes_found／
-     quotes_missing(前 3 句、截 60 字)／http_code／etag／last_modified／checked_at。
+     quotes_missing(前 3 句、截 60 字)／http_code／etag／last_modified／checked_at／
+     body_bytes(raw 長度)／text_chars(正規化文字長度)。診斷用,不影響判定。
+     status==drift 的列另外附 page_title(<title> 原文)與 text_excerpt(抽出文字
+     前 300 字)——只在 drift 才附,免得 46 份裡另外 45 份背不必要的欄位。
   5. 跟 baseline 比對,判定狀態(見下)。
   6. --update-baseline 才寫 data/sources/drift-baseline.json;平常執行只讀不寫
      (CI 不能 commit)。
@@ -108,6 +111,7 @@ quotes_of = _receipts.quotes_of
 
 TAG_RE = re.compile(r"<[^>]+>")
 SCRIPT_STYLE_RE = re.compile(r"<(script|style)\b[^>]*>.*?</\1>", re.I | re.S)
+TITLE_RE = re.compile(r"<title[^>]*>(.*?)</title>", re.I | re.S)
 
 
 def now_iso() -> str:
@@ -189,6 +193,21 @@ def _html_text(body: bytes) -> str:
     return text
 
 
+def extract_page_title(doc_type: str, body: bytes) -> str:
+    """抽原始 <title> 內容(未去 tag 前那份 body,不是 extract_text() 的輸出)——
+    診斷用:同一個 URL 回應 200 但引句全消失時,<title> 常常是第一個線索
+    (攔截頁／替代頁面的 title 通常跟文件標題對不上)。doc_type=pdf 沒有 <title>,
+    回空字串。找不到就回空字串,不回 None,呼叫端一律用 truthy 判斷就好。"""
+    if doc_type == "pdf":
+        return ""
+    text = body.decode("utf-8", "replace")
+    m = TITLE_RE.search(text)
+    if not m:
+        return ""
+    title = re.sub(r"\s+", " ", m.group(1)).strip()
+    return html_mod.unescape(title)
+
+
 def quotes_by_doc() -> dict:
     """doc_id → {引句集合}。和 check-receipts.py 主迴圈同規則:errata 沒填 doc_id
     的列跳過(那是選填,沒依據文件本來就沒有承諾引句)。"""
@@ -219,6 +238,13 @@ def check_source(src: dict, required: set, timeout: int) -> dict:
         "quotes_total": len(required), "quotes_found": 0,
         "_found": set(), "_missing": set(),
         "fetch_status": None, "error": "", "tls_verified": None,
+        # body_bytes／text_chars：2026-08-28 CI 第二輪實跑教訓——
+        # iec-a1c-report-2009 在 CI 上 HTTP 200、4/4 引句全缺，但報告當時沒有任何
+        # 欄位能讓人判斷「這到底是不是那份文件」。這兩個欄位＋下面 _text_excerpt／
+        # _page_title(drift 才進報告)就是補這個洞：不用等下次 CI 跑才知道發生了
+        # 什麼，報告本身要能回答「這次抓到的東西看起來像不像原文件」。
+        "body_bytes": None, "text_chars": None,
+        "_text_excerpt": "", "_page_title": "",
     }
     try:
         code, body, headers, tls_verified = curl_with_headers(url, timeout)
@@ -231,6 +257,7 @@ def check_source(src: dict, required: set, timeout: int) -> dict:
     result["http_code"] = code
     result["etag"] = headers.get("etag")
     result["last_modified"] = headers.get("last-modified")
+    result["body_bytes"] = len(body)
 
     reason = blocked_reason(code, body)
     if reason:
@@ -247,6 +274,11 @@ def check_source(src: dict, required: set, timeout: int) -> dict:
     text = extract_text(doc_type, body)
     norm_text = norm(text)
     result["text_sha256"] = hashlib.sha256(norm_text.encode("utf-8")).hexdigest()
+    result["text_chars"] = len(norm_text)
+    # 內部用，只在 run() 判定 status==drift 時才附進最終輸出(見 run())：
+    # 前 300 字用「壓成單一空白」的可讀版，不是 norm() 那種把所有空白吃光的版本。
+    result["_text_excerpt"] = re.sub(r"\s+", " ", text).strip()[:300]
+    result["_page_title"] = extract_page_title(doc_type, body)
 
     found = {q for q in required if norm(q) in norm_text}
     missing = required - found
@@ -356,6 +388,17 @@ def run(manifest: list, baseline_map: dict, timeout: int, workers: int,
     for cur in rows:
         baseline_entry = baseline_map.get(cur["id"])
         status = classify(cur, baseline_entry, building)
+
+        # 診斷欄位：baseline 當初驗過的引句裡，這次「本來就要驗」的那些有幾句
+        # 曾經驗過(拿來配合下面 render_report() 的全缺警語判斷)。只在真的抓到
+        # 內容(fetch_status=="reached")又有 baseline 時才算得出意義，其餘情況
+        # 留 None，不要假裝算出了一個數字。
+        quotes_verified_at_baseline = None
+        if baseline_entry and cur["fetch_status"] == "reached":
+            verified_before = set(baseline_entry.get("quotes_verified", []))
+            required_now = cur["_found"] | cur["_missing"]
+            quotes_verified_at_baseline = len(required_now & verified_before)
+
         entry = {
             "id": cur["id"], "title": cur["title"], "url": cur["url"],
             "doc_type": cur["doc_type"], "checked_at": cur["checked_at"],
@@ -369,9 +412,20 @@ def run(manifest: list, baseline_map: dict, timeout: int, workers: int,
             # 的 exit 60 重抓)，不是「上次驗過什麼」的事實，所以只放在這次的報告／
             # JSON，不進 baseline——加進 baseline 沒有意義，也不用為了它重建 baseline。
             "tls_verified": cur["tls_verified"],
+            # body_bytes／text_chars：每份結果都留，不只 drift——是「這次到底抓到
+            # 多少東西」的基本診斷，跟 status 無關。同樣不進 baseline(理由同上)。
+            "body_bytes": cur["body_bytes"], "text_chars": cur["text_chars"],
+            "quotes_verified_at_baseline": quotes_verified_at_baseline,
             "baseline_checked_at": baseline_entry.get("checked_at") if baseline_entry else None,
             "_baseline_entry_for_write": build_baseline_entry(cur, status),
         }
+        if status == "drift":
+            # text_excerpt／page_title 只在 drift 才附進輸出——2026-08-28 CI 第二輪
+            # 教訓：iec-a1c-report-2009 HTTP 200、4/4 引句全缺，但報告當時沒有任何
+            # 東西能讓人判斷「這次抓到的是不是同一份文件」。46 份裡只有真的 drift
+            # 才需要這兩個相對重的欄位，其餘 45 份沒必要背這個。
+            entry["text_excerpt"] = cur["_text_excerpt"]
+            entry["page_title"] = cur["_page_title"]
         out.append(entry)
     return out
 
@@ -418,6 +472,20 @@ def render_report(results: list, total_in_manifest: int) -> str:
                 lines.append(f"  - 缺的引句（前 3 句）：")
                 for q in r["quotes_missing"]:
                     lines.append(f"    - {q!r}")
+            # 2026-08-28 CI 第二輪教訓（iec-a1c-report-2009：HTTP 200、4/4 引句全
+            # 缺，報告當時沒有任何東西能判斷「這是不是原文件」）：drift 列補印
+            # <title>／body_bytes／text_chars／抽出文字前 300 字，人不用等下次
+            # CI 跑、也不用自己再 curl 一次才看得到當時抓到的到底是什麼。
+            if r.get("page_title"):
+                lines.append(f"  - <title>：{r['page_title']!r}")
+            lines.append(f"  - body_bytes：{r['body_bytes']}／text_chars：{r['text_chars']}")
+            if r.get("text_excerpt"):
+                lines.append(f"  - 抽出文字前 300 字：{r['text_excerpt']!r}")
+            if (r["quotes_found"] == 0 and r["quotes_total"] >= 2
+                    and r.get("quotes_verified_at_baseline") == r["quotes_total"]):
+                lines.append(
+                    "  - ⚠️ 全部引句同時消失，較可能是攔截頁或替代頁面"
+                    "（JS 渲染／地區限制），先確認回應是不是那份文件再判改版")
     else:
         lines.append("（無）")
     lines.append("")
