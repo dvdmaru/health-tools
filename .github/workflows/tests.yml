@@ -24,14 +24,18 @@ jobs:
       - run: sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils  # check-receipts.py 需要 pdftotext
       - run: pip install 'markdown==3.10.2' 'jsonschema==4.26.0'
       # 決定性驗收放在最前面：同輸入連跑兩次，全站產物 SHA-256 必須相同（禁時間戳）。
+      # 跑序固定 build-articles → gen-indicator → build-sitemap：指標頁的 sitemap part
+      # 必須在合併前寫好，llms.txt 的指標區塊必須在 build-articles 重寫之後才補。
       # 順便讓後面的測試與禁詞 gate 有真的產物可掃——乾淨 checkout 沒有 public-health/
       # 產物（不入版控），先 build 才不會變成「掃了 0 個檔案然後綠燈」的假覆蓋。
       - name: build twice and compare hashes
         run: |
           python scripts/build-articles.py
+          python scripts/gen-indicator.py
           python scripts/build-sitemap.py
           find public-health -type f -exec sha256sum {} + | sort -k2 > /tmp/build1.sha
           python scripts/build-articles.py
+          python scripts/gen-indicator.py
           python scripts/build-sitemap.py
           find public-health -type f -exec sha256sum {} + | sort -k2 > /tmp/build2.sha
           diff /tmp/build1.sha /tmp/build2.sha
