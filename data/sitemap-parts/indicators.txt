@@ -1,0 +1,7 @@
+https://health.twtools.cc/indicators/
+https://health.twtools.cc/indicators/blood-pressure/
+https://health.twtools.cc/indicators/bmi-waist/
+https://health.twtools.cc/indicators/hba1c/
+https://health.twtools.cc/indicators/lipids/
+https://health.twtools.cc/indicators/uric-acid/
+https://health.twtools.cc/errata/
