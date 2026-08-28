@@ -1,0 +1,109 @@
+# 來源改版監測：每週跑一次，抓 46 份 manifest 來源的線上現況，跟本機 baseline 比對
+# 判準列引用的那句話還在不在——不是比對 raw bytes 的 sha256。
+#
+# 為什麼不是「重抓比 sha256」：manifest 裡有 13 份 browser-text／manual 快照是瀏覽器
+# 抽出的純文字（前 3 行是 SOURCE_URL／FETCHED_AT／METHOD 標頭），跟線上 raw bytes
+# 本來就對不上；線上 HTML 每次抓也可能因 nonce／時間戳／廣告位變動，raw sha 比對
+# 只會天天假警報，警報疲勞後沒人看＝等於沒監測。站的唯一承諾是「每個數字都能回查
+# 原文」，真正會傷到這個承諾的只有一種事：判準列引用的那句話從線上版消失了。
+# 監測就定在這一層（細節見 scripts/check-source-drift.py 與 README「來源改版監測」段）。
+name: source-drift
+
+on:
+  schedule:
+    - cron: '0 1 * * 1'  # 每週一 01:00 UTC＝台北 09:00
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils  # check-source-drift.py 抽 PDF 文字需要 pdftotext
+      - run: pip install 'markdown==3.10.2' 'jsonschema==4.26.0'
+
+      # 讀 baseline、重抓全部來源、比對引句。exit code 才是判準：
+      # 0＝無 drift、1＝至少一份 drift、2＝全部 unreachable／blocked（監測本身失效，
+      # 不准當綠燈）、3＝設定錯（baseline 缺、manifest 壞）。continue-on-error 讓後面
+      # 的 artifact／issue 步驟不管這裡紅不紅都會跑；exit code 存進 GITHUB_OUTPUT，
+      # 不經 pipe（tail 會吃掉 exit code，brief 的紅線）。
+      - name: 跑改版監測
+        id: drift
+        continue-on-error: true
+        run: |
+          set +e
+          python scripts/check-source-drift.py --report drift-report.md --json drift-report.json
+          code=$?
+          set -e
+          echo "code=${code}" >> "$GITHUB_OUTPUT"
+          exit "${code}"
+
+      # 報告永遠上傳，不管上面是不是紅——drift／never-verified／blocked 明細只有這裡看得到。
+      - name: 上傳報告
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: source-drift-report
+          path: |
+            drift-report.md
+            drift-report.json
+          if-no-files-found: warn
+          retention-days: 90
+
+      - name: 確保 source-drift label 存在
+        if: steps.drift.outputs.code == '1' || steps.drift.outputs.code == '2'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh label create source-drift --repo "${{ github.repository }}" \
+            --color "d73a4a" \
+            --description "來源改版監測（.github/workflows/source-drift.yml 自動開）" \
+            || true
+
+      # 去重：找開著的 source-drift issue，有就把這次報告貼成 comment（標題照現況更新），
+      # 沒有就開一份新的——同一個 label 找，不靠標題比對（標題帶日期，每週都不一樣）。
+      # exit 1（drift）跟 exit 2（監測失效）共用同一個 label，標題不同：監測失效更急，
+      # 代表這次連「有沒有 drift」都不知道。
+      - name: 開或更新 issue
+        if: steps.drift.outputs.code == '1' || steps.drift.outputs.code == '2'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          CODE="${{ steps.drift.outputs.code }}"
+          TODAY="$(date -u +%Y-%m-%d)"
+          if [ "${CODE}" = "2" ]; then
+            TITLE="來源改版監測失效：${TODAY}"
+          else
+            TITLE="來源改版偵測：${TODAY}"
+          fi
+          BODY_FILE="drift-report.md"
+          if [ ! -f "${BODY_FILE}" ]; then
+            BODY_FILE="$(mktemp)"
+            echo "本次未產出報告檔（exit code ${CODE}），見 workflow run log 與 source-drift-report artifact。" > "${BODY_FILE}"
+          fi
+          EXISTING="$(gh issue list --repo "${{ github.repository }}" --label source-drift --state open --json number --jq '.[0].number')"
+          if [ -n "${EXISTING}" ] && [ "${EXISTING}" != "null" ]; then
+            gh issue comment "${EXISTING}" --repo "${{ github.repository }}" --body-file "${BODY_FILE}"
+            gh issue edit "${EXISTING}" --repo "${{ github.repository }}" --title "${TITLE}"
+          else
+            gh issue create --repo "${{ github.repository }}" --title "${TITLE}" --label source-drift --body-file "${BODY_FILE}"
+          fi
+
+      # exit code 不是 0，這次 run 就該顯示紅——drift／監測失效／設定錯三種都不准悄悄綠燈，
+      # 即使 CODE=3（設定錯）沒有走上面的 issue 步驟。
+      - name: 依監測結果決定這次 run 成敗
+        if: always()
+        run: |
+          CODE="${{ steps.drift.outputs.code }}"
+          echo "check-source-drift.py exit code：${CODE:-未知（drift 步驟本身沒跑到）}"
+          if [ "${CODE}" != "0" ]; then
+            exit 1
+          fi

@@ -59,6 +59,6 @@
 2. 收據 gate 紅了：不准改 `quote` 遷就快照、不准塞例外清單；回報主席裁決。
 3. 「查不到」要先驗陽性對照（探針字串命中）才算查不到。
 4. **gate 綠≠合規**：`check-health-terms.py` 抓字不抓語意。新增任何會讓讀者對自己數值下判斷的呈現（分級組名、「超標」類措辭、索引卡的統計），先想 §87①「暗示或影射」，不是只看 gate。
-5. **來源會過期而沒人通知**：`manifest.json` 的 `fetched_at` 是抓取日不是有效期；ADA 每年 1 月改版、hpa 頁面隨時改。來源 sha256 監測尚未建，改版前的頁面就是錯的頁面——接手先看最舊的 `fetched_at`。
-6. **勘誤機制存在≠有人做勘誤**：`data/errata.json` 空著，沒有觸發流程（讀者回報入口、定期自查）。改了公開頁的數字卻沒加列＝違約。
+5. **來源會過期，但現在有人通知**：`manifest.json` 的 `fetched_at` 是抓取日不是有效期；ADA 每年 1 月改版、hpa 頁面隨時改。`scripts/check-source-drift.py`＋`.github/workflows/source-drift.yml` 每週一 01:00 UTC 重抓全部 46 份、比對 `data/sources/drift-baseline.json`，驗的是「判準列引用的那句話還在不在」而不是 raw sha（理由見 README「來源改版監測」段）。**能監測到的只有 curl 抓得到的來源**——`blocked`／`unreachable` 的那幾份（2026-08-28 首次 baseline：3 份，全是 diabetesjournals.org；hpa.gov.tw 當天抓得到，別從 `retrieval` 欄推名單，以每週報告為準）監測不到訊號，仍要靠人定期拿瀏覽器複查；監測全滅（exit 2）本身會開 issue，但不等於那幾份被顧到。PDF 比的是正規化文字的 sha，不是 raw bytes（EULAR PDF 實測每次下載 bytes 不同、文字相同）。
+6. **勘誤機制存在，觸發點是每週的 drift issue**：CI 對 exit 1（drift）／exit 2（監測失效）用 label `source-drift` 開或更新 issue，接手看到就要開瀏覽器核對、真的變了才進 `data/errata.json`（流程見 README「來源改版監測」段第 3、4 步）。`data/errata.json` 目前仍是 `[]`——**這代表上線以來沒有一條判準列真的改版，不代表沒人在看**；改了公開頁的數字卻沒加列，或收到 issue 沒有人核對，才是違約。監測顧不到的 `blocked`／`unreachable` 來源，沒有自動觸發點，錯過就是錯過。
 7. 別把站群其他站的譯名／fallback 政策搬過來：本站英文＝canonical、台灣官方用詞優先、**查無不用陸譯 fallback，留原文**。

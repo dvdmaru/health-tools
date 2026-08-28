@@ -126,7 +126,67 @@ python3 scripts/fetch-health-source.py --id <id> --url <url> \
 - **沒有例外清單，也不准加**：引句 grep 不中只有兩種可能——引句抄錯了，或快照不是那份
   文件。兩種都停下來給人裁決，不准塞例外，也不准反過來改 quote 去遷就快照。
 
-## 部署方式（本輪未執行）
+## 來源改版監測
+
+`scripts/check-source-drift.py` 由 `.github/workflows/source-drift.yml` 每週一
+01:00 UTC（台北 09:00）跑一次，也能 `workflow_dispatch` 手動觸發。
+
+**驗的不是 raw bytes 的 sha256，是判準列引用的那句話還在不在**。理由跟上面「快照不
+入版控只留 sha256」是同一個：46 份來源裡 13 份是瀏覽器抽出的純文字快照，跟線上 raw
+bytes 本來就對不上；線上 HTML 每次抓也可能因 nonce／時間戳／廣告位變動，raw sha 比對
+只會天天假警報，警報疲勞後沒人看＝等於沒監測。站的唯一承諾是「每個數字都能回查原
+文」，會傷到這個承諾的只有一種事——判準列引用的那句話從線上版消失了。監測就定在
+這一層（D6：驗在缺陷顯現那層）。
+
+```bash
+# 全量檢查，印摘要表，寫報告（預設寫到 ROOT/.drift/，該目錄已 .gitignore）
+python3 scripts/check-source-drift.py
+
+# 只查一份
+python3 scripts/check-source-drift.py --only <id>
+
+# 重建 baseline（平常執行只讀不寫，CI 不會、也不准 commit）
+python3 scripts/check-source-drift.py --update-baseline
+
+# 指定報告輸出位置
+python3 scripts/check-source-drift.py --report PATH.md --json PATH.json
+```
+
+狀態語意（一個欄位一種語意，不准混）：
+
+| 狀態 | 意思 |
+|---|---|
+| `ok` | 可抓、baseline 裡的引句全在、正規化文字的 sha 跟 baseline 相同 |
+| `changed-quotes-intact` | raw bytes 變了但正規化文字沒變（HTML 的 nonce、PDF 的重新打包——EULAR 的 PDF 實測同 size 每次下載 bytes 都不同），或 HTML 文字變了但引句全在——資訊級，不算 drift |
+| `drift` | baseline 裡找得到的引句現在找不到；或 PDF 的正規化文字 sha 跟 baseline 不同（PDF 內文改版一定要人看，即使引句還在） |
+| `never-verified` | baseline 建立當下這份文件的引句本來就沒對齊（通常是 JS 渲染或 PDF 抽字差異）——這些引句不納入 drift 判定，但報告會單獨列出，不准默默吞掉 |
+| `blocked` | 403／WAF 攔截頁（hpa.gov.tw `Detail.aspx`、diabetesjournals.org 這一類）——監測不到，報告寫「無法確認，需瀏覽器」，**不是** `ok` |
+| `unreachable` | 網路錯誤或逾時 |
+| `no-quotes` | manifest 有登記、`data/criteria/` 沒引用到——只比 sha，變了記 `changed-quotes-intact`，不算 drift |
+
+exit code：`0` 無 drift；`1` 至少一份 `drift`；`2` 全部 `unreachable`／`blocked`（監測
+本身失效，CI 不准當綠燈）；`3` 設定錯（baseline 缺、manifest 壞）。
+
+### 收到 drift issue 之後：人要做什麼
+
+CI 對 exit 1／2 用 label `source-drift` 找開著的 issue，有就貼新報告當 comment，沒有
+就開一份——同一個 label 去重，不會每週疊新 issue。收到之後：
+
+1. 開瀏覽器看 issue 裡列出的線上版網址。
+2. 對照判準列引用的那句話還在不在、意思有沒有變。
+3. **真的變了**：改對應的 `data/criteria/*.json`（或 `*-history.json`）→ 在
+   `data/errata.json` 加一列（schema：`data/errata-schema.json`，收據 gate 對有
+   `doc_id` 的列一樣逐句 grep）→ `scripts/fetch-health-source.py` 重抓快照、更新
+   manifest → `python3 scripts/check-source-drift.py --update-baseline` → 開 PR。
+4. **只是排版或改版但那句話沒變**（`changed-quotes-intact`）：直接
+   `python3 scripts/check-source-drift.py --update-baseline` 即可，不必動
+   `data/criteria/` 或 `errata.json`。
+5. `blocked`／`unreachable` 的來源監測不到訊號，只能靠人定期拿瀏覽器複查。名單以每週
+   報告為準，不要從 manifest 的 `retrieval` 欄推——2026-08-28 首次建 baseline 時
+   `blocked` 只有 3 份（全是 diabetesjournals.org 的 403），hpa.gov.tw 當天 curl 抓得到；
+   網域政策會變，下週可能反過來。見 MODEL.md §5。
+
+## 部署方式
 
 Cloudflare Workers static assets ＋ custom domain，與姊妹站同一套：
 
