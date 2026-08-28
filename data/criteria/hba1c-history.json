@@ -1,0 +1,147 @@
+[
+  {
+    "id": "H1",
+    "year": 1997,
+    "org": "The Expert Committee on the Diagnosis and Classification of Diabetes Mellitus（American Diabetes Association）",
+    "change": "糖尿病診斷的空腹血糖切點由 ≥140 mg/dL 下修為 ≥126 mg/dL（7.0 mmol/L）",
+    "doc_id": "ada-followup-report-2003",
+    "version": "2003（Diabetes Care 26(11):3160）",
+    "page_or_table": "正文（回顧 1997 年委員會決議段）",
+    "quote": "the cut point separating diabetes from nondiabetes was lowered from FPG ≥140 mg/dl (7.8 mmol/l) to ≥126 mg/dl (7.0 mmol/l)",
+    "corroboration": [
+      {
+        "doc_id": "iec-a1c-report-2009",
+        "quote": "the committee recommended that the FPG cut point be lowered to ≥126 mg/dl (7.0 mmol/l)"
+      }
+    ],
+    "note": "⚠️ 引句取自 ADA 2003 追蹤報告回述 1997 年決議，不是 1997 年原始論文本身。寫頁面時應寫成「ADA 在 2003 年的追蹤報告中回顧，1997 年委員會…」。",
+    "fetched_at": "2026-08-28",
+    "status": "已證實"
+  },
+  {
+    "id": "H2",
+    "year": 1997,
+    "org": "The Expert Committee on the Diagnosis and Classification of Diabetes Mellitus（American Diabetes Association）",
+    "change": "同一份報告明確否決把 HbA1c 當診斷工具，理由是方法尚未標準化",
+    "doc_id": "ada-followup-report-2003",
+    "version": "2003（Diabetes Care 26(11):3160）",
+    "page_or_table": "正文（回顧 1997 年委員會決議段）",
+    "quote": "The use of HbA1c (A1C) as a diagnostic test for diabetes was not recommended.",
+    "note": "這是理解 2009–2010 轉向的前提：HbA1c 不是一開始就被接受的診斷工具。",
+    "fetched_at": "2026-08-28",
+    "status": "已證實"
+  },
+  {
+    "id": "H3",
+    "year": 1997,
+    "org": "The Expert Committee on the Diagnosis and Classification of Diabetes Mellitus（American Diabetes Association）",
+    "change": "首次設立 IFG（空腹血糖偏高），範圍 110–125 mg/dL",
+    "doc_id": "ada-followup-report-2003",
+    "version": "2003（Diabetes Care 26(11):3160）",
+    "page_or_table": "正文（回顧 1997 年委員會決議段）",
+    "quote": "IFG identified people whose FPG ranged from 110 mg/dl (6.1 mmol/l) to 125 mg/dl (6.9 mmol/l).",
+    "fetched_at": "2026-08-28",
+    "status": "已證實"
+  },
+  {
+    "id": "H4",
+    "year": 2003,
+    "org": "The Expert Committee on the Diagnosis and Classification of Diabetes Mellitus（American Diabetes Association）",
+    "change": "IFG 下限由 110 mg/dL 下修為 100 mg/dL（5.6 mmol/L），IFG 重新定義為 100–125 mg/dL",
+    "doc_id": "ada-followup-report-2003",
+    "version": "2003（Diabetes Care 26(11):3160）",
+    "page_or_table": "正文（IFG 切點建議段）",
+    "quote": "the cut point for IFG should be reduced from 110 mg/dl to 100 mg/dl, and that IFG should be redefined as an FPG of 100–125 mg/dl (5.6–6.9 mmol/l)",
+    "fetched_at": "2026-08-28",
+    "status": "已證實"
+  },
+  {
+    "id": "H5",
+    "year": 2003,
+    "org": "World Health Organization",
+    "change": "WHO 未跟進 ADA 這次 IFG 下修，下限維持 6.1 mmol/L（110 mg/dL）",
+    "doc_id": "ada-standards-of-care-2010",
+    "version": "2010（Diabetes Care 33(Supplement_1):S11）",
+    "page_or_table": "正文（IFG 定義沿革段）",
+    "quote": "the World Health Organization (WHO) and many other diabetes organizations did not adopt this change.",
+    "corroboration": [
+      {
+        "doc_id": "who-hba1c-diagnosis-2011",
+        "quote": "The diagnostic cut-point for IFG (6.1 mmol/l; 110 mg/dl) should not be changed."
+      }
+    ],
+    "note": "主引句出自 ADA 2010（第三方敘述 WHO 的立場），WHO 自己的原文由 corroboration 那句承擔。",
+    "fetched_at": "2026-08-28",
+    "status": "已證實"
+  },
+  {
+    "id": "H6",
+    "year": 2009,
+    "org": "International Expert Committee",
+    "change": "建議以 HbA1c ≥6.5% 診斷糖尿病；依據是視網膜病變盛行率在 6.5% 開始上升",
+    "doc_id": "iec-a1c-report-2009",
+    "version": "2009（Diabetes Care 32(7):1327）",
+    "page_or_table": "正文（診斷建議與依據段）",
+    "quote": "Diabetes should be diagnosed when A1C is ≥6.5%.",
+    "quote_extra": [
+      "the optimal cut point for detecting at least moderate retinopathy was an A1C of 6.5%"
+    ],
+    "fetched_at": "2026-08-28",
+    "status": "已證實"
+  },
+  {
+    "id": "H7",
+    "year": 2009,
+    "org": "International Expert Committee",
+    "change": "高風險族群建議的是 A1C 6.0 到 <6.5%，不是後來 ADA 採用的 5.7–6.4%",
+    "doc_id": "iec-a1c-report-2009",
+    "version": "2009（Diabetes Care 32(7):1327）",
+    "page_or_table": "正文（高風險族群段）",
+    "quote": "individuals whose A1C values are close to the 6.5% A1C threshold of diabetes (i.e., ≥6.0%) should receive demonstrably effective interventions",
+    "note": "☠️ 最容易寫錯的一條：很多二手文章把 5.7–6.4% 記成 2009 年 IEC 的建議。5.7% 這條線是 ADA 2010 依 NHANES 另訂的（見 H9）。",
+    "fetched_at": "2026-08-28",
+    "status": "已證實"
+  },
+  {
+    "id": "H8",
+    "year": 2010,
+    "org": "American Diabetes Association",
+    "change": "Standards of Medical Care in Diabetes—2010 正式把 A1C ≥6.5% 納入糖尿病診斷標準",
+    "doc_id": "ada-standards-of-care-2010",
+    "version": "2010（Diabetes Care 33(Supplement_1):S11）",
+    "page_or_table": "Table 2 第 1 項",
+    "quote": "1. A1C ≥6.5%. The test should be performed in a laboratory using a method that is NGSP certified",
+    "fetched_at": "2026-08-28",
+    "status": "已證實"
+  },
+  {
+    "id": "H9",
+    "year": 2010,
+    "org": "American Diabetes Association",
+    "change": "同一版首次把 A1C 5.7–6.4% 訂為糖尿病前期；依據為 NHANES 2005–2006 的 ROC 分析",
+    "doc_id": "ada-standards-of-care-2010",
+    "version": "2010（Diabetes Care 33(Supplement_1):S11）",
+    "page_or_table": "正文（糖尿病前期段）",
+    "quote": "it is reasonable to consider an A1C range of 5.7–6.4% as identifying individuals with high risk for future diabetes",
+    "fetched_at": "2026-08-28",
+    "status": "已證實"
+  },
+  {
+    "id": "H10",
+    "year": 2011,
+    "org": "World Health Organization",
+    "change": "採納 HbA1c 6.5% 為診斷切點，但明言證據不足以對 <6.5% 做任何正式建議（＝不設前期判準）",
+    "doc_id": "who-hba1c-diagnosis-2011",
+    "version": "2011",
+    "page_or_table": "第 3 頁 Recommendations（諮詢會日期見第 1 頁）",
+    "quote": "An HbA1c of 6.5% is recommended as the cut point for diagnosing diabetes.",
+    "quote_extra": [
+      "insufficient evidence to make any formal recommendation on the interpretation of HbA1c levels below 6.5%",
+      "A WHO expert consultation was held from 28 to 30 March 2009",
+      "GRADE strength of recommendation: conditional"
+    ],
+    "status": "已證實（需補充）",
+    "note": "需一起講的兩件事：(1) WHO 專家諮詢會是 2009 年 3 月 28–30 日召開，2011 年才出報告，「2011 年決定」是報告出版年而非決議年；(2) WHO 的採納是 conditional 等級，不是無條件採納。",
+    "fetched_at": "2026-08-28"
+  }
+]

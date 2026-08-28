@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://health.twtools.cc/schema/criteria-history.json",
+  "title": "判準變更史明細列（data/criteria/<indicator>-history.json）",
+  "description": "一列＝某機構在某一年，對某個判準做過的一次具名變更。\n\n☠️ 只存明細，不存統計：本檔禁止任何統計或彙總欄位（變更次數、最後一次年份、「共下修 N 次」…）。頁面要顯示「四次變更」就對明細做 len()。\n\n☠️ 這一層最容易出的錯不是算錯，是把二手轉述當一手：change 欄可以是我們的敘述，quote 必須是來源原文，且必須 grep 得回快照。回述型引句（例：2003 年報告回顧 1997 年決議）要在 note 標明它是回述而非當年原文。",
+  "type": "array",
+  "items": {
+    "$ref": "#/$defs/change"
+  },
+  "$defs": {
+    "change": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "year",
+        "org",
+        "change",
+        "doc_id",
+        "version",
+        "page_or_table",
+        "quote",
+        "status",
+        "fetched_at"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^H[0-9]{1,3}$",
+          "description": "本檔內的列號（H1、H2…），對應 facts pack 的變更史編號。"
+        },
+        "year": {
+          "type": "integer",
+          "minimum": 1900,
+          "maximum": 2100,
+          "description": "變更發生的年份（不是文件出版年份）。兩者不同時以 note 說明。"
+        },
+        "org": {
+          "type": "string",
+          "minLength": 1,
+          "description": "做出變更的機構全名，照原文抄，不縮短。"
+        },
+        "change": {
+          "type": "string",
+          "minLength": 1,
+          "description": "變更內容的敘述。這是我們寫的，不是原文——原文在 quote。"
+        },
+        "doc_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]{1,63}$",
+          "description": "quote 所在文件，指向 data/sources/manifest.json 的 id。"
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "description": "該文件自己標示的版本／年份。"
+        },
+        "page_or_table": {
+          "type": "string",
+          "minLength": 1,
+          "description": "quote 在文件中的位置。四項出處之一，不得留空。"
+        },
+        "quote": {
+          "type": "string",
+          "minLength": 1,
+          "description": "原文引句，照抄不美化，必須 grep 得回快照。"
+        },
+        "quote_extra": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "description": "選填。同一份文件的其他不連續引句；每一句同樣受收據 gate 逐句 grep。"
+        },
+        "corroboration": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "doc_id",
+              "quote"
+            ],
+            "properties": {
+              "doc_id": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9-]{1,63}$"
+              },
+              "quote": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "description": "選填。另一份獨立文件對同一件事的佐證引句。doc_id 一樣要指得到 manifest，quote 一樣要 grep 得回那份快照。☠️ 這裡放的是「第二個一手來源」，不是「我們覺得也對的話」。"
+        },
+        "status": {
+          "enum": [
+            "已證實",
+            "已證實（需補充）",
+            "未證實"
+          ],
+          "description": "查證結果。未證實的列不得渲染。已證實（需補充）＝主張成立但有必須一起講的限定條件，寫在 note。"
+        },
+        "fetched_at": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "note": {
+          "type": "string",
+          "description": "選填。回述性質、限定條件、與其他列的關係。"
+        }
+      }
+    }
+  }
+}

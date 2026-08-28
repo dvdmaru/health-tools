@@ -9,3 +9,19 @@ node_modules/
 # 產物 diff、掩蓋真正的變更。_headers 是手寫設定檔，不是產物，要進。
 public-health/*
 !public-health/_headers
+
+# ☠️ licensed-cite-only 的來源快照不入版控。
+# 這個 repo 是 public 的，而 data/sources/schema.json 對 licensed-cite-only 的定義是
+# 「只能引短句並標出處，不得整段重製、不得落地公開快照」——把 ADA／WHO／DAROC／NGSP
+# 的全文推上公開 repo 就是整段重製。快照仍留在本機供收據 gate 逐句回查，
+# manifest 保留 sha256 與 local_path（sha256 才是偵測上游改版的訊號，不是檔案本身）。
+# CI 上這些檔案不存在，收據 gate 對它們印 SKIP 而不是 PASS——這是誠實的，不是漏驗。
+# 另：daroc 的 PDF 13MB，本來就超過 5MB 的入版控上限。
+# 要新增一份 licensed-cite-only 快照時，記得同步加到這裡（tests 會檢查）。
+data/sources/ada-standards-of-care-2026.txt
+data/sources/ada-standards-of-care-2010.txt
+data/sources/ada-followup-report-2003.txt
+data/sources/who-hba1c-diagnosis-2011.pdf
+data/sources/daroc-t2dm-guideline-2022.pdf
+data/sources/ngsp-ifcc-standardization.html
+data/sources/ngsp-convert-table.html
