@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://health.twtools.cc/schema/criteria.json",
+  "title": "判準明細列（data/criteria/<indicator>.json）",
+  "description": "一列＝某機構在某份文件的某個位置，對某個指標、某個族群、某個判定類別給出的一組數值界線。\n\n☠️ 只存明細，不存統計：本檔**禁止任何統計或彙總欄位**（機構數、判準數、最寬鬆值、平均、共識值…）。頁面上要顯示「幾個機構」就對明細做 len()，要顯示「範圍」就對明細做 filter，永遠不對總數做加減。姊妹站的數據錯誤全部出自「先存了一個統計值，之後對它做減法」。\n\n四項出處（org＋doc_id＋version＋page_or_table）缺一即不得渲染這一列；quote 是回查原文的鑰匙，不得為空、不得改寫。",
+  "type": "array",
+  "items": { "$ref": "#/$defs/criterion" },
+  "$defs": {
+    "criterion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["indicator_id", "org", "doc_id", "version", "category",
+                   "lower", "upper", "unit", "population", "page_or_table",
+                   "quote", "fetched_at"],
+      "properties": {
+        "indicator_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]{1,63}$",
+          "description": "指標代號（如 hba1c、fpg、ogtt-2h）。URL 用它，一經上線不得更名。"
+        },
+        "org": {
+          "type": "string",
+          "minLength": 1,
+          "description": "發布判準的機構全名，照原文抄，不縮短（「衛生福利部國民健康署」不寫成「國健署」）。"
+        },
+        "doc_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]{1,63}$",
+          "description": "指向 data/sources/manifest.json 的 id。指不到既有來源的判準列不得渲染。"
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "description": "該判準所屬的文件版本／年份，抄自來源文件自己的標示。"
+        },
+        "category": {
+          "enum": ["diagnosis", "prediabetes", "screening_triage", "method_requirement",
+                   "confirmation_procedure", "retest_timing", "exclusion_rule",
+                   "grade_rating", "service_eligibility", "test_panel_item",
+                   "reimbursement", "policy_change"],
+          "description": "判定類別白名單。☠️ 分類是判準的一部分，不是標籤：把『篩檢分流門檻』標成 diagnosis，就會在頁面上把操作門檻講成診斷線。要新增類別必須先改這份白名單並說明它與既有類別的差別，不得就地自創。"
+        },
+        "lower": {
+          "type": ["number", "null"],
+          "description": "下界；該判準沒有下界（或不是數值型判準）填 null。單位以 unit 為準，不做換算——換算過的數字不是來源說的話。"
+        },
+        "upper": {
+          "type": ["number", "null"],
+          "description": "上界；沒有上界填 null。"
+        },
+        "lower_inclusive": {
+          "type": "boolean",
+          "default": true,
+          "description": "下界是否含等於（≥ 為 true，> 為 false）。選填，預設 true。原文的 ≥／> 差異由這裡承載，quote 仍是最終依據。"
+        },
+        "upper_inclusive": {
+          "type": "boolean",
+          "default": true,
+          "description": "上界是否含等於。選填，預設 true。"
+        },
+        "unit": {
+          "type": ["string", "null"],
+          "description": "單位，照來源寫法抄（%（NGSP）、mg/dL、歲…）。非數值型判準填 null。"
+        },
+        "population": {
+          "type": "string",
+          "minLength": 1,
+          "description": "適用族群，照來源寫法抄。來源沒寫就寫「來源未標示」，不得自行推斷成「一般成人」。"
+        },
+        "page_or_table": {
+          "type": "string",
+          "minLength": 1,
+          "description": "在文件中的位置（第 N 頁／Table 2.1／第四章 表二／網頁段落標題）。四項出處之一，不得留空。"
+        },
+        "quote": {
+          "type": "string",
+          "minLength": 1,
+          "description": "原文引句，照抄不美化：英文源保留英文，中文源保留原用字，含來源自己的 ≧／≥、mg/dl／mg/dL 不一致也照抄。這是唯一能把數字 grep 回原始文件的東西，空字串即等於這一列沒有出處。"
+        },
+        "fetched_at": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "這一列的引句是哪一天從來源看到的（台北時間 YYYY-MM-DD）。與版本無關。"
+        },
+        "note": {
+          "type": "string",
+          "description": "選填。這一列的限定條件或與其他列的關係（例：這是篩檢流程門檻，不是診斷判準）。"
+        },
+        "superseded_by": {
+          "type": ["string", "null"],
+          "description": "選填。被同機構後續版本取代時，指向取代它的那一列所屬的 doc_id。舊列保留不刪——判準沿革本身就是內容。"
+        }
+      }
+    }
+  }
+}

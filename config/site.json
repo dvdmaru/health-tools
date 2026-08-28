@@ -1,0 +1,24 @@
+{
+  "_comment": "health.twtools.cc 站身分單一資料源（org/website JSON-LD + 頁面 chrome）。base 無尾斜線。ga_id 為空字串＝GA property 尚未申請，不輸出 GA tag（填入 id 即全站生效）。published:false＝M0 dormant wiring：地基接好但尚未公開，翻開關前不得生成任何指標頁。nav 目前只有首頁與指標索引，其餘入口等對應里程碑再加。",
+  "base": "https://health.twtools.cc",
+  "published": false,
+  "org_name": "健檢數據誌",
+  "org_same_as": [],
+  "website_name": "健檢數據誌",
+  "website_desc": "每個數字都有出處的健檢指標整理站",
+  "home_title": "健檢報告上的數字，各機構判準並列",
+  "brand_mark": "@HEALTH",
+  "brand_tag": "健檢指標 · 逐項標註出處",
+  "title_suffix": "健檢數據誌",
+  "feed_channel_title": "健檢數據誌 — 指標頁與判準整理",
+  "feed_channel_desc": "健康檢查報告上的各項指標，並列不同機構的判準值，每個數字標註機構、文件、版本與頁碼。繁體中文。",
+  "default_theme": "paper",
+  "nav": [
+    { "label": "首頁", "href": "/", "key": "home" },
+    { "label": "指標", "href": "/indicators/", "key": "indicators" }
+  ],
+  "footer_links": [
+    { "label": "指標索引", "href": "/indicators/" }
+  ],
+  "ga_id": ""
+}

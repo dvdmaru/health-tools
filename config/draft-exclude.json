@@ -1,0 +1,4 @@
+{
+  "_comment": "build-side 草稿 gate：exclude 列的 slug 不進 index/feed/sitemap/首頁/個別頁。未 cross-check 完的稿子先加進去，審完移除即發布。",
+  "exclude": []
+}

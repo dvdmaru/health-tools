@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.DS_Store
+node_modules/
+.wrangler/
+
+# 生成產物不入版控直到公開日（百科線 playbook 工程紀律 2）：
+# public-health/ 由 build 腳本重生，決定性且可重現，進 git 只會讓每個 PR 夾一堆
+# 產物 diff、掩蓋真正的變更。_headers 是手寫設定檔，不是產物，要進。
+public-health/*
+!public-health/_headers

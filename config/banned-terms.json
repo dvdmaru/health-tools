@@ -1,0 +1,53 @@
+{
+  "_comment": "禁詞 gate 的唯一資料源，內容照 Style Spec v1 §3 五類逐條落地（招徠／療效／產品／自我標榜／gate 語言）。掃描器＝scripts/check-health-terms.py。level=absolute 命中即 exit 1；level=conditional 命中印 WARN 等人工判定（exit 0）。term 是顯示用的詞；有 pattern 時以 pattern（正規表示式）為準。allow_context 是該詞專屬的白名單語境：命中落在白名單語境的比對範圍內即放行（例：「成人預防保健」是服務名稱，裡面的「預防」不是療效宣稱）。exceptions 是全域放行語境，目前只有一條：119／急診例外句型。",
+  "categories": {
+    "solicitation": "招徠類（醫療法 §87① 暗示招徠）",
+    "efficacy": "療效類（暗示療效／預防定論）",
+    "product": "產品類（品牌名／導購）",
+    "self_promotion": "自我標榜類（誠實是預設不是賣點）",
+    "gate_language": "gate 語言類（內部紀律誤入正文）"
+  },
+  "exceptions": [
+    {
+      "id": "emergency-119",
+      "pattern": "(?:若|如)(?:有|出現)[^。！？\n]{0,80}(?:等)?立即危險徵象[^。！？\n]{0,30}(?:撥打\\s*119|前往急診)[^。！？\n]{0,30}[。]",
+      "note": "唯一允許的導引就醫句型：客觀列出具體急症徵象後，接『請撥打 119 或前往急診。』三要件缺一即誤用——(1) 前面要先列出具體徵象、(2) 只能用 119／急診不得換成日常語氣或點名機構、(3) 不得用在非緊急情境（不是每頁收尾的萬用句）。要件 1 與 3 機器擋不住，只有句型放行，仍需人工核。"
+    }
+  ],
+  "terms": [
+    { "term": "推薦醫院", "level": "absolute", "category": "solicitation" },
+    { "term": "推薦診所", "level": "absolute", "category": "solicitation" },
+    { "term": "推薦醫師", "level": "absolute", "category": "solicitation" },
+    { "term": "找 XX 科（點名科別）", "pattern": "找[^\\s，。、！？]{1,4}科(?![學技])", "level": "absolute", "category": "solicitation" },
+    { "term": "建議做進一步檢查", "pattern": "建議(?:您)?(?:做|接受|安排)進一步(?:的)?檢查", "level": "absolute", "category": "solicitation" },
+    { "term": "掛號", "level": "absolute", "category": "solicitation" },
+    { "term": "建議就診", "pattern": "就診", "level": "conditional", "category": "solicitation", "note": "只能改寫成「建議與您的醫師討論」，不可保留「就診」二字。" },
+    { "term": "立即就醫", "pattern": "(?:立即|馬上|盡快|趕快)就醫", "level": "conditional", "category": "solicitation", "note": "僅限 119／急診例外句型可用；一般段落一律改寫。" },
+
+    { "term": "治癒", "level": "absolute", "category": "efficacy" },
+    { "term": "根治", "level": "absolute", "category": "efficacy" },
+    { "term": "逆轉", "level": "absolute", "category": "efficacy" },
+    { "term": "有效", "level": "absolute", "category": "efficacy", "note": "除非直接引用文獻結論並加註「該研究之結論，非本站主張」；要用就走人工判定，不放寬 gate。" },
+    { "term": "改善", "level": "conditional", "category": "efficacy", "note": "只能在轉述指引原文並附出處、且用語意強度鎖表降級語氣（如「與改善…有關」）時使用。" },
+    { "term": "預防", "level": "conditional", "category": "efficacy", "allow_context": ["成人預防保健", "預防保健服務", "預防醫學"], "note": "療效語境一律改寫成「與較低風險有關」。服務／學科名稱（成人預防保健等）不在此限。" },
+    { "term": "預防 XX 病", "pattern": "預防[^\\s，。、！？]{0,6}(?:病|症)", "level": "conditional", "category": "efficacy" },
+
+    { "term": "立即購買", "pattern": "(?:立即|馬上|現在)(?:購買|下單|選購)", "level": "absolute", "category": "product" },
+    { "term": "導購連結", "pattern": "(?:導購|團購|優惠碼|折扣碼|加入購物車)", "level": "absolute", "category": "product" },
+    { "term": "保健食品", "pattern": "(?:保健食品|保健品|營養補充品|膳食補充劑)", "level": "conditional", "category": "product", "note": "品牌名與商品名無法窮舉，只能靠人工核。命中時檢查：有無出現品牌／商品名、有無標價或購買連結。學名與成分名可用，但不得連結購買或標價。" },
+
+    { "term": "誠實說", "level": "absolute", "category": "self_promotion" },
+    { "term": "照實說", "level": "absolute", "category": "self_promotion" },
+    { "term": "老實說", "level": "absolute", "category": "self_promotion" },
+    { "term": "坦白說", "level": "absolute", "category": "self_promotion" },
+    { "term": "我們查證了", "pattern": "我們(?:已)?查證(?:了|過)?", "level": "absolute", "category": "self_promotion" },
+    { "term": "本站查核後", "pattern": "本站(?:已)?查(?:核|證)(?:後|過|了)?", "level": "absolute", "category": "self_promotion" },
+    { "term": "本文查到的／本文沒有找到", "pattern": "本文(?:查到|沒有找到|找不到|未找到)", "level": "absolute", "category": "self_promotion", "note": "射程要用主詞與限定詞承載，不用「本文」後設句。" },
+
+    { "term": "本文不做推測", "pattern": "本文不(?:做|作)推測", "level": "absolute", "category": "gate_language" },
+    { "term": "本文一律採", "pattern": "本文一律(?:採|用)", "level": "absolute", "category": "gate_language" },
+    { "term": "本文不引用", "level": "absolute", "category": "gate_language" },
+    { "term": "「只能寫 X 不可以寫成 Y」句型", "pattern": "只能寫[^。\n]{0,30}不(?:可以|得|能)寫成", "level": "absolute", "category": "gate_language" },
+    { "term": "準確的說法是", "level": "absolute", "category": "gate_language" }
+  ]
+}

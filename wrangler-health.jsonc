@@ -1,0 +1,25 @@
+{
+  // health.twtools.cc — Cloudflare Workers static-assets 部署設定。
+  // 部署（M0 尚未執行；地基階段只寫檔，不上線）：
+  //   CLOUDFLARE_API_TOKEN=$(cat ~/.config/cloudflare/<token 檔>) \
+  //   CLOUDFLARE_ACCOUNT_ID=<account id> \
+  //   npx wrangler deploy -c wrangler-health.jsonc </dev/null
+  // Account id 不寫死在這裡，走環境變數（CI secrets／本機）。
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "health-tools",
+  "compatibility_date": "2026-08-28",
+  "observability": {
+    "enabled": true
+  },
+  "assets": {
+    "directory": "public-health"
+  },
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  // Custom domain — Cloudflare 會自動建 health.twtools.cc 的 DNS 記錄與憑證
+  // （前提：twtools.cc zone 在同一個帳號底下）。
+  "routes": [
+    { "pattern": "health.twtools.cc", "custom_domain": true }
+  ]
+}

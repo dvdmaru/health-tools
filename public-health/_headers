@@ -1,0 +1,15 @@
+# Cloudflare 安全標頭 — 套用到 health.twtools.cc 的每一條路徑。
+# CSP 允許本站自己的 inline CSS/JS，加上實際會用到的外部來源：Google Fonts 與 GA4。
+# 圖片為自架檔案與 data: URI。script-src 需要 'unsafe-inline' 是因為頁面用了
+# inline <script>（主題切換、GA 片段）；JS 端的逸出處理是互補的 XSS 防線。
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=(), interest-cohort=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'; img-src 'self' data: https://www.googletagmanager.com https://*.google-analytics.com; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://*.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; upgrade-insecure-requests
+
+# 共用 CSS 檔名含內容 hash，改內容必換檔名 → 可以放心長快取。
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable

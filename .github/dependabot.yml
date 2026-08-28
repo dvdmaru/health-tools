@@ -1,0 +1,18 @@
+# Dependabot — 自動盯 GitHub Actions 版本，有新版或 deprecation 就發升級 PR。
+# 分組成單一 PR，避免每個 action 各開一條。
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "05:00"
+      timezone: "Asia/Taipei"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "ci"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
