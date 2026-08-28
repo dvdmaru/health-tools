@@ -52,22 +52,50 @@ def build_into(tmp: pathlib.Path, published: bool):
     return html, pages, out, parts, llms
 
 
+def expected_group_order(rows: list, ids: list):
+    """把資料列排成「頁面上應該長的組序」：多指標＝先 indicator 再 category。
+
+    ☠️ 這裡故意不呼叫 gen.group_criteria_rows()：測試要有自己獨立的一份順序，
+    借生成器的分組來當期望值，分組排錯時兩邊會一起錯（假綠）。
+    """
+    order = ids if len(ids) > 1 else [None]
+    out = []
+    for iid in order:
+        for cat in gen.TABLE_CATEGORIES:
+            out += [r for r in rows if r["category"] == cat
+                    and (iid is None or r["indicator_id"] == iid)]
+    return out
+
+
 def criteria_rows():
-    rows = json.loads(CRITERIA.read_text(encoding="utf-8"))
-    return [r for r in rows
+    rows = [r for r in json.loads(CRITERIA.read_text(encoding="utf-8"))
             if r["indicator_id"] == SLUG and r["category"] in gen.TABLE_CATEGORIES]
+    return expected_group_order(rows, [SLUG])
+
+
+def crit_groups(html: str):
+    """回傳判準表的每一組：[(summary 純文字, 有沒有 open, [資料列…])]。"""
+    import html as html_lib
+
+    def text(s):
+        return html_lib.unescape(re.sub(r"<[^>]+>", "", s))
+
+    out = []
+    for attrs, block in re.findall(r'<details class="crit-grp"([^>]*)>(.*?)</details>',
+                                   html, re.S):
+        summary = text(re.search(r"<summary>(.*?)</summary>", block, re.S).group(1))
+        cells = []
+        for tr in re.findall(r"<tr>(.*?)</tr>", block, re.S):
+            tds = re.findall(r"<td>(.*?)</td>", tr, re.S)
+            if tds:
+                cells.append([text(c) for c in tds])
+        out.append((summary, "open" in attrs, cells))
+    return out
 
 
 def table_cells(html: str):
-    """回傳判準表的資料列（每列＝四欄純文字）。"""
-    import html as html_lib
-    table = re.search(r'<table class="std-table">.*?</table>', html, re.S).group(0)
-    out = []
-    for tr in re.findall(r"<tr>(.*?)</tr>", table, re.S):
-        cells = re.findall(r"<td>(.*?)</td>", tr, re.S)
-        if cells:
-            out.append([html_lib.unescape(re.sub(r"<[^>]+>", "", c)) for c in cells])
-    return out
+    """回傳判準表的資料列（每列＝各欄純文字），依組在頁面上出現的順序串起來。"""
+    return [row for _, _, cells in crit_groups(html) for row in cells]
 
 
 def unbacked_numbers(cell: str, row: dict) -> list:
@@ -97,7 +125,8 @@ class DeterministicOutput(unittest.TestCase):
             def strip(s):
                 # 拿掉 published 才有的入口（導覽、頁尾、麵包屑的 item），
                 # 再把因此空掉的行收乾淨；剩下的必須逐字相同。
-                s = re.sub(r'<a href="/indicators/"[^>]*>.*?</a>', "", s)
+                # /errata/ 是 M5 加的頁尾連結，與 /indicators/ 同樣帶 requires:published。
+                s = re.sub(r'<a href="/(?:indicators|errata)/"[^>]*>.*?</a>', "", s)
                 s = s.replace(',"item":"https://health.twtools.cc/indicators/"', "")
                 return "\n".join(l for l in s.splitlines() if l.strip())
             self.assertEqual(strip(dormant), strip(live))
@@ -127,6 +156,12 @@ class NumbersTraceBackToData(unittest.TestCase):
         """陰性對照：檢查器對被竄改的數字必須紅，否則上面那條是假綠。"""
         row = next(r for r in self.rows if r.get("lower") is not None)
         self.assertNotEqual([], unbacked_numbers("糖尿病診斷：≥6.7%", row))
+
+    def test_summary_line_counts_match_the_data(self):
+        """表前那行「共 N 列，分 K 組」的兩個數字都由資料算，不是寫死的。"""
+        self.assertIn(
+            f'<p class="crit-sum">共 {len(self.rows)} 列，'
+            f"分 {len(crit_groups(self.html))} 組；", self.html)
 
     def test_population_and_source_columns_come_from_data(self):
         mf = gen.manifest_index()
@@ -409,12 +444,17 @@ def build_fixture_page(tmp: pathlib.Path, md: str, rows: list, slug: str = MULTI
     llms = out / "llms.txt"
     llms.write_text("# 健檢數據誌\n\n## 引用說明\n\n- 一行。\n", encoding="utf-8")
 
-    keep = (gen.SRC_DIR, gen.CRITERIA_DIR)
-    gen.SRC_DIR, gen.CRITERIA_DIR = src, crit
+    # 勘誤層也一起注入成空的：fixture 的 SRC_DIR 只有這一頁，repo 的 data/errata.json
+    # 哪天真的多一列（slug 是別的頁），全量 build 會判定「勘誤指不到任何指標頁」而中止，
+    # 這些與勘誤無關的 fixture 就會集體紅。勘誤本身有自己的測試（ErrataOnTheIndicatorPage）。
+    (tmp / "errata.json").write_text("[]", encoding="utf-8")
+
+    keep = (gen.SRC_DIR, gen.CRITERIA_DIR, gen.ERRATA_PATH)
+    gen.SRC_DIR, gen.CRITERIA_DIR, gen.ERRATA_PATH = src, crit, tmp / "errata.json"
     try:
         gen.build(out_root=out, parts_dir=tmp / "parts", llms_path=llms, published=False)
     finally:
-        gen.SRC_DIR, gen.CRITERIA_DIR = keep
+        gen.SRC_DIR, gen.CRITERIA_DIR, gen.ERRATA_PATH = keep
     return (out / "indicators" / slug / "index.html").read_text(encoding="utf-8")
 
 
@@ -428,12 +468,15 @@ class MultiIndicatorPage(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.tmp, ignore_errors=True)
 
-    def test_table_gains_an_indicator_column_from_the_frontmatter_labels(self):
-        self.assertIn("<th>指標</th>", self.html)
-        cells = table_cells(self.html)
-        self.assertEqual(["收縮壓", "收縮壓", "舒張壓"], [c[0] for c in cells])
-        for row in cells:
-            self.assertEqual(5, len(row), "多指標頁的判準表是五欄（指標在最前）")
+    def test_indicator_label_from_the_frontmatter_names_each_group(self):
+        """M5：短標籤從「指標」欄搬到組名上（意圖不變＝短標籤只能來自 frontmatter，
+        頁面上看得到每一列屬於哪個指標；改的只是它出現在哪裡）。"""
+        self.assertNotIn("<th>指標</th>", self.html)
+        groups = crit_groups(self.html)
+        self.assertEqual(["收縮壓｜分級（1 列）", "收縮壓｜風險門檻（1 列）",
+                          "舒張壓｜分級（1 列）"], [g[0] for g in groups])
+        for row in table_cells(self.html):
+            self.assertEqual(4, len(row), "指標搬到組名後，表回到四欄")
 
     def test_only_declared_indicators_and_table_categories_are_rendered(self):
         cells = table_cells(self.html)
@@ -500,7 +543,7 @@ class MissingIndicatorLabelsAborts(unittest.TestCase):
 
     def test_complete_labels_do_not_abort(self):
         """陽性對照：補齊就要過，否則上面三條可能是別的原因紅的。"""
-        self.assertIn("<th>指標</th>", self._build(MULTI_MD))
+        self.assertIn("<summary>收縮壓｜", self._build(MULTI_MD))
 
 
 class SingleIndicatorPageKeepsItsShape(unittest.TestCase):
@@ -607,6 +650,333 @@ class NewTableCategories(unittest.TestCase):
         for c in gen.TABLE_CATEGORIES:
             with self.subTest(category=c):
                 self.assertIn(c, enum, "生成器收的類別不在 schema 白名單裡（兩邊各長各的）")
+
+
+# ---------- M5：判準表分組折疊 ----------
+
+SINGLE_MD = MULTI_MD.replace(
+    "indicator_ids: [sbp, dbp]\nindicator_labels: {sbp: 收縮壓, dbp: 舒張壓}\n",
+    "indicator_id: sbp\ncriteria_chart_caption: 收縮壓的各機構判準\n")
+
+# 14 列（> CRIT_OPEN_ALL_MAX）：要驗的是「只有診斷與分級預設展開」，所以這份
+# fixture 必須超過全展開的門檻，否則測到的是 ≤12 那條規則。
+BIG_ROWS = [
+    _fixture_row("sbp", "diagnosis", 140, None, "mmHg"),
+    _fixture_row("sbp", "diagnosis", 130, None, "mmHg"),
+    _fixture_row("sbp", "classification", 120, 129, "mmHg"),
+    _fixture_row("sbp", "classification", 130, 139, "mmHg"),
+    _fixture_row("sbp", "classification", 140, 159, "mmHg"),
+    _fixture_row("sbp", "screening_triage", 135, None, "mmHg"),
+    _fixture_row("sbp", "screening_triage", 125, None, "mmHg"),
+    _fixture_row("sbp", "risk_threshold", 150, None, "mmHg"),
+    _fixture_row("dbp", "diagnosis", 90, None, "mmHg"),
+    _fixture_row("dbp", "diagnosis", 85, None, "mmHg"),
+    _fixture_row("dbp", "classification", 80, 89, "mmHg"),
+    _fixture_row("dbp", "screening_triage", 84, None, "mmHg"),
+    _fixture_row("dbp", "risk_threshold", 95, None, "mmHg"),
+    _fixture_row("dbp", "no_criterion_stated", None, None, None),
+]
+
+
+def _cat_of(summary: str) -> str:
+    return re.sub(r"（\d+ 列）$", "", summary).rpartition("｜")[2]
+
+
+class CriteriaTableGrouping(unittest.TestCase):
+    """判準表改成一組一表的原生 <details>：分組鍵、組序、預設展開、沒有列被吃掉。"""
+
+    def _build(self, md, rows):
+        with tempfile.TemporaryDirectory() as d:
+            return build_fixture_page(pathlib.Path(d), md, rows)
+
+    def setUp(self):
+        self.html = self._build(MULTI_MD, BIG_ROWS)
+        self.groups = crit_groups(self.html)
+
+    def test_one_group_per_indicator_and_category_pair(self):
+        pairs = list(dict.fromkeys((r["indicator_id"], r["category"]) for r in BIG_ROWS))
+        self.assertEqual(len(pairs), len(self.groups))
+        self.assertEqual(9, len(self.groups))
+
+    def test_group_order_is_indicator_ids_then_table_categories(self):
+        self.assertEqual(
+            ["收縮壓｜診斷", "收縮壓｜篩檢分流（非診斷判準）", "收縮壓｜分級",
+             "收縮壓｜風險門檻", "舒張壓｜診斷", "舒張壓｜篩檢分流（非診斷判準）",
+             "舒張壓｜分級", "舒張壓｜風險門檻", "舒張壓｜未訂判準"],
+            [re.sub(r"（\d+ 列）$", "", s) for s, _, _ in self.groups])
+
+    def test_summary_carries_the_short_label_and_the_row_count(self):
+        for summary, _, cells in self.groups:
+            with self.subTest(summary=summary):
+                self.assertRegex(summary, r"^(收縮壓|舒張壓)｜")
+                self.assertTrue(summary.endswith(f"（{len(cells)} 列）"), summary)
+
+    def test_only_diagnosis_classification_and_risk_groups_are_open(self):
+        for summary, is_open, _ in self.groups:
+            with self.subTest(summary=summary):
+                self.assertEqual(_cat_of(summary) in ("診斷", "分級", "風險門檻"), is_open)
+        self.assertEqual(6, sum(1 for _, o, _ in self.groups if o))
+
+    def test_a_short_page_opens_every_group(self):
+        """≤12 列的頁面全部展開：組本來就少的時候，折疊只是多一次點擊。"""
+        groups = crit_groups(self._build(MULTI_MD, MULTI_ROWS))
+        self.assertEqual(3, len(groups))
+        self.assertLessEqual(sum(len(g[2]) for g in groups), gen.CRIT_OPEN_ALL_MAX)
+        self.assertTrue(all(o for _, o, _ in groups),
+                        "≤12 列時連風險門檻組也要展開（門檻規則蓋過類別規則）")
+
+    def test_no_row_disappears_into_a_fold(self):
+        self.assertEqual(len(BIG_ROWS), sum(len(g[2]) for g in self.groups))
+        self.assertIn(f'<p class="crit-sum">共 {len(BIG_ROWS)} 列，'
+                      f"分 {len(self.groups)} 組；", self.html)
+
+    def test_rows_inside_a_group_keep_the_original_json_order(self):
+        """組內不重排：分級組的三列要照 json 裡的行序出現。"""
+        cells = next(c for s, _, c in self.groups
+                     if s.startswith("收縮壓｜分級"))
+        self.assertEqual(["分級：120–129 mmHg", "分級：130–139 mmHg",
+                          "分級：140–159 mmHg"], [c[1] for c in cells])
+
+    def test_single_indicator_groups_drop_the_indicator_segment(self):
+        html = self._build(SINGLE_MD, [r for r in BIG_ROWS if r["indicator_id"] == "sbp"])
+        groups = crit_groups(html)
+        self.assertEqual(["診斷（2 列）", "篩檢分流（非診斷判準）（2 列）",
+                          "分級（3 列）", "風險門檻（1 列）"], [s for s, _, _ in groups])
+        for summary, _, _ in groups:
+            self.assertNotIn("｜", summary)
+        self.assertNotIn("<th>指標</th>", html)
+        for row in table_cells(html):
+            self.assertEqual(4, len(row), "單指標頁的判準表維持四欄")
+
+    def test_folding_uses_native_details_and_no_script(self):
+        """折疊只能用原生 <details>：內容全在 DOM，爬蟲與 RAG 讀得到。"""
+        self.assertEqual(len(self.groups), self.html.count('<details class="crit-grp"'))
+        self.assertEqual(len(self.groups), self.html.count("<summary>"))
+        self.assertEqual([], [s for s in re.findall(r'<script[^>]*\ssrc="([^"]+)"', self.html)
+                              if "googletagmanager" not in s])
+        self.assertNotIn("onclick", self.html.split("<main>")[1])
+
+    def test_two_runs_are_byte_identical(self):
+        self.assertEqual(self.html, self._build(MULTI_MD, BIG_ROWS))
+
+
+# ---------- M5：勘誤紀錄（data/errata.json → 指標頁段落＋站級 /errata/） ----------
+
+# 三列刻意造成「同一天兩列」「id 兩位數」：排序要是 date 由新到舊、同日 id 由大到小，
+# 而且 id 不能照字串排（E10 照字串會排到 E2 前面就綠得莫名其妙，照字串排 E2 會贏）。
+ERRATA_ROWS = [
+    {"id": "E1", "date": "2026-09-01", "slug": SLUG, "section": "table",
+     "was": "篩檢分流：≥5.9%", "now": "篩檢分流（非診斷判準）：≥5.9%",
+     "reason": "原標籤沒在表上寫明這不是診斷線。"},
+    {"id": "E2", "date": "2026-09-10", "slug": "blood-pressure", "section": "3",
+     "was": "140/90 已作廢", "now": "140/90 被降成第 2 級",
+     "reason": "原句把「降級」寫成「作廢」。"},
+    {"id": "E10", "date": "2026-09-10", "slug": SLUG, "section": "2",
+     "was": "ADA 把糖尿病前期畫在 6.5%", "now": "ADA 把糖尿病診斷畫在 6.5%",
+     "reason": "原句把兩條線寫反了。",
+     "doc_id": MULTI_DOC, "quote": "A1C ≥6.5% (≥48 mmol/mol)."},
+]
+
+
+def build_with_errata(tmp: pathlib.Path, rows: list, published: bool = False):
+    """把 errata fixture 餵給 build()：patch gen.ERRATA_PATH（與 SRC_DIR／CRITERIA_DIR
+    同一套注入法），不動 repo 內的 data/errata.json。"""
+    path = tmp / "errata.json"
+    path.write_text(json.dumps(rows, ensure_ascii=False), encoding="utf-8")
+    keep = gen.ERRATA_PATH
+    gen.ERRATA_PATH = path
+    try:
+        return build_into(tmp, published)
+    finally:
+        gen.ERRATA_PATH = keep
+
+
+def errata_items(html: str):
+    """回傳 <ol class="errata"> 裡每一項的純文字。"""
+    import html as html_lib
+    m = re.search(r'<ol class="errata">(.*?)</ol>', html, re.S)
+    if not m:
+        return []
+    return [html_lib.unescape(re.sub(r"<[^>]+>", "", li))
+            for li in re.findall(r"<li>(.*?)</li>", m.group(1), re.S)]
+
+
+class ErrataOnTheIndicatorPage(unittest.TestCase):
+    """有勘誤才有那一段。零列時整段不存在——空的「勘誤紀錄」看起來像功能沒接好。"""
+
+    def setUp(self):
+        self.tmp = pathlib.Path(tempfile.mkdtemp())
+        self.html, *_ = build_with_errata(self.tmp, ERRATA_ROWS)
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def test_the_page_shows_only_its_own_errata(self):
+        items = errata_items(self.html)
+        self.assertEqual(2, len(items), "hba1c 有兩列；血壓那列不屬於這一頁")
+        self.assertIn("勘誤紀錄", self.html)
+        self.assertNotIn("140/90 被降成第 2 級", self.html)
+
+    def test_each_item_says_what_it_was_and_what_it_is_now(self):
+        row = ERRATA_ROWS[0]
+        self.assertIn(
+            f"{row['date']}｜{gen.ERRATA_SECTION_LABEL[row['section']]}："
+            f"原寫「{row['was']}」，改為「{row['now']}」。{row['reason']}",
+            errata_items(self.html))
+
+    def test_a_document_backed_row_cites_the_document(self):
+        mf = gen.manifest_index()
+        item = next(i for i in errata_items(self.html) if "診斷畫在 6.5%" in i)
+        self.assertIn(f"依據：{gen.source_ref(MULTI_DOC, mf, '')}", item)
+
+    def test_a_row_without_a_document_cites_nothing(self):
+        item = next(i for i in errata_items(self.html) if "篩檢分流" in i)
+        self.assertNotIn("依據：", item, "沒有 doc_id 就不編一份依據出來")
+
+    def test_no_errata_means_no_section_and_no_extra_css(self):
+        """☠️ 這條是既有頁面 byte-identical 的守門：零列時連 CSS 都不能多一個 byte。"""
+        with tempfile.TemporaryDirectory() as d:
+            html, *_ = build_with_errata(pathlib.Path(d), [])
+            self.assertNotIn("勘誤紀錄", html)
+            self.assertNotIn("ol.errata", html)
+            self.assertEqual([], errata_items(html))
+
+    def test_two_runs_are_byte_identical(self):
+        with tempfile.TemporaryDirectory() as d:
+            other, *_ = build_with_errata(pathlib.Path(d), ERRATA_ROWS)
+            self.assertEqual(self.html, other)
+
+
+class ErrataSitePage(unittest.TestCase):
+    """站級 /errata/：全站的勘誤都在這裡，最新在前。"""
+
+    def setUp(self):
+        self.tmp = pathlib.Path(tempfile.mkdtemp())
+        _, _, self.out, self.parts, self.llms = build_with_errata(
+            self.tmp, ERRATA_ROWS)
+        self.html = (self.out / "errata" / "index.html").read_text(encoding="utf-8")
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def test_it_lists_every_erratum_newest_first(self):
+        items = errata_items(self.html)
+        self.assertEqual(len(ERRATA_ROWS), len(items))
+        self.assertEqual(["ADA 把糖尿病診斷畫在 6.5%", "140/90 被降成第 2 級",
+                          "篩檢分流（非診斷判準）：≥5.9%"],
+                         [re.search(r"改為「(.*?)」", i).group(1) for i in items])
+
+    def test_id_ordering_is_numeric_not_lexical(self):
+        """同一天的 E10 要排在 E2 前面——照字串排會反過來。"""
+        self.assertEqual(["E10", "E2", "E1"],
+                         [r["id"] for r in gen.errata_order(ERRATA_ROWS)])
+
+    def test_each_item_links_to_the_page_it_corrects(self):
+        self.assertIn(f'<a href="/indicators/{SLUG}/">糖化血色素（HbA1c）</a>｜',
+                      self.html)
+        self.assertIn('<a href="/indicators/blood-pressure/">', self.html)
+
+    def test_empty_state_says_there_is_nothing_yet(self):
+        with tempfile.TemporaryDirectory() as d:
+            _, _, out, _, _ = build_with_errata(pathlib.Path(d), [])
+            html = (out / "errata" / "index.html").read_text(encoding="utf-8")
+            self.assertIn(gen.ERRATA_EMPTY, html)
+            self.assertIn(gen.ERRATA_LEDE, html)
+            self.assertNotIn('<ol class="errata">', html)
+            self.assertLessEqual(len(gen.ERRATA_LEDE), 60)
+
+    def test_head_and_jsonld(self):
+        url = f"{gen.hl.BASE}/errata/"
+        self.assertIn(f'<link rel="canonical" href="{url}">', self.html)
+        graph = json.loads(re.findall(
+            r'<script type="application/ld\+json">(.*?)</script>',
+            self.html, re.S)[0])["@graph"]
+        types = [n["@type"] for n in graph]
+        self.assertEqual(["Organization", "WebSite", "WebPage", "BreadcrumbList"],
+                         types)
+        crumbs = next(n for n in graph if n["@type"] == "BreadcrumbList")
+        self.assertEqual(["首頁", "勘誤紀錄"],
+                         [i["name"] for i in crumbs["itemListElement"]])
+        for banned in ("aggregateRating", "dateModified", "errataCount"):
+            self.assertNotIn(banned, self.html.split("</head>")[0],
+                             "勘誤頁不放評分，也不放彙總（最後勘誤日／筆數）")
+
+    def test_banned_terms_gate_is_clean(self):
+        rules = terms.load_rules()
+        page = self.out / "errata" / "index.html"
+        hits = [h for h in terms.scan(terms.extract_text(page), rules)
+                if h["level"] == "absolute" and not h["exempt"]]
+        self.assertEqual([], hits, f"勘誤頁命中絕對禁詞：{hits}")
+
+    def test_errata_page_reuses_the_indicator_foot_rule(self):
+        """☠️ ERRATA_FOOT_CSS 的 .ind-foot 是 CHART_CSS 那條規則的副本（抽成共用會改到
+        指標頁的 bytes）。兩份必須逐字相同，否則頁尾樣式會安靜地長歪。"""
+        rule = re.search(r"\.ind-foot\{.*?\}", gen.ERRATA_FOOT_CSS, re.S).group(0)
+        self.assertIn(rule, gen.CHART_CSS)
+
+    def test_a_slug_without_a_page_aborts_instead_of_linking_to_a_404(self):
+        bad = [{**ERRATA_ROWS[0], "slug": "no-such-indicator"}]
+        with tempfile.TemporaryDirectory() as d:
+            with self.assertRaises(SystemExit):
+                build_with_errata(pathlib.Path(d), bad)
+
+    def test_two_runs_are_byte_identical(self):
+        with tempfile.TemporaryDirectory() as d:
+            _, _, out, _, _ = build_with_errata(pathlib.Path(d), ERRATA_ROWS)
+            self.assertEqual(
+                self.html, (out / "errata" / "index.html").read_text(encoding="utf-8"))
+
+    def test_a_partial_build_neither_writes_nor_deletes_the_site_page(self):
+        """只跑一個 slug 時手上沒有別頁的標題，生出來會是一份殘缺的清單；
+        也不刪它——上一次全量 build 產出的那份仍然有效。"""
+        before = (self.out / "errata" / "index.html").read_text(encoding="utf-8")
+        keep = gen.ERRATA_PATH
+        gen.ERRATA_PATH = self.tmp / "errata.json"
+        try:
+            gen.build(slugs=[SLUG], out_root=self.out, parts_dir=self.parts,
+                      llms_path=self.llms, published=False)
+        finally:
+            gen.ERRATA_PATH = keep
+        self.assertEqual(
+            before, (self.out / "errata" / "index.html").read_text(encoding="utf-8"))
+
+
+class ErrataDormantWiring(unittest.TestCase):
+    """dormant 雙向：published 才接線，且勘誤頁排在指標頁後面（最後一行）。"""
+
+    def test_published_puts_errata_last_in_the_sitemap_part_and_llms(self):
+        with tempfile.TemporaryDirectory() as d:
+            _, _, out, parts, llms = build_with_errata(
+                pathlib.Path(d), ERRATA_ROWS, published=True)
+            urls = (parts / "indicators.txt").read_text(encoding="utf-8").splitlines()
+            self.assertEqual(f"{gen.hl.BASE}/errata/", urls[-1])
+            self.assertEqual(1, urls.count(f"{gen.hl.BASE}/errata/"))
+            block = llms.read_text(encoding="utf-8").split(gen.LLMS_HEAD)[1]
+            lines = [l for l in block.strip().splitlines() if l.strip()]
+            self.assertTrue(lines[-1].startswith(
+                f"- [{gen.ERRATA_TITLE}]({gen.hl.BASE}/errata/)："), lines[-1])
+            self.assertIn(gen.ERRATA_LLMS_DESC, lines[-1])
+            self.assertNotIn("各機構判準並列、判準沿革與已知限制", lines[-1],
+                             "勘誤頁不是指標頁，說明句不能共用")
+
+    def test_dormant_generates_the_page_but_wires_nothing(self):
+        with tempfile.TemporaryDirectory() as d:
+            _, _, out, parts, llms = build_with_errata(
+                pathlib.Path(d), ERRATA_ROWS, published=False)
+            self.assertTrue((out / "errata" / "index.html").exists(),
+                            "dormant 仍要生成（要能審），只是不接線")
+            self.assertFalse((parts / "indicators.txt").exists())
+            self.assertNotIn("/errata/", llms.read_text(encoding="utf-8"))
+
+    def test_the_footer_link_follows_the_same_published_gate(self):
+        entry = next(l for l in gen.hl.SITE["footer_links"]
+                     if l["href"] == "/errata/")
+        self.assertEqual("published", entry.get("requires"))
+        with tempfile.TemporaryDirectory() as a, tempfile.TemporaryDirectory() as b:
+            dormant, *_ = build_with_errata(pathlib.Path(a), ERRATA_ROWS, False)
+            live, *_ = build_with_errata(pathlib.Path(b), ERRATA_ROWS, True)
+        self.assertNotIn('<a href="/errata/">', dormant)
+        self.assertIn('<a href="/errata/">勘誤紀錄</a>', live)
 
 
 if __name__ == "__main__":

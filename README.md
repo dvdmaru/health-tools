@@ -6,7 +6,12 @@
 - 站台：https://health.twtools.cc/ （**尚未部署**，見下方「目前狀態」）
 - 定位：不替讀者選邊、不下醫療判斷；本站整理的是「公開文件寫了什麼」。
 
-## 目前狀態（M4 五指標頁，2026-08-28）
+## 目前狀態（M5 索引＋折疊＋勘誤，2026-08-28）
+
+**M5 加了三件事**：`/indicators/` 索引頁（`scripts/gen-indicators-index.py`，卡片上的列數／機構數／來源數
+／沿革年份全由資料算，跑在 `gen-indicator.py` 之後）；判準表改成「指標→判定類別」分組的原生 `<details>`
+折疊（診斷／分級／風險門檻預設展開，整頁 ≤12 列全展開，無 JS、內容都在 DOM）；勘誤機制（見下）。
+`published` 仍為 false，三者皆 dormant 感知。
 
 **5 個指標頁已生成（dormant，未部署）**：`/indicators/hba1c/`（M3 定調）、`/indicators/blood-pressure/`
 （sbp＋dbp）、`/indicators/lipids/`（total-chol／ldl-c／hdl-c／tg）、`/indicators/uric-acid/`、
@@ -25,6 +30,9 @@
   各因子門檻以 `risk_threshold` 落在對應指標頁，note 標明非診斷。
 - 治療目標（LDL 目標值、降尿酸目標、血壓治療目標）與用藥立場**不進判準表**（MODEL.md §3）。
 - `check-health-terms.py` 目前 14 個 WARN 全是「預防」出現在文件名（初級預防指引），非療效語境，放行。
+- **勘誤機制**：公開後改過的數字或說明文字＝`data/errata.json` 一列（schema 在 `data/errata-schema.json`，
+  收據 gate 對有 `doc_id` 的列一樣逐句 grep）。有勘誤的指標頁自動多一段「勘誤紀錄」，站級清單在 `/errata/`
+  （`published` 才進 sitemap／llms.txt／頁尾）。目前是 `[]`——上線前的修改不是勘誤，不補記。
 
 `config/site.json` 的 `published` 仍為 `false`，`public-health/` 只有骨架與 dormant 指標頁。
 `config/site.json` 的 `published` 為 `false`，帶 `"requires": "published"` 的導覽與頁尾
@@ -68,9 +76,10 @@
 ## 常用指令
 
 ```bash
-# 重建（不部署）。跑序固定：文章 → 指標頁 → sitemap 合併
+# 重建（不部署）。跑序固定：文章 → 指標頁（含 /errata/）→ 指標索引 → sitemap 合併
 python3 scripts/build-articles.py
 python3 scripts/gen-indicator.py
+python3 scripts/gen-indicators-index.py
 python3 scripts/build-sitemap.py
 
 # 禁詞 gate（絕對禁詞命中 exit 1；需附條件的詞印 WARN 不擋）

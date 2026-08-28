@@ -37,8 +37,9 @@ import sys
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SOURCES = ROOT / "data" / "sources" / "manifest.json"
 CRITERIA_DIR = ROOT / "data" / "criteria"
+ERRATA = ROOT / "data" / "errata.json"
 
-# 每個資料檔怎麼認自己的列：(檔名, 列號欄位或 None, 顯示名)。
+# 每個資料檔怎麼認自己的列：(ROOT 起算的相對路徑, 列號欄位或 None, 顯示名)。
 # 動態掃描 data/criteria/*.json（schema 檔除外）——新指標落地不必回來改這裡，
 # 也不會出現「檔在、gate 沒讀」的假綠。
 def _datasets():
@@ -46,12 +47,18 @@ def _datasets():
     for f in sorted(CRITERIA_DIR.glob("*.json")):
         if f.name.endswith("schema.json"):
             continue
+        rel = f.relative_to(ROOT).as_posix()
         if f.name.endswith("-history.json"):
-            out.append((f.name, "id", "history"))
+            out.append((rel, "id", "history"))
         elif f.name.endswith("-interference.json"):
-            out.append((f.name, "id", "interference"))
+            out.append((rel, "id", "interference"))
         else:
-            out.append((f.name, None, "criteria"))
+            out.append((rel, None, "criteria"))
+    # 勘誤紀錄是站級的，不屬於任何指標，所以不在 data/criteria/ 底下，上面那個 glob
+    # 掃不到。檔案不存在＝這個 repo 還沒有勘誤層（例如測試用的暫存 fixture 根目錄），
+    # 不掃也不報錯；正式 repo 少了這個檔會被 tests/test_errata_schema.py 抓到。
+    if ERRATA.exists():
+        out.append((ERRATA.relative_to(ROOT).as_posix(), "id", "errata"))
     return out
 
 _pdf_cache: dict = {}
@@ -104,15 +111,21 @@ def main() -> int:
     failures = []
     skipped_docs = {}
 
-    for fname, id_field, label in _datasets():
-        path = CRITERIA_DIR / fname
+    for rel, id_field, label in _datasets():
+        path = ROOT / rel
         if not path.exists():
-            print(f"❌ 找不到 {path.relative_to(ROOT)}", file=sys.stderr)
+            print(f"❌ 找不到 {rel}", file=sys.stderr)
             return 1
         rows = json.loads(path.read_text(encoding="utf-8"))
         for idx, row in enumerate(rows):
             row_id = row.get(id_field) if id_field else f"#{idx + 1}"
             tag = f"{label}:{row_id}"
+
+            # 勘誤列的 doc_id 是選填（schema 用 dependentRequired 綁 doc_id↔quote）：
+            # 沒有依據文件的那一列本來就沒有承諾任何引句，跳過。☠️ 判 FAIL 會逼人
+            # 為了讓 gate 綠而編一個 doc_id 出來——那才是真的把出處變成事後編的。
+            if label == "errata" and not row.get("doc_id"):
+                continue
 
             for doc_id, quote, field in quotes_of(row):
                 where = f"{tag} {field}"
