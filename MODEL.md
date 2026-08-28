@@ -47,6 +47,8 @@
 ## 4. 發布契約
 
 - `config/site.json` `published:false`＝dormant：頁面照生，但不進 sitemap／llms.txt／導覽。翻開關前 build 必須 byte-identical，翻開關後才接線；兩態都有測試。
+- **2026-08-28 起 `published:true`、站已公開**（health.twtools.cc）。**部署是手動的**：合 main 不會自動上線，要在對齊 `origin/main` 的 checkout 上跑 build 四步（`build-articles` → `gen-indicator` → `gen-indicators-index` → `build-sitemap`）再 `wrangler deploy -c wrangler-health.jsonc`；驗收＝線上與本機產物逐檔 byte 比對（`verify-deploy.py`，首次部署 DNS 未傳播時改 `curl --resolve`），不看 HTTP 200。sites-dashboard 的部署新鮮度會在「合了沒部署」6 小時後出聲。
+- 觀測：GA4 `ga_id` 在 `config/site.json`（空字串＝不輸出 tag）；GSC sitemap 已提交；站群日報第 12 站。
 - 生成器跑兩次 SHA-256 必須全同（禁時間戳）。
 - **公開後改動要留痕**：頁面上的數字或說明文字改過，就在 `data/errata.json` 加一列（`was` 照舊頁抄、`now`、`reason`；有依據文件就附 `doc_id`＋`quote`，同樣受收據 gate）。有勘誤的指標頁在第⑥段之後多一段「勘誤紀錄」，站級清單在 `/errata/`。☠️ 不是「改完再寫一段話說明」——沒有那一列，頁面上就不會有痕跡。
 - 個資：本站**不蒐集任何民眾健康資料**（個資法 §6 特種個資）。任何要民眾輸入數值的功能都是另一個產品決策，先過律師再動。
@@ -56,4 +58,7 @@
 1. 動 `data/` 前先看該來源的 `license_bucket` 與 `retrieval`。
 2. 收據 gate 紅了：不准改 `quote` 遷就快照、不准塞例外清單；回報主席裁決。
 3. 「查不到」要先驗陽性對照（探針字串命中）才算查不到。
-4. 別把站群其他站的譯名／fallback 政策搬過來：本站英文＝canonical、台灣官方用詞優先、**查無不用陸譯 fallback，留原文**。
+4. **gate 綠≠合規**：`check-health-terms.py` 抓字不抓語意。新增任何會讓讀者對自己數值下判斷的呈現（分級組名、「超標」類措辭、索引卡的統計），先想 §87①「暗示或影射」，不是只看 gate。
+5. **來源會過期而沒人通知**：`manifest.json` 的 `fetched_at` 是抓取日不是有效期；ADA 每年 1 月改版、hpa 頁面隨時改。來源 sha256 監測尚未建，改版前的頁面就是錯的頁面——接手先看最舊的 `fetched_at`。
+6. **勘誤機制存在≠有人做勘誤**：`data/errata.json` 空著，沒有觸發流程（讀者回報入口、定期自查）。改了公開頁的數字卻沒加列＝違約。
+7. 別把站群其他站的譯名／fallback 政策搬過來：本站英文＝canonical、台灣官方用詞優先、**查無不用陸譯 fallback，留原文**。
