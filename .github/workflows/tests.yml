@@ -37,3 +37,9 @@ jobs:
       - run: python -m unittest discover -s tests -v
       # 禁詞 gate 對實際產物再跑一次（絕對禁詞命中即 exit 1）。
       - run: python scripts/check-health-terms.py
+      # 收據 gate：每一條判準／變更史／限制列的引句都要 grep 得回快照。
+      # ⚠️ CI 上 licensed-cite-only 的快照不在（不入版控，見 .gitignore），
+      # 那些列會印 SKIP 而不是 PASS——這是誠實的缺口，不是漏驗；
+      # 它們的完整驗證在本機跑（PASS 78／SKIP 0），紀錄在 PR 描述裡。
+      # exit 1 的條件只有：doc_id 指不到 manifest、引句為空、引句在快照裡找不到。
+      - run: python scripts/check-receipts.py

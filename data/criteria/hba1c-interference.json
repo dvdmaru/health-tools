@@ -1,0 +1,159 @@
+[
+  {
+    "id": "L1",
+    "direction": "unsuitable",
+    "factor": "貧血、使用紅血球生成素、血液透析、HIV 治療",
+    "org": "American Diabetes Association",
+    "doc_id": "ada-standards-of-care-2026",
+    "version": "2026",
+    "page_or_table": "Sec. 2（A1C 的限制段）",
+    "quote": "A1C may not be a suitable diagnostic test in people with anemia, people treated with erythropoietin, or people undergoing hemodialysis or HIV treatment",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L2",
+    "direction": "unspecified",
+    "factor": "影響血紅素濃度或紅血球更新率的因素（如海洋性貧血、葉酸缺乏）",
+    "org": "American Diabetes Association",
+    "doc_id": "ada-standards-of-care-2026",
+    "version": "2026",
+    "page_or_table": "Sec. 2（A1C 的限制段，指向 Table 2.3）",
+    "quote": "factors that affect hemoglobin concentrations or erythrocyte turnover can affect A1C (e.g., thalassemia or folate deficiency)",
+    "note": "原文只說 affect，未指方向，故 direction=unspecified。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L3",
+    "direction": "unspecified",
+    "factor": "血紅素變異型；鐮刀型血球特徵者須改用不受該干擾的檢驗方法",
+    "org": "American Diabetes Association",
+    "doc_id": "ada-standards-of-care-2026",
+    "version": "2026",
+    "page_or_table": "Sec. 2（檢驗方法段）",
+    "quote": "an A1C assay without interference from hemoglobin variants should be used in individuals with sickle cell trait",
+    "note": "這條是方法選擇問題（換一種不受干擾的 assay），原文未給方向。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L4",
+    "direction": "low",
+    "factor": "G6PD G202A 變異同型合子（男性 A1C 約低 0.8%、女性約低 0.7%）",
+    "org": "American Diabetes Association",
+    "doc_id": "ada-standards-of-care-2026",
+    "version": "2026",
+    "page_or_table": "Sec. 2（G6PD 段）",
+    "quote": "associated with a decrease in A1C of about 0.8% in homozygous men and 0.7% in homozygous women",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L5",
+    "direction": "unsuitable",
+    "factor": "部分血紅素變異型、懷孕、G6PD 缺乏、HIV，以及會改變紅血球更新率的狀況",
+    "org": "American Diabetes Association",
+    "doc_id": "ada-standards-of-care-2026",
+    "version": "2026",
+    "page_or_table": "Sec. 2, Recommendation 2.4",
+    "quote": "plasma glucose criteria should be used to diagnose diabetes",
+    "note": "ADA 在這些情況下要求改用血漿葡萄糖判準，也就是不以 A1C 診斷。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L6",
+    "direction": "unspecified",
+    "factor": "血紅素病變（視所用檢驗方法而定）、某些貧血、紅血球更新加速的疾病（如瘧疾）",
+    "org": "World Health Organization",
+    "doc_id": "who-hba1c-diagnosis-2011",
+    "version": "2011",
+    "page_or_table": "第 7 頁",
+    "quote": "haemoglobinopathies (depending on the assay employed), certain anaemias, and disorders associated with accelerated red cell turnover such as malaria",
+    "note": "WHO 在此句列出全球最重要的三類干擾，未在該句指出方向；方向見 Annex 1（L7–L9）。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L7",
+    "direction": "high",
+    "factor": "酗酒、慢性腎衰竭、紅血球內 pH 下降（glycation 機轉）",
+    "org": "World Health Organization",
+    "doc_id": "who-hba1c-diagnosis-2011",
+    "version": "2011",
+    "page_or_table": "Annex 1 第 16 頁，3. Glycation",
+    "quote": "Increased HbA1c: alcoholism, chronic renal failure, decreased intra-erythrocyte pH.",
+    "note": "☠️ 最容易寫反的一條：慢性腎衰竭在 WHO Annex 1 是列在 Increased 那一側，不是偏低。這與 ADA（L1）說透析者不適合用 A1C 診斷並不矛盾——機轉不同，結論都是「腎病病人的 A1C 不可盡信」，不得化簡成單一方向。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L8",
+    "direction": "both",
+    "factor": "紅血球生成機轉：缺鐵、缺維生素 B12、紅血球生成減少 → 偏高；補充紅血球生成素／鐵／B12、網狀紅血球增多、慢性肝病 → 偏低",
+    "org": "World Health Organization",
+    "doc_id": "who-hba1c-diagnosis-2011",
+    "version": "2011",
+    "page_or_table": "Annex 1 第 16 頁，1. Erythropoiesis",
+    "quote": "Increased HbA1c: iron, vitamin B12 deficiency, decreased erythropoiesis.",
+    "quote_extra": [
+      "Decreased HbA1c: administration of erythropoietin, iron, vitamin B12, reticulocytosis, chronic liver disease."
+    ],
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L9",
+    "direction": "both",
+    "factor": "紅血球破壞機轉：脾切除使紅血球壽命延長 → 偏高；血紅素病變、脾腫大、類風濕性關節炎、抗反轉錄病毒藥物等使壽命縮短 → 偏低",
+    "org": "World Health Organization",
+    "doc_id": "who-hba1c-diagnosis-2011",
+    "version": "2011",
+    "page_or_table": "Annex 1 第 16 頁，4. Erythrocyte destruction",
+    "quote": "Decreased A1c: decreased erythrocyte life span: haemoglobinopathies,",
+    "quote_extra": [
+      "Increased HbA1c: increased erythrocyte life span: Splenectomy."
+    ],
+    "note": "原文此處大小寫不一致（Decreased A1c／Increased HbA1c），照抄不美化。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L10",
+    "direction": "unspecified",
+    "factor": "洗腎、懷孕、HIV 之藥物治療、貧血、血色素疾病",
+    "org": "社團法人中華民國糖尿病學會／中華民國內分泌暨糖尿病學會",
+    "doc_id": "daroc-t2dm-guideline-2022",
+    "version": "2022",
+    "page_or_table": "第四章（糖化血色素之限制段）",
+    "quote": "有某些因素，如洗腎、懷孕、HIV 之藥物治療（如某些蛋白酶抑制劑以及核苷酸反轉錄酶抑制劑）、貧血以及血色素疾病等狀況，可能會干擾糖化血色素的",
+    "note": "台灣指引明列的干擾情境；原文說「可能會干擾」，未指方向。引句在 PDF 中跨行，比對前正規化空白。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L11",
+    "direction": "unsuitable",
+    "factor": "測得的糖化血色素與血漿葡萄糖之間存在明顯偏差時",
+    "org": "社團法人中華民國糖尿病學會／中華民國內分泌暨糖尿病學會",
+    "doc_id": "daroc-t2dm-guideline-2022",
+    "version": "2022",
+    "page_or_table": "第四章（糖化血色素之限制段）",
+    "quote": "當測得的糖化血色素與血漿葡萄糖之間存在明顯偏差時，應考慮糖化血色素之測量或許對於該個案並不適合。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L12",
+    "direction": "unspecified",
+    "factor": "A1C 在指定切點處的敏感度低於 OGTT 第 2 小時血糖",
+    "org": "American Diabetes Association",
+    "doc_id": "ada-standards-of-care-2026",
+    "version": "2026",
+    "page_or_table": "Sec. 2（A1C 與 FPG／OGTT 比較段）",
+    "quote": "there is lower sensitivity of A1C at the designated cut point compared with that of 2-h PG",
+    "note": "這不是干擾因子，是檢查本身的效能限制；收在同一層是因為它同樣回答「這個數字什麼時候不可盡信」。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L13",
+    "direction": "unspecified",
+    "factor": "三種檢查測的是不同面向，各自切點篩出來的族群本來就不完全一致",
+    "org": "American Diabetes Association",
+    "doc_id": "ada-standards-of-care-2026",
+    "version": "2026",
+    "page_or_table": "Sec. 2（各檢查切點一致性段）",
+    "quote": "diagnostic cut points for the different tests will identify groups with incomplete concordance",
+    "fetched_at": "2026-08-28"
+  }
+]

@@ -4,14 +4,27 @@
   "title": "判準明細列（data/criteria/<indicator>.json）",
   "description": "一列＝某機構在某份文件的某個位置，對某個指標、某個族群、某個判定類別給出的一組數值界線。\n\n☠️ 只存明細，不存統計：本檔**禁止任何統計或彙總欄位**（機構數、判準數、最寬鬆值、平均、共識值…）。頁面上要顯示「幾個機構」就對明細做 len()，要顯示「範圍」就對明細做 filter，永遠不對總數做加減。姊妹站的數據錯誤全部出自「先存了一個統計值，之後對它做減法」。\n\n四項出處（org＋doc_id＋version＋page_or_table）缺一即不得渲染這一列；quote 是回查原文的鑰匙，不得為空、不得改寫。",
   "type": "array",
-  "items": { "$ref": "#/$defs/criterion" },
+  "items": {
+    "$ref": "#/$defs/criterion"
+  },
   "$defs": {
     "criterion": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["indicator_id", "org", "doc_id", "version", "category",
-                   "lower", "upper", "unit", "population", "page_or_table",
-                   "quote", "fetched_at"],
+      "required": [
+        "indicator_id",
+        "org",
+        "doc_id",
+        "version",
+        "category",
+        "lower",
+        "upper",
+        "unit",
+        "population",
+        "page_or_table",
+        "quote",
+        "fetched_at"
+      ],
       "properties": {
         "indicator_id": {
           "type": "string",
@@ -34,18 +47,36 @@
           "description": "該判準所屬的文件版本／年份，抄自來源文件自己的標示。"
         },
         "category": {
-          "enum": ["diagnosis", "prediabetes", "screening_triage", "method_requirement",
-                   "confirmation_procedure", "retest_timing", "exclusion_rule",
-                   "grade_rating", "service_eligibility", "test_panel_item",
-                   "reimbursement", "policy_change"],
-          "description": "判定類別白名單。☠️ 分類是判準的一部分，不是標籤：把『篩檢分流門檻』標成 diagnosis，就會在頁面上把操作門檻講成診斷線。要新增類別必須先改這份白名單並說明它與既有類別的差別，不得就地自創。"
+          "enum": [
+            "diagnosis",
+            "prediabetes",
+            "screening_triage",
+            "method_requirement",
+            "confirmation_procedure",
+            "retest_timing",
+            "exclusion_rule",
+            "no_criterion_stated",
+            "grade_rating",
+            "service_eligibility",
+            "test_panel_item",
+            "reimbursement",
+            "policy_change",
+            "definition"
+          ],
+          "description": "判定類別白名單。☠️ 分類是判準的一部分，不是標籤：把『篩檢分流門檻』標成 diagnosis，就會在頁面上把操作門檻講成診斷線。要新增類別必須先改這份白名單並說明它與既有類別的差別，不得就地自創。\n\n兩個易混類別的分界：\n・no_criterion_stated＝來源明文說自己「證據不足、不作正式建議」，也就是該機構在這個區間根本沒有判準；exclusion_rule＝來源給出了一條規則（例：低於某值不排除診斷）。把 no_criterion_stated 標成 prediabetes 會憑空生出一條 WHO 從未訂過的前期判準。\n・definition＝來源對「這個數字量的是什麼」的定義敘述，不帶數值界線（lower/upper 為 null）；method_requirement 講的是「怎麼驗才算數」，兩者不可互換。"
         },
         "lower": {
-          "type": ["number", "null"],
+          "type": [
+            "number",
+            "null"
+          ],
           "description": "下界；該判準沒有下界（或不是數值型判準）填 null。單位以 unit 為準，不做換算——換算過的數字不是來源說的話。"
         },
         "upper": {
-          "type": ["number", "null"],
+          "type": [
+            "number",
+            "null"
+          ],
           "description": "上界；沒有上界填 null。"
         },
         "lower_inclusive": {
@@ -59,7 +90,10 @@
           "description": "上界是否含等於。選填，預設 true。"
         },
         "unit": {
-          "type": ["string", "null"],
+          "type": [
+            "string",
+            "null"
+          ],
           "description": "單位，照來源寫法抄（%（NGSP）、mg/dL、歲…）。非數值型判準填 null。"
         },
         "population": {
@@ -87,8 +121,20 @@
           "description": "選填。這一列的限定條件或與其他列的關係（例：這是篩檢流程門檻，不是診斷判準）。"
         },
         "superseded_by": {
-          "type": ["string", "null"],
+          "type": [
+            "string",
+            "null"
+          ],
           "description": "選填。被同機構後續版本取代時，指向取代它的那一列所屬的 doc_id。舊列保留不刪——判準沿革本身就是內容。"
+        },
+        "quote_extra": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "description": "選填。同一份文件、同一位置的其他不連續引句（例：流程圖裡分屬不同方框的兩句、表格裡分兩行的評級）。☠️ 存在這裡的每一句都與 quote 一樣受收據 gate 逐句 grep，不是備註欄——不要把無法回查原文的話放進來。需要它是因為 quote 必須是「一段連續原文」，把兩段不連續的原文用「＋」黏成一個字串會 grep 不到，而 grep 不到就等於沒有出處。"
         }
       }
     }

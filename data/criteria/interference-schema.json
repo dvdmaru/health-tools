@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://health.twtools.cc/schema/criteria-interference.json",
+  "title": "判準已知限制／干擾因子明細列（data/criteria/<indicator>-interference.json）",
+  "description": "一列＝某機構在某份文件裡，明講的一個「這個數字什麼時候不可盡信」。\n\n☠️ 只收來源明講的：不得從機轉自行推論。來源沒寫方向就標 unspecified，不得補一個「應該是偏高吧」——方向寫反是這一層最貴的錯。\n\n☠️ 只存明細，不存統計：禁止任何彙總欄位（干擾因子數、依方向分組的計數…）。\n\n☠️ 同一個病況可能同時出現在不同機構、不同機轉、不同方向的列裡（例：腎病在 WHO Annex 1 屬 glycation 機轉的『升高』，在 ADA 則是『透析者不適合用 A1C 診斷』）。這不是矛盾，不得合併成一列、也不得化簡成單一方向。",
+  "type": "array",
+  "items": {
+    "$ref": "#/$defs/interference"
+  },
+  "$defs": {
+    "interference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "direction",
+        "factor",
+        "org",
+        "doc_id",
+        "version",
+        "page_or_table",
+        "quote",
+        "fetched_at"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^L[0-9]{1,3}$",
+          "description": "本檔內的列號（L1、L2…），對應 facts pack 的限制編號。"
+        },
+        "direction": {
+          "enum": [
+            "high",
+            "low",
+            "both",
+            "unsuitable",
+            "unspecified"
+          ],
+          "description": "來源明講的影響方向。high＝使 A1C 偏高；low＝偏低；both＝同一列的來源原文同時列出偏高與偏低兩組情況（例：WHO Annex 1 的同一機轉分類）；unsuitable＝來源說在這個情況下 A1C 不適合作為診斷依據（不是方向問題，是不該用）；unspecified＝來源只說「會影響／會干擾」而未指方向。☠️ 沒把握就填 unspecified，不要猜——猜錯方向會在頁面上寫出反向的醫療敘述。"
+        },
+        "factor": {
+          "type": "string",
+          "minLength": 1,
+          "description": "干擾因子／情境的敘述。這是我們寫的，原文在 quote；factor 的射程不得超過 quote 加 quote_extra 撐得住的範圍。"
+        },
+        "org": {
+          "type": "string",
+          "minLength": 1,
+          "description": "來源機構全名，照原文抄。"
+        },
+        "doc_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]{1,63}$",
+          "description": "指向 data/sources/manifest.json 的 id。"
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "page_or_table": {
+          "type": "string",
+          "minLength": 1
+        },
+        "quote": {
+          "type": "string",
+          "minLength": 1,
+          "description": "原文引句，照抄不美化，必須 grep 得回快照。"
+        },
+        "quote_extra": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "description": "選填。同一位置的其他不連續引句；每一句同樣受收據 gate 逐句 grep。direction=both 的列，兩個方向各自的原文都要在這裡湊齊。"
+        },
+        "fetched_at": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "note": {
+          "type": "string",
+          "description": "選填。與其他列的關係、易寫反的提醒。"
+        }
+      }
+    }
+  }
+}

@@ -4,23 +4,55 @@
   "title": "來源快照登記簿（data/sources/manifest.json）",
   "description": "每一份被引用的官方文件都要在這裡有一列，且磁碟上要有對應的快照檔。判準明細（data/criteria）的 doc_id 指向本檔的 id；指不到就不得渲染。這裡只登記「文件本身」，不放任何判準值或統計——判準值是 data/criteria 的事。",
   "type": "array",
-  "items": { "$ref": "#/$defs/source" },
+  "items": {
+    "$ref": "#/$defs/source"
+  },
   "$defs": {
     "source": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "title", "org", "doc_type", "url", "version_or_date",
-                   "fetched_at", "sha256", "local_path", "license_bucket"],
+      "required": [
+        "id",
+        "title",
+        "org",
+        "doc_type",
+        "url",
+        "version_or_date",
+        "fetched_at",
+        "sha256",
+        "local_path",
+        "license_bucket"
+      ],
       "properties": {
         "id": {
           "type": "string",
           "pattern": "^[a-z0-9][a-z0-9-]{1,63}$",
           "description": "本站內部代號，判準列以此指向本文件。一經使用就不得更名（改名等於讓所有引用它的判準列失去出處）。"
         },
-        "title": { "type": "string", "minLength": 1, "description": "文件標題，照原文抄，不縮短、不改寫。" },
-        "org": { "type": "string", "minLength": 1, "description": "發布機構全名，照原文抄，不用縮寫。" },
-        "doc_type": { "enum": ["pdf", "html"], "description": "落地快照的檔案型態。" },
-        "url": { "type": "string", "format": "uri", "pattern": "^https?://", "description": "取得快照的原始網址。" },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "description": "文件標題，照原文抄，不縮短、不改寫。"
+        },
+        "org": {
+          "type": "string",
+          "minLength": 1,
+          "description": "發布機構全名，照原文抄，不用縮寫。"
+        },
+        "doc_type": {
+          "enum": [
+            "pdf",
+            "html",
+            "html-text"
+          ],
+          "description": "落地快照的檔案型態。html-text＝原始頁面是 HTML，但因來源擋 curl，快照是用瀏覽器抽出的純文字（.txt）——標成 html 會讓下次自動化以為可以直接重抓 HTML。"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https?://",
+          "description": "取得快照的原始網址。"
+        },
         "version_or_date": {
           "type": "string",
           "minLength": 1,
@@ -33,22 +65,35 @@
         },
         "sha256": {
           "type": "string",
-          "pattern": "^[0-9a-f]{64}$",
-          "description": "快照檔的 SHA-256。來源改版時這個值會變，是偵測上游變動的唯一機械訊號。"
+          "pattern": "^([0-9a-f]{64})?$",
+          "description": "快照檔的 SHA-256。來源改版時這個值會變，是偵測上游變動的唯一機械訊號。尚未取得快照（retrieval=browser-needed）時填空字串——空字串代表「還沒有快照」，不得填任何佔位值假裝已經算過。"
         },
         "local_path": {
           "type": "string",
-          "pattern": "^data/sources/[A-Za-z0-9._-]+$",
-          "description": "快照檔在 repo 內的相對路徑。"
+          "pattern": "^(data/sources/[A-Za-z0-9._-]+)?$",
+          "description": "快照檔在 repo 內的相對路徑。尚未取得快照時填空字串。☠️ 快照 >5MB 不入版控（走 .gitignore），但 local_path 與 sha256 照填——本機仍要有檔案才驗得了引句，CI 上檔案不在會被收據 gate 判為 SKIP 而不是 PASS。"
         },
         "license_bucket": {
-          "enum": ["us-federal-pd", "tw-gov", "licensed-cite-only"],
+          "enum": [
+            "us-federal-pd",
+            "tw-gov",
+            "licensed-cite-only"
+          ],
           "description": "重製權限分桶，決定引用方式：us-federal-pd＝美國聯邦政府作品（公共領域）；tw-gov＝台灣政府資訊（依政府資料開放授權條款，需標示出處）；licensed-cite-only＝有版權的第三方文件，只能引短句並標出處，不得整段重製、不得落地公開快照。"
         },
-        "note": { "type": "string", "description": "選填。取得方式的特殊條件、轉檔工具、grep 驗證注意事項等。" },
+        "note": {
+          "type": "string",
+          "description": "選填。取得方式的特殊條件、轉檔工具、grep 驗證注意事項等。"
+        },
         "retrieval": {
-          "enum": ["curl", "browser", "manual"],
-          "description": "選填。快照怎麼取得的。有防火牆或需登入而由瀏覽器取得時標 browser——這件事必須留紀錄，否則下次自動化重抓會靜默拿到攔截頁。"
+          "enum": [
+            "curl",
+            "browser",
+            "browser-text",
+            "manual",
+            "browser-needed"
+          ],
+          "description": "選填。快照怎麼取得的。curl＝腳本直抓；browser＝瀏覽器另存原始檔；browser-text＝瀏覽器抽出純文字（來源擋 curl，見 doc_type=html-text）；browser-needed＝已知擋 curl 且快照尚未取得，local_path 與 sha256 為空，引用它的判準列在收據 gate 印 SKIP（待補）而不是 PASS。☠️ 這個欄位必須誠實：標錯會讓下次自動化重抓靜默拿到攔截頁還算得出 sha256。"
         }
       }
     }
