@@ -22,14 +22,18 @@
    對某個族群給出的一組界線，必帶原文引句。schema：`data/criteria/schema.json`。
    **只存明細，不存統計**——頁面要顯示「幾個機構」就對明細做 `len()`，不預先存一個數字。
 3. **靜態產出層**：`articles/<slug>/index.md` → `scripts/build-articles.py` → 靜態頁；
+   指標頁另有一條：`articles/indicators/<slug>.md`（只有敘事）＋ `data/criteria/` →
+   `scripts/gen-indicator.py` → `/indicators/<slug>/`。判準表、判準數線、沿革時間軸、
+   失真卡全部由資料生成，**md 內不得再寫一份表格**（寫了就中止）。
    sitemap 走 manifest 合併（各生成器只寫 `data/sitemap-parts/<owner>.txt`，
    `scripts/build-sitemap.py` 統一合併）。部署走 Cloudflare Workers static assets。
 
 ## 常用指令
 
 ```bash
-# 重建（不部署）
+# 重建（不部署）。跑序固定：文章 → 指標頁 → sitemap 合併
 python3 scripts/build-articles.py
+python3 scripts/gen-indicator.py
 python3 scripts/build-sitemap.py
 
 # 禁詞 gate（絕對禁詞命中 exit 1；需附條件的詞印 WARN 不擋）
@@ -40,9 +44,9 @@ python3 scripts/check-health-terms.py --verbose      # 連被放行的命中一�
 python3 -m unittest discover -s tests
 
 # 決定性驗收：同輸入連跑兩次，全站產物 SHA-256 必須全同
-python3 scripts/build-articles.py && python3 scripts/build-sitemap.py
+python3 scripts/build-articles.py && python3 scripts/gen-indicator.py && python3 scripts/build-sitemap.py
 find public-health -type f -exec shasum -a 256 {} + | sort -k2 > /tmp/b1.sha
-python3 scripts/build-articles.py && python3 scripts/build-sitemap.py
+python3 scripts/build-articles.py && python3 scripts/gen-indicator.py && python3 scripts/build-sitemap.py
 find public-health -type f -exec shasum -a 256 {} + | sort -k2 > /tmp/b2.sha
 diff /tmp/b1.sha /tmp/b2.sha && echo "byte-identical"
 

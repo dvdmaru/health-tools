@@ -244,6 +244,10 @@ def render_feed(articles):
 # ---------- llms.txt（build-time 生成，永不 stale） ----------
 
 def render_llms_txt(articles):
+    # 指標索引入口與導覽列同一條 published gate：/indicators/ 要到 M5 才生成，
+    # 翻開關前列進 llms.txt 就是餵給 AI 一條死連結（llms.txt 沒人看，錯了不會有人叫）。
+    indicators_line = (f"- [指標索引]({BASE}/indicators/)：各項指標的判準並列頁（陸續上線）。\n"
+                       if hl.PUBLISHED else "")
     art_lines = "\n".join(
         f"- [{a['meta'].get('title', a['slug'])}]({BASE}/articles/{a['slug']}/)"
         + (f"（{a['meta']['date']}）" if a["meta"].get("date") else "")
@@ -257,8 +261,7 @@ def render_llms_txt(articles):
 ## 重點頁面
 
 - [首頁]({BASE}/)：站台說明與最新整理。
-- [指標索引]({BASE}/indicators/)：各項指標的判準並列頁（陸續上線）。
-- [所有整理]({BASE}/articles/)：長文與判準沿革。
+{indicators_line}- [所有整理]({BASE}/articles/)：長文與判準沿革。
 
 ## 最新內容
 
