@@ -1,0 +1,134 @@
+[
+  {
+    "id": "L1",
+    "direction": "unsuitable",
+    "factor": "非空腹採檢時，LDL 膽固醇與三酸甘油酯不可用，只有總膽固醇與 HDL 可用",
+    "org": "National Cholesterol Education Program（National Heart, Lung, and Blood Institute, National Institutes of Health）",
+    "doc_id": "nhlbi-ncep-atp3-executive-summary-2001",
+    "version": "2001（NIH Publication No. 01-3670）",
+    "page_or_table": "Table 2 前一段",
+    "quote": "If the testing oppor- tunity is nonfasting, only the values for total cholesterol and HDL choles- terol will be usable.",
+    "fetched_at": "2026-08-28",
+    "note": "這是 ATP III 2001 的規定；2018 ACC/AHA 已改為空腹非空腹皆可（見變更史 H10）。引句中的「oppor- tunity」「choles- terol」是 pdftotext 在原 PDF 換行處留下的連字號，不是原文拼寫；照抄才 grep 得回快照。"
+  },
+  {
+    "id": "L3",
+    "direction": "low",
+    "factor": "急性冠心事件後 LDL 會下降：事件後數小時開始降、24–48 小時明顯降低、可持續數週偏低",
+    "org": "National Cholesterol Education Program（National Heart, Lung, and Blood Institute, National Institutes of Health）",
+    "doc_id": "nhlbi-ncep-atp3-executive-summary-2001",
+    "version": "2001（NIH Publication No. 01-3670）",
+    "page_or_table": "「Acute coronary syndromes」段",
+    "quote": "LDL cholesterol levels begin to decline in the first few hours after an event and are significantly decreased by 24-48 hours and may remain low for many weeks. Thus, the initial LDL cholesterol level obtained in the hospital may be substantially lower than is usual for the patient.",
+    "fetched_at": "2026-08-28",
+    "note": "住院當下驗到的值可能遠低於該病人的平常值。"
+  },
+  {
+    "id": "L4",
+    "direction": "unspecified",
+    "factor": "次發性血脂異常：糖尿病、甲狀腺功能低下、阻塞性肝病、慢性腎衰竭",
+    "org": "National Cholesterol Education Program（National Heart, Lung, and Blood Institute, National Institutes of Health）",
+    "doc_id": "nhlbi-ncep-atp3-executive-summary-2001",
+    "version": "2001（NIH Publication No. 01-3670）",
+    "page_or_table": "「secondary dyslipidemia」框",
+    "quote": "Causes of secondary dyslipidemia include:",
+    "quote_extra": [
+      "• Diabetes",
+      "• Hypothyroidism",
+      "• Obstructive liver disease",
+      "• Chronic renal failure"
+    ],
+    "fetched_at": "2026-08-28",
+    "note": "來源只列成因、未指方向，故 direction=unspecified。對應判準列的 category 為 exclusion_rule（開始藥物治療前須先排除）。"
+  },
+  {
+    "id": "L5",
+    "direction": "both",
+    "factor": "藥物干擾：黃體素、同化類固醇、皮質類固醇",
+    "org": "National Cholesterol Education Program（National Heart, Lung, and Blood Institute, National Institutes of Health）",
+    "doc_id": "nhlbi-ncep-atp3-executive-summary-2001",
+    "version": "2001（NIH Publication No. 01-3670）",
+    "page_or_table": "「secondary dyslipidemia」框",
+    "quote": "• Drugs that increase LDL cholesterol and decrease HDL cholesterol (progestins, anabolic steroids, and corticosteroids).",
+    "fetched_at": "2026-08-28",
+    "note": "來源明講同時有兩個方向：使 LDL 升高、使 HDL 降低，故 direction=both。不要化簡成單一方向。"
+  },
+  {
+    "id": "L6",
+    "direction": "unspecified",
+    "factor": "LDL 與風險的關係是連續的，分級切點是為臨床操作而畫，不是生物學上的斷點",
+    "org": "National Cholesterol Education Program（National Heart, Lung, and Blood Institute, National Institutes of Health）",
+    "doc_id": "nhlbi-ncep-atp3-executive-summary-2001",
+    "version": "2001（NIH Publication No. 01-3670）",
+    "page_or_table": "Table 2 前一段",
+    "quote": "The relationship between LDL cholesterol levels and CHD risk is continuous over a broad range of LDL levels from low to high.",
+    "fetched_at": "2026-08-28",
+    "note": "☠️ 這是來源自己講的。寫成「129 沒事、130 完蛋」違反來源本意。"
+  },
+  {
+    "id": "L7",
+    "direction": "unspecified",
+    "factor": "HDL 沒有治療目標值：ATP III 明言不訂 HDL 的提升目標",
+    "org": "National Cholesterol Education Program（National Heart, Lung, and Blood Institute, National Institutes of Health）",
+    "doc_id": "nhlbi-ncep-atp3-executive-summary-2001",
+    "version": "2001（NIH Publication No. 01-3670）",
+    "page_or_table": "「Low HDL cholesterol」段",
+    "quote": "ATP III does not specify a goal for HDL raising.",
+    "fetched_at": "2026-08-28",
+    "note": "對應判準列的 category 為 no_criterion_stated。"
+  },
+  {
+    "id": "L8",
+    "direction": "unspecified",
+    "factor": "三酸甘油酯 ≥500 mg/dL 時處置順序反轉：先把三酸甘油酯降到 <500 才回頭處理 LDL",
+    "org": "National Cholesterol Education Program（National Heart, Lung, and Blood Institute, National Institutes of Health）",
+    "doc_id": "nhlbi-ncep-atp3-executive-summary-2001",
+    "version": "2001（NIH Publication No. 01-3670）",
+    "page_or_table": "「Very high triglycerides」段",
+    "quote": "Only after triglyceride levels have been lowered to <500 mg/dL should attention turn to LDL lowering to reduce risk for CHD.",
+    "fetched_at": "2026-08-28",
+    "note": "極高三酸甘油酯的臨床意義是胰臟炎風險而不只是心血管風險；此句只講處置順序，未講數值偏差方向。"
+  },
+  {
+    "id": "L9",
+    "direction": "both",
+    "factor": "現有 ASCVD 風險預測模型沒有一個是在東亞族群推導或前瞻驗證的",
+    "org": "台灣血脂及動脈硬化學會（Taiwan Society of Lipids and Atherosclerosis）等八學會",
+    "doc_id": "tas-taiwan-lipid-primary-prevention-2022",
+    "version": "2022",
+    "page_or_table": "Risk assessment 段",
+    "quote": "available models are derived from or prospectively vali-",
+    "quote_extra": [
+      "dated in East Asians.",
+      "estimate the ASCVD risk in the Chinese population.",
+      "Framingham risk score also overestimated the ASCVD risk",
+      "for ethnic Chinese."
+    ],
+    "fetched_at": "2026-08-28",
+    "note": "☠️ 有證據的是「風險預測『模型』不適用東亞人」，不是「血脂切點該不同」——血脂四項的切點台灣照抄 ATP III 原值。同段另證 pooled cohort equation 與 Framingham 皆高估華人風險（見 quote_extra）。原 PDF 為雙欄排版，pdftotext -layout 會把左右欄交錯，整句無法連續 grep；quote 與 quote_extra 是原文同一句在轉檔後被切開的相鄰片段，合起來即原句。原文的 ≥ 在轉檔後為控制字元 \\x15。"
+  },
+  {
+    "id": "L10",
+    "direction": "unspecified",
+    "factor": "總膽固醇單獨看資訊量不足：ATP III 已改為建議驗完整四項全套",
+    "org": "National Cholesterol Education Program（National Heart, Lung, and Blood Institute, National Institutes of Health）",
+    "doc_id": "nhlbi-ncep-atp3-executive-summary-2001",
+    "version": "2001（NIH Publication No. 01-3670）",
+    "page_or_table": "Table 1「New Features of ATP III」",
+    "quote": "■ Recommends a complete lipoprotein profile (total cholesterol, LDL cholesterol, HDL cholesterol, and triglycerides) as the preferred initial test, rather than screening for total cholesterol and HDL alone.",
+    "fetched_at": "2026-08-28",
+    "note": "同一句亦登錄為變更史 H5。"
+  },
+  {
+    "id": "L11",
+    "direction": "unspecified",
+    "factor": "2018 ACC/AHA 的代謝症候群三酸甘油酯門檻是 >175 mg/dL",
+    "org": "American Heart Association／American College of Cardiology 等多學會聯合（AHA/ACC/AACVPR/AAPA/ABC/ACPM/ADA/AGS/APhA/ASPC/NLA/PCNA）",
+    "doc_id": "acc-aha-blood-cholesterol-guideline-2018",
+    "version": "2018",
+    "page_or_table": "Table 6",
+    "quote": "Metabolic syndrome (increased waist circumference, elevated triglycerides [>175 mg/dL], elevated blood pressure, elevated glucose, and low HDL-C [<40 mg/dL in men; <50 in women mg/dL] are factors; tally of 3 makes the diagnosis)",
+    "fetched_at": "2026-08-28",
+    "note": "☠️ 同一個「代謝症候群三酸甘油酯門檻」在不同年份／地區不是同一個數字：ATP III 2001＝≥150、2018 ACC/AHA＝>175、台灣 2022 指引與國健署＝150。三個數字各自有獨立的判準列可查，不要合併成一個「150」。本列的引句只撐得起 2018 的 >175，其餘兩個數字請看各自的判準列。"
+  }
+]

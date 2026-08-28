@@ -6,10 +6,27 @@
 - 站台：https://health.twtools.cc/ （**尚未部署**，見下方「目前狀態」）
 - 定位：不替讀者選邊、不下醫療判斷；本站整理的是「公開文件寫了什麼」。
 
-## 目前狀態（M0 地基，2026-08-28）
+## 目前狀態（M4 五指標頁，2026-08-28）
 
-地基已就緒，**零內容頁、未部署、未建 GitHub remote**。`public-health/` 目前只有骨架
-（首頁殼、文章索引殼、feed、llms.txt、robots.txt、sitemap.xml、共用 CSS）。
+**5 個指標頁已生成（dormant，未部署）**：`/indicators/hba1c/`（M3 定調）、`/indicators/blood-pressure/`
+（sbp＋dbp）、`/indicators/lipids/`（total-chol／ldl-c／hdl-c／tg）、`/indicators/uric-acid/`、
+`/indicators/bmi-waist/`（bmi＋waist）。來源 manifest 46 份（licensed-cite-only 快照本機留、CI SKIP），
+判準明細＋沿革＋失真列全部過收據 gate。M4 落地時的紀律與坑：
+
+- **一頁多指標**：frontmatter `indicator_ids`＋`indicator_labels`，資料檔以 slug 定位；每個 indicator_id
+  一條數線，座標軸在 `gen-indicator.py` 的 `AXIS`（呈現層）指定，未列名者由資料推導。
+- **`gen-indicator.py <slug>` 只生成該頁，不清別人的輸出**；只有不帶參數的全量 build 才 prune。
+  （平行寫手各跑自己的 slug 時互相刪頁，踩過。）
+- **收據 gate 與 `tests/test_receipts.py` 動態掃 `data/criteria/*.json`**，新指標不必回來登記檔名。
+- **hpa.gov.tw 的 `List.aspx` 頁 curl 抓得到，`Detail.aspx` 會被導回首頁**——後者仍走瀏覽器。
+- **雙欄排版 PDF（JFMA 等）`pdftotext -layout` 會左右欄交錯**，整句 grep 必失；把同一句的相鄰片段
+  放 `quote`＋`quote_extra`，每段各自受 gate。含 `≥` 的 PDF 常抽成控制字元，登記純文字快照時 note 寫明。
+- **代謝症候群「五項符合三項」不落在任何單一指標頁**（在 mmHg／cm 表裡會讀成該指標的診斷線）；
+  各因子門檻以 `risk_threshold` 落在對應指標頁，note 標明非診斷。
+- 治療目標（LDL 目標值、降尿酸目標、血壓治療目標）與用藥立場**不進判準表**（MODEL.md §3）。
+- `check-health-terms.py` 目前 14 個 WARN 全是「預防」出現在文件名（初級預防指引），非療效語境，放行。
+
+`config/site.json` 的 `published` 仍為 `false`，`public-health/` 只有骨架與 dormant 指標頁。
 `config/site.json` 的 `published` 為 `false`，帶 `"requires": "published"` 的導覽與頁尾
 入口一律不輸出——翻開關之前，站上不會出現任何連到未生成頁面的死連結。
 
@@ -18,15 +35,35 @@
 1. **來源快照層**：`scripts/fetch-health-source.py` 把官方 PDF／網頁抓成快照落到
    `data/sources/<id>.{pdf,html}`，並在 `data/sources/manifest.json` 登記一列
    （id／機構／版本／抓取日／sha256／授權分桶）。schema：`data/sources/schema.json`。
-2. **判準明細層**：`data/criteria/<indicator>.json`，一列＝某機構在某份文件的某個位置
-   對某個族群給出的一組界線，必帶原文引句。schema：`data/criteria/schema.json`。
+2. **判準明細層**：`data/criteria/<slug>.json`（＋`<slug>-history.json`、
+   `<slug>-interference.json`），一列＝某機構在某份文件的某個位置對某個指標、某個族群
+   給出的一組界線，必帶原文引句。schema：`data/criteria/schema.json`。
    **只存明細，不存統計**——頁面要顯示「幾個機構」就對明細做 `len()`，不預先存一個數字。
+   檔名認的是**頁面 slug**，一個檔可以裝多個 `indicator_id`（血壓頁＝sbp＋dbp）。
 3. **靜態產出層**：`articles/<slug>/index.md` → `scripts/build-articles.py` → 靜態頁；
    指標頁另有一條：`articles/indicators/<slug>.md`（只有敘事）＋ `data/criteria/` →
    `scripts/gen-indicator.py` → `/indicators/<slug>/`。判準表、判準數線、沿革時間軸、
    失真卡全部由資料生成，**md 內不得再寫一份表格**（寫了就中止）。
    sitemap 走 manifest 合併（各生成器只寫 `data/sitemap-parts/<owner>.txt`，
    `scripts/build-sitemap.py` 統一合併）。部署走 Cloudflare Workers static assets。
+
+### 指標頁 frontmatter（`articles/indicators/<slug>.md`）
+
+| 欄位 | 必填 | 說明 |
+|---|---|---|
+| `slug` | 是 | 頁面網址與三個資料檔的檔名前綴 |
+| `indicator_ids` | 多指標頁必填 | `[sbp, dbp]`——這頁收 `data/criteria/<slug>.json` 裡哪些 `indicator_id`。單數的 `indicator_id` 仍支援（＝單元素）；兩者都沒有＝用 slug |
+| `indicator_labels` | 多指標頁必填 | `{sbp: 收縮壓, dbp: 舒張壓}`——判準表「指標」欄與各數線標題的中文短標籤。**缺一個就中止**，生成器不從 id 造中文、不從單位猜 |
+| `criteria_chart_caption` | 單指標頁必填 | 判準數線的標題（單指標頁的標題是編輯下的判斷，推導不出來）。多指標頁不吃這欄：每條數線的標題＝短標籤＋單位 |
+| `sources` | 是 | 第⑥段「來源與版本」的順序，指向 `data/sources/manifest.json` 的 id |
+
+多指標頁的判準表最前面多一欄「指標」，每個 `indicator_id` 各畫一條數線（座標軸在
+`gen-indicator.py` 的 `AXIS`，以 `indicator_id` 為鍵，未列名者由該指標的資料推導）；
+沿革時間軸與失真卡整頁共用一份（`<slug>-history.json`／`<slug>-interference.json`）。
+
+圖上的**顏色語意是「機構屬性」**（`ORG_FAMILY_COLOR`：`tw-gov`／`tw-society`／`intl`／
+`us`／`other`），不是逐個機構挑色票——新指標會帶進新機構，逐一挑遲早撞色或輪替，
+讀者就得重學一次圖例。名單外的機構走 fallback 灰＋機構全名。
 
 ## 常用指令
 
@@ -114,6 +151,10 @@ python3 scripts/verify-deploy.py public-health/index.html
   「客觀列出具體急症徵象後接 119／急診」句型，且機器只驗得了句型，用在非緊急情境
   擋不住——那要人工核。
 - **四項出處**：判準值必須齊備機構、文件、版本、頁碼；缺一即不渲染。
+- **分類就是判準**：`category` 走 `data/criteria/schema.json` 的白名單，不得就地自創。
+  易混的兩對——`classification`（來源把連續數值切成具名等級：高血壓第一期、BMI 過重）
+  與 `risk_threshold`（來源說超過此值風險升高、但沒說它構成診斷：腰圍 ≥90 cm）都**不是**
+  `diagnosis`；`risk_threshold` 也不是 `screening_triage`（那是指向下一項檢查的流程門檻）。
 - **引句照抄**：不做繁簡、標點、單位大小寫的美化。原文的 `≧`／`≥`、`mg/dl`／`mg/dL`
   不一致就照抄，那是回查原文的鑰匙。
 - **只存明細**：判準層禁止任何統計／彙總欄位（schema 已用 `additionalProperties: false`

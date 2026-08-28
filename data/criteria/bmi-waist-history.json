@@ -1,0 +1,117 @@
+[
+  {
+    "id": "H1",
+    "year": 1997,
+    "org": "World Health Organization",
+    "change": "WHO 肥胖諮詢會確立國際通用的成人 BMI 分級：18.50／25.00／30.00／35.00／40.00 五段切點（過輕、正常範圍、Preobese、Obese class I–III）",
+    "doc_id": "who-trs894-obesity-report-2000",
+    "version": "2000（WHO Technical Report Series 894）",
+    "page_or_table": "封面內頁會議標示與 Table 2.1（第 9 頁）",
+    "quote": "Geneva, 3-5 June 1997",
+    "quote_extra": [
+      "Normal range 18.50-24.99 Average",
+      "Overweight: :2:25.00",
+      "Obese class I 30.00-34.99 Moderate"
+    ],
+    "note": "year 記的是諮詢會召開年（1997），報告出版年是 2000（2004 重印）。☠️ quote_extra 中的 `:2:` 是掃描件 OCR 對 `≥` 的誤識，正文寫 `≥25.00`。這組切點至今仍是 WHO 的國際分級——亞太版的 23／25 不是它。",
+    "fetched_at": "2026-08-28",
+    "status": "已證實"
+  },
+  {
+    "id": "H2",
+    "year": 2000,
+    "org": "World Health Organization",
+    "change": "同一份報告明確表示腰圍無法訂出全球通用切點；Table 2.2 的 94／102、80／88 cm 只是荷蘭樣本的示例，不是 WHO 的建議值",
+    "doc_id": "who-trs894-obesity-report-2000",
+    "version": "2000（WHO Technical Report Series 894）",
+    "page_or_table": "2.4 節與 Table 2.2 註 a（第 9–10 頁）",
+    "quote": "Populations differ in the level of risk associated with a particular waist circumference, so that globally applicable cut-off points cannot be developed.",
+    "quote_extra": [
+      "This table is an example only.",
+      "denote en- hanced relative risk for a random sample from the Netherlands of 2183 men and 2698 women aged 20-59 years"
+    ],
+    "note": "🔴 這是本指標最常被寫錯的一條：很多二手文章把 94／80 說成「WHO 標準」。⚠️ quote_extra 第二句的 `en- hanced` 是原文換行處的連字斷行，照抄才 grep 得回快照，正文寫 enhanced。",
+    "fetched_at": "2026-08-28",
+    "status": "已證實"
+  },
+  {
+    "id": "H3",
+    "year": 2000,
+    "org": "World Health Organization Regional Office for the Western Pacific／International Association for the Study of Obesity／International Obesity Task Force",
+    "change": "亞太版首次提出亞洲人專用切點：BMI 過重 ≥23.0、肥胖 >25.0 kg/m²；腰圍男 90／女 80 cm。原文自稱 provisional／interim",
+    "doc_id": "who-asia-pacific-obesity-2000",
+    "version": "2000",
+    "page_or_table": "2.1 節（第 18 頁）與 2.2 節（第 20 頁）",
+    "quote": "In Asians, the cut-offs for overweight (2 23.0 kg/m?) and obesity (> 25.0 kg/m2) are lower than the WHO criteria. These provisional recommendations will need to be revised",
+    "quote_extra": [
+      "This report suggests, that instead, 90 cm for men and 80 cm for women be used as interim lower values for Asians."
+    ],
+    "note": "🔴 發布者是 WHO 西太平洋處＋IASO＋IOTF，不是 WHO 的國際分級。☠️ 引句取自本站自製 OCR（原 PDF 無文字層）：`2 23.0` ＝ `≥ 23.0`、`kg/m?` ＝ `kg/m²`，正文寫正確符號。原文自稱 provisional／interim，不得寫成「國際定案」。台灣的 90／80 目前可追溯到的最早出處就是這一條。",
+    "fetched_at": "2026-08-28",
+    "status": "已證實"
+  },
+  {
+    "id": "H4",
+    "year": 2001,
+    "org": "National Institutes of Health／National Heart, Lung, and Blood Institute（National Cholesterol Education Program）",
+    "change": "ATP III 把腰圍 >102／>88 cm 訂為代謝症候群五項判準之一，並明言腹部肥胖比 BMI 升高更能反映代謝風險",
+    "doc_id": "nhlbi-ncep-atp3-executive-summary-2001",
+    "version": "2001 年 5 月（NIH Publication No. 01-3670）",
+    "page_or_table": "Table 8 與其註 *",
+    "quote": "Men >102 cm (>40 in)",
+    "quote_extra": [
+      "Women >88 cm (>35 in)",
+      "the presence of abdominal obesity is more highly correlated with the metabolic risk factors than is an elevated body mass index (BMI)"
+    ],
+    "note": "美國走的是 102／88，不是 WHO Table 2.2 的 94／80，也不是亞太的 90／80。",
+    "fetched_at": "2026-08-28",
+    "status": "已證實"
+  },
+  {
+    "id": "H7",
+    "year": 2002,
+    "org": "World Health Organization",
+    "change": "WHO 亞洲人 BMI 專家諮詢會建議：在有中央肥胖傾向的族群，用腰圍去細化以 BMI 為基礎的行動門檻（腰圍偏高就把 BMI 行動層級往上跳一級）",
+    "doc_id": "who-waist-circumference-report-2011",
+    "version": "2011（會議 Geneva, 8–11 December 2008）",
+    "page_or_table": "第 3 章（第 8 頁）回顧段",
+    "quote": "the consultation recommended that, where possible, waist circumference should be used to refine action levels based on BMI. For example, levels based on BMI might be increased by one level if the waist circumference were elevated above a specified level.",
+    "note": "⚠️ 兩層限定必須一起講：(1) 引句出自 WHO 2011 年腰圍報告回述 2002 年那場諮詢會，不是該諮詢會的原文；(2) 該諮詢會 2002 年召開、結論以 WHO 2004 出版（原文寫 `The 2002 WHO Expert Consultation ... (WHO, 2004)`），facts pack 的年份欄寫 2004（出版年），本列依 schema「變更發生的年份」記 2002。🔴 該諮詢會的 public health action points（23.0／27.5／32.5／37.5）本次未取得一手（Lancet 付費牆），不在本站資料裡，寫手不准寫。",
+    "fetched_at": "2026-08-28",
+    "status": "已證實（需補充）"
+  },
+  {
+    "id": "H8",
+    "year": 2006,
+    "org": "International Diabetes Federation",
+    "change": "IDF 把代謝症候群改成「中央肥胖是必要條件＋族群別腰圍切點」，華人／南亞／日本採男 ≥90、女 ≥80 cm",
+    "doc_id": "idf-metabolic-syndrome-consensus-2006",
+    "version": "2006",
+    "page_or_table": "Table 1 與 Table 2（第 10–11 頁）",
+    "quote": "Central obesity (defined as waist circumference* with ethnicity specific values)",
+    "quote_extra": [
+      "plus any two of the following four factors",
+      "Male ≥ 90 cm Chinese Female ≥ 80 cm"
+    ],
+    "note": "🔴 IDF 的規則與台灣／ATP III 不同：腰圍是必要條件，不是可替換的五分之一。",
+    "fetched_at": "2026-08-28",
+    "status": "已證實"
+  },
+  {
+    "id": "H9",
+    "year": 2008,
+    "org": "World Health Organization",
+    "change": "WHO 腰圍／腰臀比專家諮詢會沒有訂出新的切點，只確立了標準量測法與「將來如何訂切點」的流程需求；並再次聲明 2000 年那組值不是 WHO 建議值",
+    "doc_id": "who-waist-circumference-report-2011",
+    "version": "2011（會議 Geneva, 8–11 December 2008）",
+    "page_or_table": "5.4 節（第 22 頁）與 Annex A1 首段（第 27 頁）",
+    "quote": "The consultation identified the need for a transparent and methodologically sound empirical approach to developing population or geography‐specific cut‐off points for abdominal obesity.",
+    "quote_extra": [
+      "there were too many unresolved issues for the consultation to determine whether this process would be useful",
+      "those sex‐specific cut‐off points cited in the report of the WHO Expert Consultation on Obesity (2000b) were an example only and not WHO recommendations"
+    ],
+    "note": "year 記的是會議年（2008），報告出版年是 2011。🔴 到本次查證日為止，WHO 官方仍沒有一套自己的腰圍切點。⚠️ 引句中的連字號是 U+2010，不是 ASCII `-`。",
+    "fetched_at": "2026-08-28",
+    "status": "已證實"
+  }
+]

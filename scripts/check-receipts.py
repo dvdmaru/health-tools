@@ -38,12 +38,21 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 SOURCES = ROOT / "data" / "sources" / "manifest.json"
 CRITERIA_DIR = ROOT / "data" / "criteria"
 
-# 每個資料檔怎麼認自己的列：(檔名, 列號欄位或 None, 顯示名)
-DATASETS = [
-    ("hba1c.json", None, "criteria"),
-    ("hba1c-history.json", "id", "history"),
-    ("hba1c-interference.json", "id", "interference"),
-]
+# 每個資料檔怎麼認自己的列：(檔名, 列號欄位或 None, 顯示名)。
+# 動態掃描 data/criteria/*.json（schema 檔除外）——新指標落地不必回來改這裡，
+# 也不會出現「檔在、gate 沒讀」的假綠。
+def _datasets():
+    out = []
+    for f in sorted(CRITERIA_DIR.glob("*.json")):
+        if f.name.endswith("schema.json"):
+            continue
+        if f.name.endswith("-history.json"):
+            out.append((f.name, "id", "history"))
+        elif f.name.endswith("-interference.json"):
+            out.append((f.name, "id", "interference"))
+        else:
+            out.append((f.name, None, "criteria"))
+    return out
 
 _pdf_cache: dict = {}
 _text_cache: dict = {}
@@ -95,7 +104,7 @@ def main() -> int:
     failures = []
     skipped_docs = {}
 
-    for fname, id_field, label in DATASETS:
+    for fname, id_field, label in _datasets():
         path = CRITERIA_DIR / fname
         if not path.exists():
             print(f"❌ 找不到 {path.relative_to(ROOT)}", file=sys.stderr)

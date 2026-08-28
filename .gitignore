@@ -25,3 +25,25 @@ data/sources/who-hba1c-diagnosis-2011.pdf
 data/sources/daroc-t2dm-guideline-2022.pdf
 data/sources/ngsp-ifcc-standardization.html
 data/sources/ngsp-convert-table.html
+# M4 blood-pressure（licensed-cite-only）
+data/sources/ths-tsoc-hypertension-guideline-2022.pdf
+data/sources/who-hypertension-pharmacotherapy-guideline-2021.pdf
+data/sources/cvder-aha-acc-guideline-editorial-2025.txt
+# M4 lipids（licensed-cite-only）
+data/sources/acc-aha-blood-cholesterol-guideline-2018.txt
+data/sources/tas-taiwan-lipid-primary-prevention-2022.pdf
+data/sources/tas-taiwan-lipid-high-risk-2017.pdf
+data/sources/tas-taiwan-lipid-focused-update-2022.pdf
+data/sources/jama-blood-cholesterol-synopsis-2019.html
+data/sources/ades-2013-acc-aha-cholesterol-commentary-2014.html
+# M4 uric-acid（licensed-cite-only）
+data/sources/tra-gout-hyperuricemia-guideline-2016.pdf
+data/sources/tra-gout-hyperuricemia-guideline-2007.txt
+data/sources/jsgna-hyperuricemia-gout-guideline-2019.pdf
+data/sources/acr-gout-guideline-2020.txt
+data/sources/eular-gout-recommendations-2016.pdf
+# M4 bmi-waist（licensed-cite-only）
+data/sources/who-trs894-obesity-report-2000.pdf
+data/sources/who-waist-circumference-report-2011.pdf
+data/sources/idf-metabolic-syndrome-consensus-2006.pdf
+data/sources/who-asia-pacific-obesity-2000.txt

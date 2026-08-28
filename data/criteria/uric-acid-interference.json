@@ -1,0 +1,212 @@
+[
+  {
+    "id": "L1",
+    "direction": "unspecified",
+    "factor": "脫水（列於高尿酸血症及痛風的相關疾病和因子表）",
+    "org": "中華民國風濕病醫學會",
+    "doc_id": "tra-gout-hyperuricemia-guideline-2016",
+    "version": "第三版（2016 年 9 月完成）",
+    "page_or_table": "第二章 第一節，【表一】高尿酸血症及痛風的相關疾病和因子",
+    "quote": "脫水 Dehydration",
+    "note": "☠️【表一】的引介句只說「痛風或高尿酸血症與諸多疾病的發生具有明顯相關性」，沒有逐項寫方向；同指引第二節列的高尿酸血症成因只有三項（攝取富含嘌呤食物／內源性過量產生／腎臟排泄受阻），脫水不在內。只能寫「被列為相關因子」，不得寫「脫水會讓尿酸驗起來偏高」。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L2",
+    "direction": "high",
+    "factor": "利尿劑（loop 或 thiazide）、低劑量阿斯匹林",
+    "org": "中華民國風濕病醫學會",
+    "doc_id": "tra-gout-hyperuricemia-guideline-2016",
+    "version": "第三版（2016 年 9 月完成）",
+    "page_or_table": "第二章 第六節 治療目的與治療計畫（藥物引起的高尿酸血症段）",
+    "quote": "能是藥物引起的，如利尿劑 (loop or thiazide diuretics)、低劑量阿斯匹林",
+    "note": "原文脈絡是「高尿酸血症可能是藥物引起的」，故 direction=high。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L3",
+    "direction": "high",
+    "factor": "菸鹼酸、抗結核藥（pyrazinamide、ethambutol）、器官移植抗排斥藥環孢靈",
+    "org": "中華民國風濕病醫學會",
+    "doc_id": "tra-gout-hyperuricemia-guideline-2016",
+    "version": "第三版（2016 年 9 月完成）",
+    "page_or_table": "第二章 第六節 治療目的與治療計畫（藥物引起的高尿酸血症段）",
+    "quote": "菸鹼酸、抗結核藥物 (pyrazinamide, ethambutol)、器官移植抗排斥藥物環孢靈 (cyclosporine)、",
+    "note": "與 L2 同一句的延續（原文換行），同屬「可能是藥物引起的高尿酸血症」清單。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L4",
+    "direction": "high",
+    "factor": "酒精與含果糖飲料（代謝為乳酸影響尿酸排泄）",
+    "org": "中華民國風濕病醫學會",
+    "doc_id": "tra-gout-hyperuricemia-guideline-2016",
+    "version": "第三版（2016 年 9 月完成）",
+    "page_or_table": "第二章 第九節 高尿酸血症與痛風日常生活指導與飲食建議",
+    "quote": "酒精及含果糖飲料在體內會代謝為乳酸影響尿酸排泄，並且本身會加",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L5",
+    "direction": "high",
+    "factor": "高脂肪食物（抑制尿酸排泄）",
+    "org": "中華民國風濕病醫學會",
+    "doc_id": "tra-gout-hyperuricemia-guideline-2016",
+    "version": "第三版（2016 年 9 月完成）",
+    "page_or_table": "第二章 第九節 高尿酸血症與痛風日常生活指導與飲食建議",
+    "quote": "由於高脂肪食物會抑制尿酸排泄，在急性痛風發作期需避免大量食用",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L6",
+    "direction": "high",
+    "factor": "完全無乳製品的飲食（dairy-free diet）",
+    "org": "中華民國風濕病醫學會",
+    "doc_id": "tra-gout-hyperuricemia-guideline-2016",
+    "version": "第三版（2016 年 9 月完成）",
+    "page_or_table": "第二章 第九節 高尿酸血症與痛風日常生活指導與飲食建議",
+    "quote": "完全無乳製品的飲食 (dairy-free diet)，會",
+    "quote_extra": [
+      "增加血尿酸濃度"
+    ],
+    "note": "原文為一項為期四週的臨床試驗發現；原文換行不連續，故拆 quote／quote_extra。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L7",
+    "direction": "unspecified",
+    "factor": "慢性腎衰竭（列於高尿酸血症及痛風的相關疾病和因子表）",
+    "org": "中華民國風濕病醫學會",
+    "doc_id": "tra-gout-hyperuricemia-guideline-2016",
+    "version": "第三版（2016 年 9 月完成）",
+    "page_or_table": "第二章 第一節，【表一】高尿酸血症及痛風的相關疾病和因子",
+    "quote": "慢性腎衰竭 Chronic renal failure",
+    "note": "同 L1：【表一】只講相關性，未逐項給方向。腎功能與尿酸排泄路徑的機轉說明另見 L8。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L8",
+    "direction": "unspecified",
+    "factor": "腎功能異常會改變尿酸排泄路徑（腎臟排泄減少、腸道排泄增加）",
+    "org": "中華民國風濕病醫學會",
+    "doc_id": "tra-gout-hyperuricemia-guideline-2016",
+    "version": "第三版（2016 年 9 月完成）",
+    "page_or_table": "第二章 第二節 高尿酸血症的定義及原因",
+    "quote": "但腎臟功能異常的病人由腎臟",
+    "quote_extra": [
+      "排泄的量減少，相對地由腸道排泄的量會增加"
+    ],
+    "note": "來源只說明排泄路徑的重新分配，沒有寫對血中尿酸值的淨方向，故 unspecified。原文換行不連續，故拆 quote／quote_extra。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L9",
+    "direction": "unspecified",
+    "factor": "限鹽、飢餓、乳酸酸血症等（列於高尿酸血症及痛風的相關疾病和因子表）",
+    "org": "中華民國風濕病醫學會",
+    "doc_id": "tra-gout-hyperuricemia-guideline-2016",
+    "version": "第三版（2016 年 9 月完成）",
+    "page_or_table": "第二章 第一節，【表一】高尿酸血症及痛風的相關疾病和因子",
+    "quote": "限鹽 Salt restriction",
+    "quote_extra": [
+      "飢餓 Starvation",
+      "乳酸酸血症 Lactic acidosis"
+    ],
+    "note": "同 L1：【表一】只講相關性，未逐項給方向。三句是表內連續條目，但各自獨立成行，故拆 quote／quote_extra。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L10",
+    "direction": "low",
+    "factor": "痛風急性發作當下，約 30% 的病患血尿酸值落在 <7.0 mg/dL",
+    "org": "中華民國風濕病醫學會",
+    "doc_id": "tra-gout-hyperuricemia-guideline-2016",
+    "version": "第三版（2016 年 9 月完成）",
+    "page_or_table": "第二章 第四節 痛風的診斷",
+    "quote": "約有 30% 發生急性痛風關節炎之病患，關節炎發作時血尿酸值處於 <7.0 mg/dL 的",
+    "note": "⚠️ 這是「發作當下尿酸落在正常範圍」的臨床現象，不是檢驗方法失真；direction 標 low 是指「這時的數值會低於平時的判斷預期」，不得寫成「有某個因素讓尿酸驗起來假性偏低」。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L11",
+    "direction": "unsuitable",
+    "factor": "尿酸值高也不代表關節痛就是痛風（>10 mg/dL 仍有 ≥10% 的病患不是）",
+    "org": "中華民國風濕病醫學會",
+    "doc_id": "tra-gout-hyperuricemia-guideline-2016",
+    "version": "第三版（2016 年 9 月完成）",
+    "page_or_table": "第二章 第四節 痛風的診斷",
+    "quote": "即使血中尿酸值 >10 mg/dL，仍有 ≥10% 的病患",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L12",
+    "direction": "unsuitable",
+    "factor": "血尿酸值不得作為「當時關節炎是否為痛風」的唯一診斷依據",
+    "org": "中華民國風濕病醫學會",
+    "doc_id": "tra-gout-hyperuricemia-guideline-2016",
+    "version": "第三版（2016 年 9 月完成）",
+    "page_or_table": "第二章 第四節 痛風的診斷",
+    "quote": "血中尿酸值的高低絕對不宜做為當時關節炎是否為痛風關節炎的唯一診",
+    "note": "原文句尾「唯一診／斷依據」跨行斷開，引句只取到斷行處。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L13",
+    "direction": "unspecified",
+    "factor": "高尿酸血症患者只有約十分之一會發展成痛風關節炎",
+    "org": "中華民國風濕病醫學會",
+    "doc_id": "tra-gout-hyperuricemia-guideline-2016",
+    "version": "第三版（2016 年 9 月完成）",
+    "page_or_table": "第二章 第一節 台灣之痛風與高尿酸血症流行病學",
+    "quote": "具有高尿酸血症的病人僅有十分之一會發展出痛風關節炎",
+    "note": "這是解讀限制（超標不等於會發病），不是檢驗失真，來源也未給方向，故 unspecified。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L14",
+    "direction": "unspecified",
+    "factor": "多種藥物（含阿斯匹林）會影響血中與尿中尿酸值",
+    "org": "MedlinePlus（U.S. National Library of Medicine）",
+    "doc_id": "medlineplus-uric-acid-test",
+    "version": "Last updated July 15, 2026",
+    "page_or_table": "Will I need to do anything to prepare for the test?",
+    "quote": "Many medicines, including aspirin, can affect uric acid levels in your blood and urine.",
+    "note": "原文只說 affect，未指方向，故 unspecified。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L15",
+    "direction": "unspecified",
+    "factor": "高值不必然代表有需要治療的疾病",
+    "org": "MedlinePlus（U.S. National Library of Medicine）",
+    "doc_id": "medlineplus-uric-acid-test",
+    "version": "Last updated July 15, 2026",
+    "page_or_table": "What do the results mean?",
+    "quote": "it doesn't always mean you have a condition that needs treatment",
+    "note": "解讀限制，非方向性失真，故 unspecified。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L16",
+    "direction": "high",
+    "factor": "化學治療殺死癌細胞時大量釋出普林（腫瘤溶解）",
+    "org": "MedlinePlus（U.S. National Library of Medicine）",
+    "doc_id": "medlineplus-uric-acid-test",
+    "version": "Last updated July 15, 2026",
+    "page_or_table": "What is it used for?",
+    "quote": "When treatment kills cancer cells quickly, they release large amounts of purines into the blood.",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "id": "L17",
+    "direction": "low",
+    "factor": "低尿酸值罕見，且通常不造成健康問題",
+    "org": "MedlinePlus（U.S. National Library of Medicine）",
+    "doc_id": "medlineplus-uric-acid-test",
+    "version": "Last updated July 15, 2026",
+    "page_or_table": "What do the results mean?",
+    "quote": "are uncommon and usually don’t cause health problems",
+    "note": "引句的撇號是原文的彎引號 ’，照抄不美化。這一列講的是低值的臨床意義，不是「有東西讓尿酸驗起來偏低」。",
+    "fetched_at": "2026-08-28"
+  }
+]

@@ -9,9 +9,14 @@
 資料改了頁面不會叫。這支把「頁面上出現的每個判準數字」的唯一來源收斂回
 data/criteria/，md 只留敘事。所以：
 
-- 第②段的判準表**不從 md 讀**，從 data/criteria/<indicator>.json 生成
-  （category ∈ TABLE_CATEGORIES 且 indicator_id 相符者，資料順序即列序）。
-  ☠️ md 裡再出現任何表格一律 exit 1：雙源就是遲早對不起來，寧可不生成。
+- 第②段的判準表**不從 md 讀**，從 data/criteria/<slug>.json 生成
+  （category ∈ TABLE_CATEGORIES 且 indicator_id ∈ frontmatter 的 indicator_ids 者，
+  資料順序即列序）。☠️ md 裡再出現任何表格一律 exit 1：雙源就是遲早對不起來。
+- **一頁多指標**：frontmatter 的 `indicator_ids: [sbp, dbp]` 決定這頁收哪些指標
+  （舊的單數 `indicator_id` 仍支援＝單元素 list；兩者都沒有＝用 slug）。三個資料檔
+  一律以**頁面 slug** 定位（<slug>.json／<slug>-history.json／<slug>-interference.json）。
+  多指標時判準表最前面多一欄「指標」，每個 indicator_id 各畫一條數線；欄裡與數線
+  標題的中文短標籤只能來自 frontmatter 的 `indicator_labels`，缺了就中止不猜。
 - 三張圖同源：判準數線畫 criteria、時間軸畫 *-history、失真卡畫 *-interference。
   每張圖旁保留 table view（圖看趨勢、表看出處），圖下「依據」行列出用到的資料列
   id／索引與 doc_id。
@@ -48,35 +53,68 @@ CRITERIA_DIR = ROOT / "data" / "criteria"
 MANIFEST_PATH = ROOT / "data" / "sources" / "manifest.json"
 SITEMAP_OWNER = "indicators"
 
-# 第②段判準表要收哪些 category。診斷／前期／篩檢分流／未訂判準四類都進表，
-# ☠️ 篩檢分流與未訂判準**不得**併進診斷列——5.9% 是要不要轉介做 OGTT 的門檻，
-# WHO 的「未訂」是一個明確的空缺，兩者都不是診斷線。分類就是判準的一部分。
-TABLE_CATEGORIES = ["diagnosis", "prediabetes", "screening_triage", "no_criterion_stated"]
+# 第②段判準表要收哪些 category。☠️ 篩檢分流與未訂判準**不得**併進診斷列——
+# 5.9% 是要不要轉介做 OGTT 的門檻，WHO 的「未訂」是一個明確的空缺，兩者都不是診斷線。
+# classification 與 risk_threshold 同理：分級是把連續數值切成命名等級（高血壓第一期、
+# BMI 過重），風險門檻是「超過此值風險升高」但來源沒說它構成診斷（腰圍 ≥90 cm）。
+# 分類就是判準的一部分。
+TABLE_CATEGORIES = ["diagnosis", "prediabetes", "screening_triage",
+                    "classification", "risk_threshold", "no_criterion_stated"]
 
 CATEGORY_LABEL = {
-    "diagnosis": "糖尿病診斷",
+    "diagnosis": "診斷",
     "prediabetes": "糖尿病前期",
     "screening_triage": "篩檢分流（非診斷判準）",
+    "classification": "分級",
+    "risk_threshold": "風險門檻",
     "no_criterion_stated": "未訂判準",
 }
 
 # ---------- 呈現層設定（不是資料；資料一律在 data/ 下） ----------
-# 機構全名 → (頁面短標籤, 色票 CSS 變數)。四機構固定序、固定色，不輪替配色——
-# 顏色在這頁承載的語意是「哪個機構」，一個視覺通道只能承載一種語意。
-ORG_DISPLAY = {
-    "American Diabetes Association": ("ADA", "--c-ada"),
-    "World Health Organization": ("WHO", "--c-who"),
-    "衛生福利部國民健康署": ("國健署", "--c-hpa"),
-    "行政院衛生署國民健康局": ("國健局（2003）", "--c-hpa"),
-    "社團法人中華民國糖尿病學會／中華民國內分泌暨糖尿病學會": ("糖尿病學會", "--c-daroc"),
-    "The Expert Committee on the Diagnosis and Classification of Diabetes Mellitus"
-    "（American Diabetes Association）": ("ADA 專家委員會", "--c-ada"),
-    "International Expert Committee": ("國際專家委員會", "--c-other"),
-    "MedlinePlus（美國國家醫學圖書館 NLM，NIH 旗下）": ("MedlinePlus", "--c-other"),
-    "National Glycohemoglobin Standardization Program": ("NGSP", "--c-other"),
+# 顏色在這幾張圖承載的語意是「這條判準是誰發布的」，一個視覺通道只能承載一種語意。
+# ☠️ 語意的單位是**機構屬性**（family），不是機構本身：新指標會帶進新機構
+# （心臟學會、國際高血壓學會…），逐一挑色票遲早撞色或輪替，讀者就得重學一次圖例。
+# family → 色票；機構全名 → (頁面短標籤, family)。名單外的機構走 fallback 灰＋全名。
+ORG_FAMILY_COLOR = {
+    "tw-gov": "--c-hpa",        # 台灣官方（國健署／食藥署／衛福部）
+    "tw-society": "--c-daroc",  # 台灣專科學會
+    "intl": "--c-who",          # 國際組織（WHO 等）
+    "us": "--c-ada",            # 美國學會／其專家委員會
+    "other": "--c-other",       # 其他（標準化計畫、跨國專家委員會、衛教資料庫…）
 }
-# 名單外的機構＝去強調灰，不配系列色（系列色是四機構的識別，不能被稀釋）。
-ORG_FALLBACK_COLOR = "--c-other"
+ORG_DISPLAY = {
+    "American Diabetes Association": ("ADA", "us"),
+    "World Health Organization": ("WHO", "intl"),
+    "衛生福利部國民健康署": ("國健署", "tw-gov"),
+    "行政院衛生署國民健康局": ("國健局（2003）", "tw-gov"),
+    "社團法人中華民國糖尿病學會／中華民國內分泌暨糖尿病學會": ("糖尿病學會", "tw-society"),
+    "The Expert Committee on the Diagnosis and Classification of Diabetes Mellitus"
+    "（American Diabetes Association）": ("ADA 專家委員會", "us"),
+    "International Expert Committee": ("國際專家委員會", "other"),
+    "MedlinePlus（美國國家醫學圖書館 NLM，NIH 旗下）": ("MedlinePlus", "other"),
+    "National Glycohemoglobin Standardization Program": ("NGSP", "other"),
+    # ---- M4 新增（血壓／血脂／尿酸／BMI 腰圍）----
+    "World Health Organization Regional Office for the Western Pacific／International Association for the Study of Obesity／International Obesity Task Force": ("WHO 西太平洋辦公室／IASO／IOTF", "intl"),
+    "衛生福利部": ("衛福部", "tw-gov"),
+    "American College of Cardiology／American Heart Association": ("ACC/AHA", "us"),
+    "American Heart Association／American College of Cardiology": ("AHA/ACC", "us"),
+    "American Heart Association／American College of Cardiology 等多學會聯合（AHA/ACC/AACVPR/AAPA/ABC/ACPM/ADA/AGS/APhA/ASPC/NLA/PCNA）": ("AHA/ACC 等多學會", "us"),
+    "American College of Rheumatology": ("ACR", "us"),
+    "European League Against Rheumatism": ("EULAR", "intl"),
+    "International Diabetes Federation": ("IDF", "intl"),
+    "Japanese Society of Gout and Uric & Nucleic Acids": ("日本痛風・尿酸核酸學會", "intl"),
+    "MedlinePlus（U.S. National Library of Medicine）": ("MedlinePlus", "other"),
+    "National Cholesterol Education Program（National Heart, Lung, and Blood Institute, National Institutes of Health）": ("NCEP（NHLBI）", "us"),
+    "National Heart, Lung, and Blood Institute（National Institutes of Health）": ("NHLBI", "us"),
+    "National High Blood Pressure Education Program（National Heart, Lung, and Blood Institute, National Institutes of Health）": ("NHBPEP（NHLBI）", "us"),
+    "National Institutes of Health／National Heart, Lung, and Blood Institute": ("NIH/NHLBI", "us"),
+    "National Institutes of Health／National Heart, Lung, and Blood Institute（National Cholesterol Education Program）": ("NIH/NHLBI（NCEP）", "us"),
+    "Taiwan Society of Cardiology／Taiwan Hypertension Society": ("心臟學會／高血壓學會", "tw-society"),
+    "中華民國風濕病醫學會": ("風濕病醫學會", "tw-society"),
+    "台灣血脂及動脈硬化學會（Taiwan Society of Lipids and Atherosclerosis）等八學會": ("血脂學會等八學會", "tw-society"),
+}
+# 名單外的機構＝去強調灰，不配系列色（系列色是已具名機構屬性的識別，不能被稀釋）。
+ORG_FALLBACK_FAMILY = "other"
 
 # 失真卡的欄序。五種 direction 各自有欄，來源沒指方向就進 unspecified 欄，不猜。
 DIRECTION_ORDER = ["high", "both", "low", "unsuitable", "unspecified"]
@@ -88,11 +126,21 @@ DIRECTION_LABEL = {
     "unspecified": "來源只說會影響，未指方向",
 }
 
-# 判準數線的座標軸（每個指標的合理視窗不同，屬呈現層）。未列名的指標由資料推導。
+# 判準數線的座標軸，**鍵＝indicator_id**（不是頁面 slug）：一頁多指標時每個
+# indicator_id 各畫一條數線，各自吃自己的視窗。未列名者由該指標的資料 min/max 推導。
 AXIS = {
     "hba1c": {"min": 4.5, "max": 8.0,
               "ticks": [4.5, 5.0, 6.0, 6.5, 7.0, 8.0],
               "label": "HbA1c（%）"},
+    "sbp": {"min": 100, "max": 160, "ticks": [100, 120, 130, 140, 160], "label": "收縮壓（mmHg）"},
+    "dbp": {"min": 60, "max": 100, "ticks": [60, 80, 85, 90, 100], "label": "舒張壓（mmHg）"},
+    "total-chol": {"min": 150, "max": 260, "ticks": [150, 200, 240, 260], "label": "總膽固醇（mg/dL）"},
+    "ldl-c": {"min": 80, "max": 200, "ticks": [80, 100, 130, 160, 190], "label": "LDL-C（mg/dL）"},
+    "hdl-c": {"min": 30, "max": 70, "ticks": [30, 40, 50, 60, 70], "label": "HDL-C（mg/dL）"},
+    "tg": {"min": 100, "max": 550, "ticks": [100, 150, 200, 500], "label": "三酸甘油酯（mg/dL）"},
+    "uric-acid": {"min": 6.0, "max": 10.0, "ticks": [6.0, 6.8, 7.0, 8.0, 9.0, 10.0], "label": "尿酸（mg/dL）"},
+    "bmi": {"min": 15, "max": 42, "ticks": [15, 18.5, 23, 24, 25, 27, 30, 35, 40], "label": "BMI（kg/m²）"},
+    "waist": {"min": 70, "max": 110, "ticks": [70, 80, 88, 90, 94, 102, 110], "label": "腰圍（cm）"},
 }
 
 
@@ -130,11 +178,16 @@ def source_ref(doc_id: str, mf: dict, page_or_table: str = "") -> str:
 
 
 def org_label(org: str) -> str:
-    return ORG_DISPLAY.get(org, (org, ORG_FALLBACK_COLOR))[0]
+    return ORG_DISPLAY.get(org, (org, ORG_FALLBACK_FAMILY))[0]
+
+
+def org_family(org: str) -> str:
+    """機構屬性（tw-gov／tw-society／intl／us／other）。名單外一律 other。"""
+    return ORG_DISPLAY.get(org, (org, ORG_FALLBACK_FAMILY))[1]
 
 
 def org_color(org: str) -> str:
-    return f"var({ORG_DISPLAY.get(org, ('', ORG_FALLBACK_COLOR))[1]})"
+    return f"var({ORG_FAMILY_COLOR[org_family(org)]})"
 
 
 def wrap_cjk(text: str, width: int) -> list:
@@ -202,6 +255,22 @@ _TABLE_LINE = re.compile(r"(?m)^\s*\|")
 SECTION_COUNT = 6
 
 
+def parse_list(raw: str) -> list:
+    """frontmatter 的 `[a, b, c]`（healthlib 的解析器只回原字串）→ list。"""
+    return [s.strip() for s in (raw or "").strip().lstrip("[").rstrip("]").split(",")
+            if s.strip()]
+
+
+def parse_map(raw: str) -> dict:
+    """frontmatter 的 `{sbp: 收縮壓, dbp: 舒張壓}` → dict。冒號後的值照抄不改。"""
+    out = {}
+    for item in (raw or "").strip().lstrip("{").rstrip("}").split(","):
+        k, sep, v = item.partition(":")
+        if sep and k.strip() and v.strip():
+            out[k.strip()] = v.strip()
+    return out
+
+
 def parse_article(path: pathlib.Path):
     """回 (meta, h1, sections)；sections＝[(標題, [段落…])]，固定六段。
 
@@ -229,10 +298,31 @@ def parse_article(path: pathlib.Path):
         raise SystemExit(f"❌ {path.name} 有 {len(sections)} 段，固定結構是 "
                          f"{SECTION_COUNT} 段且順序不可調換（Style Spec §4）。")
 
-    meta["sources"] = [s.strip() for s in
-                       meta.get("sources", "").strip().lstrip("[").rstrip("]").split(",")
-                       if s.strip()]
+    meta["sources"] = parse_list(meta.get("sources", ""))
     return meta, h1, sections
+
+
+def page_indicators(meta: dict, slug: str) -> tuple:
+    """(indicator_ids, indicator_labels)。
+
+    一頁多指標（blood-pressure＝sbp＋dbp、lipids＝四項…）靠 `indicator_ids`；
+    舊的單數 `indicator_id` 仍支援（＝單元素 list）；兩者都沒有就用 slug。
+
+    多指標頁的短標籤（判準表的「指標」欄、每條數線的標題）必須由 frontmatter 的
+    `indicator_labels` 給——☠️ 生成器不從 indicator_id 造中文，也不從 unit 猜，
+    缺一個就中止：猜出來的「SBP」不會有人發現它不是來源的用詞。
+    """
+    ids = parse_list(meta.get("indicator_ids", ""))
+    if not ids:
+        ids = [meta["indicator_id"]] if meta.get("indicator_id") else [slug]
+    labels = parse_map(meta.get("indicator_labels", ""))
+    if len(ids) > 1:
+        missing = [i for i in ids if i not in labels]
+        if missing:
+            raise SystemExit(
+                f"❌ {slug}：indicator_labels 缺 {missing} 的中文短標籤。"
+                "多指標頁的「指標」欄與各數線標題只能由 frontmatter 指定，生成器不猜。")
+    return ids, labels
 
 
 # ---------- 判準值組字（唯一的數字來源） ----------
@@ -345,14 +435,19 @@ figure.chart svg.narrow-only{ display:none; }
 
 # ---------- ② 判準表（唯一數字來源） ----------
 
-def render_criteria_table(rows: list, mf: dict) -> str:
-    head = ("<thead><tr><th>機構</th><th>判準值</th><th>族群</th>"
+def render_criteria_table(rows: list, mf: dict, multi: bool = False,
+                          labels: dict = None) -> str:
+    """多指標頁在最前面多一欄「指標」；單指標頁不加（一欄只有一個值＝白佔寬度）。"""
+    labels = labels or {}
+    ind_th = "<th>指標</th>" if multi else ""
+    head = (f"<thead><tr>{ind_th}<th>機構</th><th>判準值</th><th>族群</th>"
             "<th>依據文件與版本（含頁碼或表號）</th></tr></thead>")
     body = []
     for r in rows:
         body.append(
             "<tr>"
-            f"<td>{esc(org_label(r['org']))}</td>"
+            + (f"<td>{esc(labels[r['indicator_id']])}</td>" if multi else "")
+            + f"<td>{esc(org_label(r['org']))}</td>"
             f"<td>{esc(criteria_cell(r))}</td>"
             f"<td>{esc(r['population'])}</td>"
             f"<td>{esc(source_ref(r['doc_id'], mf, r['page_or_table']))}</td>"
@@ -377,8 +472,17 @@ def _axis_cfg(indicator_id: str, rows: list) -> dict:
     return {"min": lo - pad, "max": hi + pad, "ticks": [lo - pad, lo, hi, hi + pad], "label": ""}
 
 
-def render_number_line(rows: list, indicator_id: str, mf: dict) -> str:
-    """四機構判準數線：同一批 criteria 列，畫的與表上的是同一份數字。
+def line_title(indicator_id: str, rows: list, labels: dict) -> str:
+    """多指標頁每條數線的標題＝短標籤＋單位（單位照資料抄，沒有就只放短標籤）。"""
+    units = [r["unit"] for r in rows if r.get("unit")]
+    return f"{labels[indicator_id]}（{units[0]}）" if units else labels[indicator_id]
+
+
+def render_number_line(rows: list, indicator_id: str, mf: dict, slug: str,
+                       caption: str) -> str:
+    """各機構判準數線：同一批 criteria 列，畫的與表上的是同一份數字。
+
+    一頁多指標時每個 indicator_id 各一條，rows 已先按 indicator_id 篩過。
 
     兩端都沒有數值的列畫不出來（例：流程圖型的篩檢分流），不硬畫也不靜默丟掉——
     在圖下明說有幾列只在表上。
@@ -477,8 +581,19 @@ def render_number_line(rows: list, indicator_id: str, mf: dict) -> str:
     legend = "".join(
         f'<span><i style="background:{org_color(o)}"></i>{esc(org_label(o))}</span>'
         for o in orgs)
-    legend += ('<span><i style="background:var(--c-ada);opacity:.32"></i>淡色帶＝'
-               f'{esc(CATEGORY_LABEL["prediabetes"])}</span>')
+    # ☠️ 圖例的類別文字由資料推導，不寫死：淡色帶承載的是「畫得出來、但不是診斷線也
+    # 不是篩檢分流」的那些類別，血壓頁是分級、腰圍頁是風險門檻，寫死「糖尿病前期」
+    # 就會在別的指標頁上安靜地說錯話。
+    wash_cats = [c for c in TABLE_CATEGORIES
+                 if c not in ("diagnosis", "screening_triage")
+                 and any(r["category"] == c
+                         and (r.get("lower") is not None or r.get("upper") is not None)
+                         for r in rows)]
+    # 多個類別共用同一個淡色帶時併成一個圖例項：同一個色塊給兩行圖例，等於讓一個
+    # 視覺通道承載兩種語意，讀者會以為深淺之外還有別的差別。
+    if wash_cats:
+        legend += ('<span><i style="background:var(--c-ada);opacity:.32"></i>淡色帶＝'
+                   + esc("／".join(CATEGORY_LABEL[c] for c in wash_cats)) + '</span>')
     if any(r["category"] == "screening_triage" and r.get("lower") is not None for r in rows):
         legend += ('<span><i class="dash"></i>虛線框＝'
                    f'{esc(CATEGORY_LABEL["screening_triage"])}</span>')
@@ -494,7 +609,7 @@ def render_number_line(rows: list, indicator_id: str, mf: dict) -> str:
     basis = "、".join(f"第 {r['_row_no']} 列（{r['doc_id']}）" for r in rows)
 
     return f"""<figure class="chart">
-<figcaption class="ct">四套判準的糖尿病線畫在同一個數字上，分歧全在門檻以下</figcaption>
+<figcaption class="ct">{esc(caption)}</figcaption>
 <div class="lg">{legend}</div>
 <svg class="cs" viewBox="0 0 720 {vb_h:g}" role="img" aria-label="{esc(aria)}的{esc(cfg.get('label', ''))}判準數線">
 <g class="grid">{grid}</g>
@@ -504,7 +619,7 @@ def render_number_line(rows: list, indicator_id: str, mf: dict) -> str:
 {tick_labels}
 {axis_label}
 </svg>
-<p class="src">依據：data/criteria/{esc(indicator_id)}.json {esc(basis)}。判準值與完整出處見上表。{esc(note)}</p>
+<p class="src">依據：data/criteria/{esc(slug)}.json {esc(basis)}。判準值與完整出處見上表。{esc(note)}</p>
 </figure>"""
 
 
@@ -537,7 +652,8 @@ def _timeline_svg(rows: list, vb_w: int, wrap: int, dot_x: int, text_x: int, cls
             f'{axis}{"".join(entries)}</svg>')
 
 
-def render_history(rows: list, mf: dict, indicator_id: str) -> str:
+def render_history(rows: list, mf: dict, slug: str) -> str:
+    """判準沿革時間軸。history 檔以頁面 slug 定位，多指標頁共用一條時間軸。"""
     orgs = list(dict.fromkeys(r["org"] for r in rows))
     legend = "".join(
         f'<span><i class="dot" style="background:{org_color(o)}"></i>{esc(org_label(o))}</span>'
@@ -560,15 +676,18 @@ def render_history(rows: list, mf: dict, indicator_id: str) -> str:
 <div class="lg">{legend}</div>
 {_timeline_svg(rows, 720, 30, 26, 48, "wide-only")}
 {_timeline_svg(rows, 340, 15, 22, 42, "narrow-only")}
-<p class="src">依據：data/criteria/{esc(indicator_id)}-history.json {esc(basis)}。事件點依序排列，縱軸不等距於實際年數；完整出處見下表。</p>
+<p class="src">依據：data/criteria/{esc(slug)}-history.json {esc(basis)}。事件點依序排列，縱軸不等距於實際年數；完整出處見下表。</p>
 </figure>
 {table}"""
 
 
 # ---------- 圖三：失真卡 ----------
 
-def render_interference(rows: list, mf: dict, indicator_id: str) -> str:
-    """五種 direction 各自成欄；來源沒指方向的收在「未指方向」欄，不併也不猜。"""
+def render_interference(rows: list, mf: dict, slug: str) -> str:
+    """五種 direction 各自成欄；來源沒指方向的收在「未指方向」欄，不併也不猜。
+
+    interference 檔同樣以頁面 slug 定位，多指標頁共用一張失真卡。
+    """
     by_dir = {d: [r for r in rows if r["direction"] == d] for d in DIRECTION_ORDER}
     unknown = sorted({r["direction"] for r in rows} - set(DIRECTION_ORDER))
     if unknown:
@@ -608,7 +727,7 @@ def render_interference(rows: list, mf: dict, indicator_id: str) -> str:
 <figcaption class="ct">同一批狀況，各機構標的方向不一樣，也有只說會影響而未指方向的</figcaption>
 <div class="lg">{legend}</div>
 <div class="fx">{"".join(cols)}</div>
-<p class="src">依據：data/criteria/{esc(indicator_id)}-interference.json {esc(basis)}。方向一律照來源原文標示，來源未指方向者不推論。</p>
+<p class="src">依據：data/criteria/{esc(slug)}-interference.json {esc(basis)}。方向一律照來源原文標示，來源未指方向者不推論。</p>
 </figure>
 {table}"""
 
@@ -634,11 +753,12 @@ FOOT_LINE = "本站不提供診斷或治療建議。頁面整理的是各機構�
 
 
 def render_page(meta: dict, h1: str, sections: list, crit: list, hist: list,
-                intf: list, mf: dict, indicator_id: str, slug: str,
+                intf: list, mf: dict, ids: list, labels: dict, slug: str,
                 published: bool) -> str:
     url = f"{hl.BASE}/indicators/{slug}/"
     title = meta.get("title", h1)
     desc = (sections[0][1][0] if sections[0][1] else "")[:120]
+    multi = len(ids) > 1
 
     blocks = []
     for i, (head, paras) in enumerate(sections):
@@ -646,15 +766,29 @@ def render_page(meta: dict, h1: str, sections: list, crit: list, hist: list,
         if i == 1:                                   # ② 各機構判準並列
             if paras:
                 blocks.append(f"<p>{esc(paras[0])}</p>")
-            blocks.append(render_criteria_table(crit, mf))
+            blocks.append(render_criteria_table(crit, mf, multi, labels))
             blocks.extend(f"<p>{esc(p)}</p>" for p in paras[1:])
-            blocks.append(render_number_line(crit, indicator_id, mf))
+            # 一個 indicator_id 一條數線；多指標頁的標題＝短標籤＋單位，單指標頁
+            # 的標題是編輯下的判斷（「分歧全在門檻以下」不是資料推得出來的），
+            # 所以走 frontmatter 的 criteria_chart_caption，缺了就中止不猜。
+            for iid in ids:
+                rows = [r for r in crit if r["indicator_id"] == iid]
+                if not rows:
+                    raise SystemExit(
+                        f"❌ {slug}：indicator_ids 列了 {iid}，但 data/criteria/{slug}.json "
+                        "沒有它可渲染的判準列（頁面不得宣稱一個沒有資料的指標）。")
+                caption = line_title(iid, rows, labels) if multi else meta.get(
+                    "criteria_chart_caption", "")
+                if not caption:
+                    raise SystemExit(
+                        f"❌ {slug}：frontmatter 缺 criteria_chart_caption（判準數線的標題）。")
+                blocks.append(render_number_line(rows, iid, mf, slug, caption))
         else:
             blocks.extend(f"<p>{esc(p)}</p>" for p in paras)
             if i == 2 and hist:                      # ③ 判準什麼時候改過
-                blocks.append(render_history(hist, mf, indicator_id))
+                blocks.append(render_history(hist, mf, slug))
             elif i == 3 and intf:                    # ④ 哪些情況這個數字會失真
-                blocks.append(render_interference(intf, mf, indicator_id))
+                blocks.append(render_interference(intf, mf, slug))
             elif i == 5:                             # ⑥ 來源與版本
                 blocks.append(render_sources(meta["sources"], mf))
 
@@ -769,34 +903,38 @@ def build(slugs=None, out_root=None, parts_dir=None, llms_path=None, published=N
     pages = []
     for f in files:
         meta, h1, sections = parse_article(f)
-        indicator_id = meta.get("indicator_id") or f.stem
         slug = meta.get("slug") or f.stem
+        ids, labels = page_indicators(meta, slug)
 
-        crit_path = CRITERIA_DIR / f"{indicator_id}.json"
+        # 三個資料檔一律以**頁面 slug** 定位（不是 indicator_id）：一頁多指標時
+        # 「哪些 indicator_id 進這頁」是 frontmatter 的事，檔名只認頁面。
+        crit_path = CRITERIA_DIR / f"{slug}.json"
         if not crit_path.exists():
             raise SystemExit(f"❌ 找不到判準明細：{crit_path}（沒有資料就不生成頁面）")
         # _row_no＝該列在原始 json 檔裡的行序（1 起算），只用於圖下「依據」行的回指，
         # 不寫回資料檔（判準層只存明細，不存衍生欄位）。
         crit = [dict(r, _row_no=i) for i, r in enumerate(load_json(crit_path), start=1)
-                if r["indicator_id"] == indicator_id and r["category"] in TABLE_CATEGORIES]
+                if r["indicator_id"] in ids and r["category"] in TABLE_CATEGORIES]
         if not crit:
-            raise SystemExit(f"❌ {indicator_id} 沒有可渲染的判準列（四類 category 皆空）。")
+            raise SystemExit(f"❌ {slug}（{'、'.join(ids)}）沒有可渲染的判準列"
+                             "（TABLE_CATEGORIES 皆空）。")
 
-        hp = CRITERIA_DIR / f"{indicator_id}-history.json"
+        hp = CRITERIA_DIR / f"{slug}-history.json"
         # status 為「未證實」的列不得渲染（history schema 的宣告）。
         hist = [r for r in load_json(hp) if r.get("status") != "未證實"] if hp.exists() else []
-        ip = CRITERIA_DIR / f"{indicator_id}-interference.json"
+        ip = CRITERIA_DIR / f"{slug}-interference.json"
         intf = load_json(ip) if ip.exists() else []
 
         html_out = render_page(meta, h1, sections, crit, hist, intf, mf,
-                               indicator_id, slug, published)
+                               ids, labels, slug, published)
         out_dir = out_root / "indicators" / slug
         out_dir.mkdir(parents=True, exist_ok=True)
         (out_dir / "index.html").write_text(html_out, encoding="utf-8")
         pages.append((meta.get("title", h1), f"{hl.BASE}/indicators/{slug}/"))
         print(f"✅ /indicators/{slug}/　判準 {len(crit)} 列／沿革 {len(hist)} 列／限制 {len(intf)} 列")
 
-    prune_stale(out_root, {u.rstrip("/").rsplit("/", 1)[-1] for _, u in pages})
+    if not slugs:  # 只跑部分 slug 時不清別人的輸出（平行寫手互刪頁的坑）
+        prune_stale(out_root, {u.rstrip("/").rsplit("/", 1)[-1] for _, u in pages})
     wire_sitemap(pages, parts_dir, published)
     wire_llms(pages, llms_path, published)
     if not published:

@@ -2,6 +2,7 @@
 title: 糖化血色素（HbA1c）
 indicator_id: hba1c
 slug: hba1c
+criteria_chart_caption: 四套判準的糖尿病線畫在同一個數字上，分歧全在門檻以下
 status: draft
 updated: 2026-08-28
 sources: [medlineplus-a1c-test, hpa-diabetes-handbook-2003, hpa-adult-preventive-care, ada-standards-of-care-2026, who-hba1c-diagnosis-2011, hpa-diabetes-topic-page, hpa-blood-sugar-4-tips-2025, daroc-t2dm-guideline-2022, ada-followup-report-2003, iec-a1c-report-2009, ada-standards-of-care-2010]
@@ -11,7 +12,7 @@ sources: [medlineplus-a1c-test, hpa-diabetes-handbook-2003, hpa-adult-preventive
 
 ## 免費成人健檢的項目表上，沒有糖化血色素
 
-糖化血色素反映的是過去約 3 個月的平均血糖。國健署成人預防保健的血液生化檢查列的是 GOT、GPT、肌酸酐、血糖（頁面未標明是否空腹）、血脂，沒有糖化血色素。HbA1c 另外抽血驗，ADA 與糖尿病學會都要求檢驗方法經 NGSP 認證。單位國健署衛教文件用 %，學會指引 % 與 mmol/mol 並列。
+糖化血色素反映的是過去約 3 個月的平均血糖。國健署成人預防保健的血液生化檢查列的是 GOT、GPT、肌酸酐、血糖（頁面未標明是否空腹）、血脂、尿酸，沒有糖化血色素。HbA1c 另外抽血驗，ADA 與糖尿病學會都要求檢驗方法經 NGSP 認證。單位國健署衛教文件用 %，學會指引 % 與 mmol/mol 並列。
 
 ## 糖尿病都畫在 6.5%，前期那一段 WHO 沒有訂
 
