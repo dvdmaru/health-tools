@@ -53,7 +53,7 @@
   {
     "id": "H4",
     "year": 2001,
-    "org": "National Institutes of Health／National Heart, Lung, and Blood Institute（National Cholesterol Education Program）",
+    "org": "National Cholesterol Education Program（National Heart, Lung, and Blood Institute, National Institutes of Health）",
     "change": "ATP III 把腰圍 >102／>88 cm 訂為代謝症候群五項判準之一，並明言腹部肥胖比 BMI 升高更能反映代謝風險",
     "doc_id": "nhlbi-ncep-atp3-executive-summary-2001",
     "version": "2001 年 5 月（NIH Publication No. 01-3670）",
@@ -68,17 +68,26 @@
     "status": "已證實"
   },
   {
-    "id": "H7",
+    "id": "H6",
     "year": 2002,
-    "org": "World Health Organization",
-    "change": "WHO 亞洲人 BMI 專家諮詢會建議：在有中央肥胖傾向的族群，用腰圍去細化以 BMI 為基礎的行動門檻（腰圍偏高就把 BMI 行動層級往上跳一級）",
-    "doc_id": "who-waist-circumference-report-2011",
-    "version": "2011（會議 Geneva, 8–11 December 2008）",
-    "page_or_table": "第 3 章（第 8 頁）回顧段",
-    "quote": "the consultation recommended that, where possible, waist circumference should be used to refine action levels based on BMI. For example, levels based on BMI might be increased by one level if the waist circumference were elevated above a specified level.",
-    "note": "⚠️ 兩層限定必須一起講：(1) 引句出自 WHO 2011 年腰圍報告回述 2002 年那場諮詢會，不是該諮詢會的原文；(2) 該諮詢會 2002 年召開、結論以 WHO 2004 出版（原文寫 `The 2002 WHO Expert Consultation ... (WHO, 2004)`），facts pack 的年份欄寫 2004（出版年），本列依 schema「變更發生的年份」記 2002。🔴 該諮詢會的 public health action points（23.0／27.5／32.5／37.5）本次未取得一手（Lancet 付費牆），不在本站資料裡，寫手不准寫。",
-    "fetched_at": "2026-08-28",
-    "status": "已證實（需補充）"
+    "org": "WHO expert consultation",
+    "change": "WHO 亞洲人 BMI 專家諮詢會（2002 年召開，結論以 2004 年 Lancet 摘要發表）做出正式結論：保留既有 WHO 國際 BMI 切點不變，另外提出 23.0／27.5／32.5／37.5 kg/m² 四個 public health action points；並建議在有中央肥胖傾向的族群，用腰圍去細化以 BMI 為基礎的行動門檻（腰圍偏高就把 BMI 行動層級往上跳一級）。",
+    "doc_id": "who-asian-bmi-lancet-summary-2004",
+    "version": "The Lancet, Volume 363, Issue 9403, p157-163, January 10, 2004",
+    "page_or_table": "Summary（摘要頁）",
+    "quote": "The consultation also agreed that the WHO BMI cut-off points should be retained as international classifications.",
+    "quote_extra": [
+      "The consultation identified further potential public health action points (23·0, 27·5, 32·5, and 37·5 kg/m2) along the continuum of BMI"
+    ],
+    "note": "H6／H7 原為兩列，二審裁決依同一場 2002 年 WHO 亞洲人 BMI 專家諮詢會合併：該會 2002 年召開、結論以 Lancet 摘要於 2004 年出版（本列 doc_id 即該摘要），故 year 依「變更發生的年份」記 2002（不是出版年 2004）。原 H7 引用 WHO 2011 年腰圍報告回顧該次諮詢會的句子降為 corroboration（二手回述，非該次諮詢會原文，且該報告本身是 2011 年書寫回顧 2002 年的事，不是與本列 change 同時發生的獨立變更）。只取得 Lancet 摘要頁（Summary），全文在付費牆後未取得——quote_extra 的 action points（23·0／27·5／32·5／37·5 kg/m2）是沿 BMI 連續軸線的公衛行動點，不是重新定義的診斷或分級切點；摘要沒有給這四個數字的 ≥／> 關係與適用族群，故不落 criteria 列。引句中的 23·0 等使用 U+00B7 中點，不是 ASCII 句號，照抄。**status 欄位裁決**：schema 的 status enum 只有「已證實」／「已證實（需補充）」／「未證實」，本列採「已證實（需補充）」，「僅摘要層、全文未取得」的限定寫在本 note。",
+    "fetched_at": "2026-08-29",
+    "status": "已證實（需補充）",
+    "corroboration": [
+      {
+        "doc_id": "who-waist-circumference-report-2011",
+        "quote": "the consultation recommended that, where possible, waist circumference should be used to refine action levels based on BMI. For example, levels based on BMI might be increased by one level if the waist circumference were elevated above a specified level."
+      }
+    ]
   },
   {
     "id": "H8",
@@ -113,21 +122,5 @@
     "note": "year 記的是會議年（2008），報告出版年是 2011。🔴 到本次查證日為止，WHO 官方仍沒有一套自己的腰圍切點。⚠️ 引句中的連字號是 U+2010，不是 ASCII `-`。",
     "fetched_at": "2026-08-28",
     "status": "已證實"
-  },
-  {
-    "id": "H6",
-    "year": 2004,
-    "org": "WHO expert consultation",
-    "change": "WHO 專家諮詢會就亞洲人 BMI 議題做出正式結論：保留既有 WHO 國際切點不變，另外提出四個 public health action points 供各國自行決定風險定義的方法",
-    "doc_id": "who-asian-bmi-lancet-summary-2004",
-    "version": "The Lancet, Volume 363, Issue 9403, p157-163, January 10, 2004",
-    "page_or_table": "Summary（摘要頁）",
-    "quote": "The consultation also agreed that the WHO BMI cut-off points should be retained as international classifications.",
-    "quote_extra": [
-      "The consultation identified further potential public health action points (23·0, 27·5, 32·5, and 37·5 kg/m2) along the continuum of BMI"
-    ],
-    "note": "☠️ 只取得 Lancet 摘要頁（Summary），全文在付費牆後未取得——本列填補的是 2000 年亞太臨時值（H3）與 WHO 2011 年回顧 2002/2008 諮詢會（H7、H9）之間、2004 年這場諮詢會本身的空白。quote_extra 的 action points（23·0／27·5／32·5／37·5 kg/m2）是「沿 BMI 連續軸線的公衛行動點」，不是重新定義的診斷或分級切點；摘要沒有給這四個數字的 ≥／> 關係與適用族群，data/criteria 的 method_requirement／classification 等列都需要 lower/upper/population 可回查，摘要給不了，故這四個數字**不落 criteria 列**（見同 doc 未來若取得全文再議）。引句中的 `23·0` 等使用 U+00B7 中點，不是 ASCII 句號，照抄。⚠️ **status 欄位裁決**：brief 原文建議寫「已證實（摘要層）」，但 `data/criteria/history-schema.json` 的 status enum 只有「已證實」／「已證實（需補充）」／「未證實」三種，沒有「摘要層」這個值——本列改採「已證實（需補充）」，「僅摘要層、全文未取得」的限定寫在本 note 裡承載，未擅自修改 schema。",
-    "fetched_at": "2026-08-29",
-    "status": "已證實（需補充）"
   }
 ]

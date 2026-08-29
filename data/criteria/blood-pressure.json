@@ -327,7 +327,7 @@
     "lower": null,
     "upper": null,
     "unit": "mmHg",
-    "population": "成人",
+    "population": "來源未標示",
     "page_or_table": "§2 Recommendations/Keypoints",
     "quote": "All three cut-off values for grading, 120/80 mmHg,",
     "quote_extra": [
@@ -346,7 +346,7 @@
     "lower": null,
     "upper": null,
     "unit": "mmHg",
-    "population": "成人",
+    "population": "來源未標示",
     "page_or_table": "§2 Recommendations/Keypoints",
     "quote": "All three cut-off values for grading, 120/80 mmHg,",
     "quote_extra": [
@@ -365,7 +365,7 @@
     "lower": null,
     "upper": null,
     "unit": null,
-    "population": "成人",
+    "population": "來源未標示",
     "page_or_table": "§2 Recommendations/Keypoints",
     "quote": "HBPM is recommended as the foundation for the diag-",
     "quote_extra": [
@@ -383,7 +383,7 @@
     "lower": null,
     "upper": null,
     "unit": null,
-    "population": "成人",
+    "population": "來源未標示",
     "page_or_table": "§2 Recommendations/Keypoints",
     "quote": "HBPM is recommended as the foundation for the diag-",
     "quote_extra": [
@@ -397,7 +397,7 @@
     "org": "Taiwan Society of Cardiology／Taiwan Hypertension Society",
     "doc_id": "ths-tsoc-hypertension-guideline-2022",
     "version": "2022",
-    "category": "exclusion_rule",
+    "category": "method_requirement",
     "lower": null,
     "upper": null,
     "unit": null,
@@ -415,7 +415,7 @@
     "org": "Taiwan Society of Cardiology／Taiwan Hypertension Society",
     "doc_id": "ths-tsoc-hypertension-guideline-2022",
     "version": "2022",
-    "category": "exclusion_rule",
+    "category": "method_requirement",
     "lower": null,
     "upper": null,
     "unit": null,
@@ -437,7 +437,7 @@
     "lower": null,
     "upper": null,
     "unit": "天",
-    "population": "全體",
+    "population": "來源未標示",
     "page_or_table": "Table 7",
     "quote": "7 (at least 4) consecutive days",
     "note": "722 的「7」。國健署衛教版只寫「連續七天」，沒有「至少 4 天」——那一點只有本指引有。",
@@ -452,7 +452,7 @@
     "lower": null,
     "upper": null,
     "unit": "天",
-    "population": "全體",
+    "population": "來源未標示",
     "page_or_table": "Table 7",
     "quote": "7 (at least 4) consecutive days",
     "note": "722 的「7」。國健署衛教版只寫「連續七天」，沒有「至少 4 天」——那一點只有本指引有。",
@@ -467,7 +467,7 @@
     "lower": null,
     "upper": null,
     "unit": "次/日",
-    "population": "全體",
+    "population": "來源未標示",
     "page_or_table": "Table 7",
     "quote": "2 occasions per day: in the morning (within 1 hour after awakening, after voiding,",
     "quote_extra": [
@@ -486,7 +486,7 @@
     "lower": null,
     "upper": null,
     "unit": "次/日",
-    "population": "全體",
+    "population": "來源未標示",
     "page_or_table": "Table 7",
     "quote": "2 occasions per day: in the morning (within 1 hour after awakening, after voiding,",
     "quote_extra": [
@@ -541,7 +541,7 @@
     "lower": null,
     "upper": null,
     "unit": null,
-    "population": "全體",
+    "population": "來源未標示",
     "page_or_table": "§3.6 Home blood pressure measurement 本文（722 協定說明段）",
     "quote": "BP readings, respectively, except those obtained on the",
     "quote_extra": [
@@ -559,7 +559,7 @@
     "lower": null,
     "upper": null,
     "unit": null,
-    "population": "全體",
+    "population": "來源未標示",
     "page_or_table": "§3.6 Home blood pressure measurement 本文（722 協定說明段）",
     "quote": "BP readings, respectively, except those obtained on the",
     "quote_extra": [
@@ -577,7 +577,7 @@
     "lower": null,
     "upper": null,
     "unit": null,
-    "population": "成人",
+    "population": "來源未標示",
     "page_or_table": "§2 Recommendations/Keypoints",
     "quote": "7-day HBPM should be considered as the best approach",
     "quote_extra": [
@@ -594,7 +594,7 @@
     "lower": null,
     "upper": null,
     "unit": null,
-    "population": "成人",
+    "population": "來源未標示",
     "page_or_table": "§2 Recommendations/Keypoints",
     "quote": "7-day HBPM should be considered as the best approach",
     "quote_extra": [
@@ -641,7 +641,7 @@
     "lower": null,
     "upper": null,
     "unit": "分鐘",
-    "population": "全體",
+    "population": "來源未標示",
     "page_or_table": "Table 6, Stage 1: Preparation",
     "quote": "Sit calmly for at least 5 minutes and avoid talking during the rest period and the whole measurement",
     "quote_extra": [
@@ -658,7 +658,7 @@
     "lower": null,
     "upper": null,
     "unit": "分鐘",
-    "population": "全體",
+    "population": "來源未標示",
     "page_or_table": "Table 6, Stage 1: Preparation",
     "quote": "Sit calmly for at least 5 minutes and avoid talking during the rest period and the whole measurement",
     "quote_extra": [
@@ -676,7 +676,7 @@
     "upper": null,
     "lower_inclusive": true,
     "unit": "分鐘",
-    "population": "全體",
+    "population": "來源未標示",
     "page_or_table": "Table 6, Stage 1: Preparation",
     "quote": "Before the measurement procedure, subjects should avoid caffeine, exercise, and smoking for at",
     "quote_extra": [
@@ -694,7 +694,7 @@
     "upper": null,
     "lower_inclusive": true,
     "unit": "分鐘",
-    "population": "全體",
+    "population": "來源未標示",
     "page_or_table": "Table 6, Stage 1: Preparation",
     "quote": "Before the measurement procedure, subjects should avoid caffeine, exercise, and smoking for at",
     "quote_extra": [
@@ -712,7 +712,7 @@
     "upper": null,
     "lower_inclusive": true,
     "unit": "分鐘",
-    "population": "全體",
+    "population": "來源未標示",
     "page_or_table": "Table 6, Stage 3",
     "quote": "Sit for 5 minutes without talking or moving around prior to recording the first BP reading in a chair",
     "quote_extra": [
@@ -730,7 +730,7 @@
     "upper": null,
     "lower_inclusive": true,
     "unit": "分鐘",
-    "population": "全體",
+    "population": "來源未標示",
     "page_or_table": "Table 6, Stage 3",
     "quote": "Sit for 5 minutes without talking or moving around prior to recording the first BP reading in a chair",
     "quote_extra": [
@@ -758,6 +758,25 @@
     "fetched_at": "2026-08-28"
   },
   {
+    "indicator_id": "dbp",
+    "org": "Taiwan Society of Cardiology／Taiwan Hypertension Society",
+    "doc_id": "ths-tsoc-hypertension-guideline-2022",
+    "version": "2022",
+    "category": "method_requirement",
+    "lower": null,
+    "upper": 15,
+    "upper_inclusive": false,
+    "unit": "mmHg（兩臂差）",
+    "population": "首次受測者",
+    "page_or_table": "Table 6, Stage 3",
+    "quote": "If BP is measured for the first time, check the BP in right and left upper arms. If the between-arm BP",
+    "quote_extra": [
+      "difference is < 15 mmHg, use the higher BP for further management."
+    ],
+    "note": "兩臂差 < 15 mmHg 時取較高的那一手；上界的單位是兩臂差值，不是血壓判準值。",
+    "fetched_at": "2026-08-28"
+  },
+  {
     "indicator_id": "sbp",
     "org": "Taiwan Society of Cardiology／Taiwan Hypertension Society",
     "doc_id": "ths-tsoc-hypertension-guideline-2022",
@@ -766,7 +785,7 @@
     "lower": null,
     "upper": null,
     "unit": "%（上臂圍）",
-    "population": "全體",
+    "population": "來源未標示",
     "page_or_table": "Table 6, Stage 2",
     "quote": "Use the correct cuff size, following the manufacturer’s instructions (cuff bladder width and length are",
     "quote_extra": [
@@ -784,7 +803,7 @@
     "lower": null,
     "upper": null,
     "unit": "%（上臂圍）",
-    "population": "全體",
+    "population": "來源未標示",
     "page_or_table": "Table 6, Stage 2",
     "quote": "Use the correct cuff size, following the manufacturer’s instructions (cuff bladder width and length are",
     "quote_extra": [
@@ -803,7 +822,7 @@
     "upper": null,
     "lower_inclusive": true,
     "unit": "次／時段",
-    "population": "全體",
+    "population": "來源未標示",
     "page_or_table": "Table 6, Stage 4: Documentation",
     "quote": "Use an average of ³ 2 readings obtained on ³ 2 occasions to estimate the BP.",
     "note": "PDF 轉檔（pdftotext -layout）把 ≥ 顯示為 ³、≤ 顯示為 £，引句照抄轉檔原樣。　至少 2 次讀數的平均，且至少 2 個時段。",
@@ -819,7 +838,7 @@
     "upper": null,
     "lower_inclusive": true,
     "unit": "次／時段",
-    "population": "全體",
+    "population": "來源未標示",
     "page_or_table": "Table 6, Stage 4: Documentation",
     "quote": "Use an average of ³ 2 readings obtained on ³ 2 occasions to estimate the BP.",
     "note": "PDF 轉檔（pdftotext -layout）把 ≥ 顯示為 ³、≤ 顯示為 £，引句照抄轉檔原樣。　至少 2 次讀數的平均，且至少 2 個時段。",
@@ -835,7 +854,7 @@
     "upper": 12,
     "upper_inclusive": true,
     "unit": "月",
-    "population": "全體",
+    "population": "來源未標示",
     "page_or_table": "§3 Recommendations/Keypoints",
     "quote": "Periodic calibration of automated electronic sphygmo-",
     "quote_extra": [
@@ -854,7 +873,7 @@
     "upper": 12,
     "upper_inclusive": true,
     "unit": "月",
-    "population": "全體",
+    "population": "來源未標示",
     "page_or_table": "§3 Recommendations/Keypoints",
     "quote": "Periodic calibration of automated electronic sphygmo-",
     "quote_extra": [
@@ -952,7 +971,7 @@
     "lower": null,
     "upper": null,
     "unit": null,
-    "population": "成人",
+    "population": "來源未標示",
     "page_or_table": "§3.8 Ambulatory blood pressure monitoring 本文",
     "quote": "ABPM is generally considered the gold standard for",
     "quote_extra": [
@@ -969,7 +988,7 @@
     "lower": null,
     "upper": null,
     "unit": null,
-    "population": "成人",
+    "population": "來源未標示",
     "page_or_table": "§3.8 Ambulatory blood pressure monitoring 本文",
     "quote": "ABPM is generally considered the gold standard for",
     "quote_extra": [
@@ -1017,7 +1036,7 @@
     "upper": null,
     "lower_inclusive": true,
     "unit": "天（不同日）",
-    "population": "成人（非孕）",
+    "population": "成人",
     "page_or_table": "§1 Introduction／Scope",
     "quote": "addresses pharmacotherapy in individuals with a “confirmed” diagnosis of hypertension, such as",
     "quote_extra": [
@@ -1036,7 +1055,7 @@
     "upper": null,
     "lower_inclusive": true,
     "unit": "天（不同日）",
-    "population": "成人（非孕）",
+    "population": "成人",
     "page_or_table": "§1 Introduction／Scope",
     "quote": "addresses pharmacotherapy in individuals with a “confirmed” diagnosis of hypertension, such as",
     "quote_extra": [
@@ -1050,18 +1069,17 @@
     "org": "World Health Organization",
     "doc_id": "who-hypertension-pharmacotherapy-guideline-2021",
     "version": "2021",
-    "category": "diagnosis",
-    "lower": 140,
+    "category": "definition",
+    "lower": null,
     "upper": null,
-    "lower_inclusive": true,
-    "unit": "mmHg",
+    "unit": null,
     "population": "孕婦",
     "page_or_table": "Special settings（懷孕段）",
     "quote": "HTN in pregnancy is generally diagnosed when BP is ≥140 mmHg and/or ≥90",
     "quote_extra": [
       "mmHg on at least two occasions, at least six hours apart."
     ],
-    "note": "僅限懷孕。同一份文件明文不處理非孕成人的診斷（見同來源 no_criterion_stated 列）。",
+    "note": "WHO 2021 自陳不處理診斷；此句為孕期通行做法的敘述，不進判準表與數線。原句是 is generally diagnosed（描述通行做法，不是該指引自訂的建議條文）。僅限懷孕；同一份文件明文不處理非孕成人的量測與診斷（見同來源 §1 的 no_criterion_stated 列）。",
     "fetched_at": "2026-08-28"
   },
   {
@@ -1069,18 +1087,17 @@
     "org": "World Health Organization",
     "doc_id": "who-hypertension-pharmacotherapy-guideline-2021",
     "version": "2021",
-    "category": "diagnosis",
-    "lower": 90,
+    "category": "definition",
+    "lower": null,
     "upper": null,
-    "lower_inclusive": true,
-    "unit": "mmHg",
+    "unit": null,
     "population": "孕婦",
     "page_or_table": "Special settings（懷孕段）",
     "quote": "HTN in pregnancy is generally diagnosed when BP is ≥140 mmHg and/or ≥90",
     "quote_extra": [
       "mmHg on at least two occasions, at least six hours apart."
     ],
-    "note": "僅限懷孕。同一份文件明文不處理非孕成人的診斷（見同來源 no_criterion_stated 列）。",
+    "note": "WHO 2021 自陳不處理診斷；此句為孕期通行做法的敘述，不進判準表與數線。原句是 is generally diagnosed（描述通行做法，不是該指引自訂的建議條文）。僅限懷孕；同一份文件明文不處理非孕成人的量測與診斷（見同來源 §1 的 no_criterion_stated 列）。",
     "fetched_at": "2026-08-28"
   },
   {
@@ -1213,6 +1230,38 @@
     "org": "National Heart, Lung, and Blood Institute（National Institutes of Health）",
     "doc_id": "nhlbi-high-blood-pressure-page",
     "version": "頁面標示 Last updated on 2024-04-25",
+    "category": "classification",
+    "lower": 180,
+    "upper": null,
+    "lower_inclusive": false,
+    "unit": "mm Hg",
+    "population": "來源未標示",
+    "page_or_table": "Blood pressure levels 表",
+    "quote": "Hypertensive Crisis Higher than 180 systolic pressure OR Higher than 120 diastolic pressure",
+    "note": "等級名稱：Hypertensive Crisis。表列以 OR 連接。原文「Higher than」不含等於，故 lower_inclusive=false。本頁分級表另有 Normal／Elevated／Stage 1／Stage 2（同檔其他列），本列補第五級（急症）；二審查核指出原檔漏收此級，本列為補漏新增。",
+    "fetched_at": "2026-08-29"
+  },
+  {
+    "indicator_id": "dbp",
+    "org": "National Heart, Lung, and Blood Institute（National Institutes of Health）",
+    "doc_id": "nhlbi-high-blood-pressure-page",
+    "version": "頁面標示 Last updated on 2024-04-25",
+    "category": "classification",
+    "lower": 120,
+    "upper": null,
+    "lower_inclusive": false,
+    "unit": "mm Hg",
+    "population": "來源未標示",
+    "page_or_table": "Blood pressure levels 表",
+    "quote": "Hypertensive Crisis Higher than 180 systolic pressure OR Higher than 120 diastolic pressure",
+    "note": "等級名稱：Hypertensive Crisis。表列以 OR 連接。原文「Higher than」不含等於，故 lower_inclusive=false。本頁分級表另有 Normal／Elevated／Stage 1／Stage 2（同檔其他列），本列補第五級（急症）；二審查核指出原檔漏收此級，本列為補漏新增。",
+    "fetched_at": "2026-08-29"
+  },
+  {
+    "indicator_id": "sbp",
+    "org": "National Heart, Lung, and Blood Institute（National Institutes of Health）",
+    "doc_id": "nhlbi-high-blood-pressure-page",
+    "version": "頁面標示 Last updated on 2024-04-25",
     "category": "diagnosis",
     "lower": 130,
     "upper": null,
@@ -1241,6 +1290,163 @@
     "fetched_at": "2026-08-28"
   },
   {
+    "org": "MedlinePlus（U.S. National Library of Medicine）",
+    "doc_id": "medlineplus-high-blood-pressure",
+    "version": "Last updated January 22, 2026",
+    "category": "classification",
+    "unit": "mm Hg",
+    "population": "來源未標示",
+    "page_or_table": "Blood Pressure Category 表",
+    "fetched_at": "2026-08-29",
+    "indicator_id": "sbp",
+    "lower": null,
+    "upper": 120,
+    "upper_inclusive": false,
+    "quote": "Normal Less than 120 and Less than 80",
+    "note": "二審查核指出 MedlinePlus 整張分級表原檔一列都沒落地，本列為補漏新增。等級名稱：Normal。表列以 and 連接。"
+  },
+  {
+    "org": "MedlinePlus（U.S. National Library of Medicine）",
+    "doc_id": "medlineplus-high-blood-pressure",
+    "version": "Last updated January 22, 2026",
+    "category": "classification",
+    "unit": "mm Hg",
+    "population": "來源未標示",
+    "page_or_table": "Blood Pressure Category 表",
+    "fetched_at": "2026-08-29",
+    "indicator_id": "dbp",
+    "lower": null,
+    "upper": 80,
+    "upper_inclusive": false,
+    "quote": "Normal Less than 120 and Less than 80",
+    "note": "二審查核指出 MedlinePlus 整張分級表原檔一列都沒落地，本列為補漏新增。等級名稱：Normal。表列以 and 連接。"
+  },
+  {
+    "org": "MedlinePlus（U.S. National Library of Medicine）",
+    "doc_id": "medlineplus-high-blood-pressure",
+    "version": "Last updated January 22, 2026",
+    "category": "classification",
+    "unit": "mm Hg",
+    "population": "來源未標示",
+    "page_or_table": "Blood Pressure Category 表",
+    "fetched_at": "2026-08-29",
+    "indicator_id": "sbp",
+    "lower": 120,
+    "upper": 129,
+    "quote": "Elevated 120 - 129 and Less than 80",
+    "note": "二審查核指出 MedlinePlus 整張分級表原檔一列都沒落地，本列為補漏新增。等級名稱：Elevated。表列以 and 連接。"
+  },
+  {
+    "org": "MedlinePlus（U.S. National Library of Medicine）",
+    "doc_id": "medlineplus-high-blood-pressure",
+    "version": "Last updated January 22, 2026",
+    "category": "classification",
+    "unit": "mm Hg",
+    "population": "來源未標示",
+    "page_or_table": "Blood Pressure Category 表",
+    "fetched_at": "2026-08-29",
+    "indicator_id": "dbp",
+    "lower": null,
+    "upper": 80,
+    "upper_inclusive": false,
+    "quote": "Elevated 120 - 129 and Less than 80",
+    "note": "二審查核指出 MedlinePlus 整張分級表原檔一列都沒落地，本列為補漏新增。等級名稱：Elevated。表列以 and 連接，舒張壓須同時 < 80。"
+  },
+  {
+    "org": "MedlinePlus（U.S. National Library of Medicine）",
+    "doc_id": "medlineplus-high-blood-pressure",
+    "version": "Last updated January 22, 2026",
+    "category": "classification",
+    "unit": "mm Hg",
+    "population": "來源未標示",
+    "page_or_table": "Blood Pressure Category 表",
+    "fetched_at": "2026-08-29",
+    "indicator_id": "sbp",
+    "lower": 130,
+    "upper": 139,
+    "quote": "High Blood Pressure Stage 1 130 - 139 or 80 - 89",
+    "note": "二審查核指出 MedlinePlus 整張分級表原檔一列都沒落地，本列為補漏新增。等級名稱：High Blood Pressure Stage 1。表列以 or 連接。"
+  },
+  {
+    "org": "MedlinePlus（U.S. National Library of Medicine）",
+    "doc_id": "medlineplus-high-blood-pressure",
+    "version": "Last updated January 22, 2026",
+    "category": "classification",
+    "unit": "mm Hg",
+    "population": "來源未標示",
+    "page_or_table": "Blood Pressure Category 表",
+    "fetched_at": "2026-08-29",
+    "indicator_id": "dbp",
+    "lower": 80,
+    "upper": 89,
+    "quote": "High Blood Pressure Stage 1 130 - 139 or 80 - 89",
+    "note": "二審查核指出 MedlinePlus 整張分級表原檔一列都沒落地，本列為補漏新增。等級名稱：High Blood Pressure Stage 1。表列以 or 連接。"
+  },
+  {
+    "org": "MedlinePlus（U.S. National Library of Medicine）",
+    "doc_id": "medlineplus-high-blood-pressure",
+    "version": "Last updated January 22, 2026",
+    "category": "classification",
+    "unit": "mm Hg",
+    "population": "來源未標示",
+    "page_or_table": "Blood Pressure Category 表",
+    "fetched_at": "2026-08-29",
+    "indicator_id": "sbp",
+    "lower": 140,
+    "upper": null,
+    "lower_inclusive": true,
+    "quote": "High Blood Pressure Stage 2 140 or higher or 90 or higher",
+    "note": "二審查核指出 MedlinePlus 整張分級表原檔一列都沒落地，本列為補漏新增。等級名稱：High Blood Pressure Stage 2。表列以 or 連接。"
+  },
+  {
+    "org": "MedlinePlus（U.S. National Library of Medicine）",
+    "doc_id": "medlineplus-high-blood-pressure",
+    "version": "Last updated January 22, 2026",
+    "category": "classification",
+    "unit": "mm Hg",
+    "population": "來源未標示",
+    "page_or_table": "Blood Pressure Category 表",
+    "fetched_at": "2026-08-29",
+    "indicator_id": "dbp",
+    "lower": 90,
+    "upper": null,
+    "lower_inclusive": true,
+    "quote": "High Blood Pressure Stage 2 140 or higher or 90 or higher",
+    "note": "二審查核指出 MedlinePlus 整張分級表原檔一列都沒落地，本列為補漏新增。等級名稱：High Blood Pressure Stage 2。表列以 or 連接。"
+  },
+  {
+    "org": "MedlinePlus（U.S. National Library of Medicine）",
+    "doc_id": "medlineplus-high-blood-pressure",
+    "version": "Last updated January 22, 2026",
+    "category": "classification",
+    "unit": "mm Hg",
+    "population": "來源未標示",
+    "page_or_table": "Blood Pressure Category 表",
+    "fetched_at": "2026-08-29",
+    "indicator_id": "sbp",
+    "lower": 180,
+    "upper": null,
+    "lower_inclusive": false,
+    "quote": "Hypertensive Crisis (dangerously high blood pressure - seek medical care right away) Higher than 180 and Higher than 120",
+    "note": "二審查核指出 MedlinePlus 整張分級表原檔一列都沒落地，本列為補漏新增。等級名稱：Hypertensive Crisis。表列以 and 連接。原文「Higher than」不含等於，故 lower_inclusive=false。"
+  },
+  {
+    "org": "MedlinePlus（U.S. National Library of Medicine）",
+    "doc_id": "medlineplus-high-blood-pressure",
+    "version": "Last updated January 22, 2026",
+    "category": "classification",
+    "unit": "mm Hg",
+    "population": "來源未標示",
+    "page_or_table": "Blood Pressure Category 表",
+    "fetched_at": "2026-08-29",
+    "indicator_id": "dbp",
+    "lower": 120,
+    "upper": null,
+    "lower_inclusive": false,
+    "quote": "Hypertensive Crisis (dangerously high blood pressure - seek medical care right away) Higher than 180 and Higher than 120",
+    "note": "二審查核指出 MedlinePlus 整張分級表原檔一列都沒落地，本列為補漏新增。等級名稱：Hypertensive Crisis。表列以 and 連接。原文「Higher than」不含等於，故 lower_inclusive=false。"
+  },
+  {
     "indicator_id": "sbp",
     "org": "MedlinePlus（U.S. National Library of Medicine）",
     "doc_id": "medlineplus-high-blood-pressure",
@@ -1250,7 +1456,7 @@
     "upper": null,
     "lower_inclusive": true,
     "unit": "次（不同次門診）",
-    "population": "成人",
+    "population": "來源未標示",
     "page_or_table": "How is high blood pressure diagnosed?",
     "quote": "They will take two or more readings at separate appointments before making a diagnosis.",
     "fetched_at": "2026-08-28"
@@ -1265,7 +1471,7 @@
     "upper": null,
     "lower_inclusive": true,
     "unit": "次（不同次門診）",
-    "population": "成人",
+    "population": "來源未標示",
     "page_or_table": "How is high blood pressure diagnosed?",
     "quote": "They will take two or more readings at separate appointments before making a diagnosis.",
     "fetched_at": "2026-08-28"
@@ -1275,7 +1481,7 @@
     "org": "MedlinePlus（U.S. National Library of Medicine）",
     "doc_id": "medlineplus-high-blood-pressure",
     "version": "Last updated January 22, 2026",
-    "category": "exclusion_rule",
+    "category": "method_requirement",
     "lower": null,
     "upper": null,
     "unit": null,
@@ -1290,7 +1496,7 @@
     "org": "MedlinePlus（U.S. National Library of Medicine）",
     "doc_id": "medlineplus-high-blood-pressure",
     "version": "Last updated January 22, 2026",
-    "category": "exclusion_rule",
+    "category": "method_requirement",
     "lower": null,
     "upper": null,
     "unit": null,
@@ -1310,7 +1516,7 @@
     "upper": null,
     "lower_inclusive": true,
     "unit": "mmHg",
-    "population": "成人",
+    "population": "來源未標示",
     "page_or_table": "代謝症候群主題頁 判定標準第 (2) 項",
     "quote": "(2) 血壓偏高:收縮壓≧130mmHg或舒張壓≧85mmHg。",
     "note": "☠️ 這是代謝症候群五項組成因子之一，不是高血壓的診斷或分級。舒張壓門檻是 85（不是 80），與高血壓判準體系不同；同一頁同時出現 80 與 85 時必須講明兩者不同體系。",
@@ -1326,7 +1532,7 @@
     "upper": null,
     "lower_inclusive": true,
     "unit": "mmHg",
-    "population": "成人",
+    "population": "來源未標示",
     "page_or_table": "代謝症候群主題頁 判定標準第 (2) 項",
     "quote": "(2) 血壓偏高:收縮壓≧130mmHg或舒張壓≧85mmHg。",
     "note": "☠️ 這是代謝症候群五項組成因子之一，不是高血壓的診斷或分級。舒張壓門檻是 85（不是 80），與高血壓判準體系不同；同一頁同時出現 80 與 85 時必須講明兩者不同體系。",
@@ -1371,7 +1577,7 @@
     "lower": null,
     "upper": null,
     "unit": "分鐘",
-    "population": "全體",
+    "population": "來源未標示",
     "page_or_table": "新聞稿本文「量血壓前」",
     "quote": "量血壓前：半小時前避免抽菸、飲食、洗澡、運動、喝酒、咖啡或茶，不憋尿，並於開始測量前五分鐘靜坐休息。",
     "note": "原文含兩個時間數值（半小時、五分鐘），單一 lower 欄位承載不了，故留空，數值以引句為準。",
@@ -1386,7 +1592,7 @@
     "lower": null,
     "upper": null,
     "unit": "分鐘",
-    "population": "全體",
+    "population": "來源未標示",
     "page_or_table": "新聞稿本文「量血壓前」",
     "quote": "量血壓前：半小時前避免抽菸、飲食、洗澡、運動、喝酒、咖啡或茶，不憋尿，並於開始測量前五分鐘靜坐休息。",
     "note": "原文含兩個時間數值（半小時、五分鐘），單一 lower 欄位承載不了，故留空，數值以引句為準。",
@@ -1401,7 +1607,7 @@
     "lower": null,
     "upper": null,
     "unit": null,
-    "population": "全體",
+    "population": "來源未標示",
     "page_or_table": "新聞稿本文「量血壓時」",
     "quote": "量血壓時：坐在有靠背的椅子上，壓脈帶的中心約與心臟水平對齊，鬆緊約可放入兩隻指頭。雙腳平放、不要說話或移動",
     "fetched_at": "2026-08-28"
@@ -1415,7 +1621,7 @@
     "lower": null,
     "upper": null,
     "unit": null,
-    "population": "全體",
+    "population": "來源未標示",
     "page_or_table": "新聞稿本文「量血壓時」",
     "quote": "量血壓時：坐在有靠背的椅子上，壓脈帶的中心約與心臟水平對齊，鬆緊約可放入兩隻指頭。雙腳平放、不要說話或移動",
     "fetched_at": "2026-08-28"
@@ -1429,7 +1635,21 @@
     "lower": null,
     "upper": null,
     "unit": null,
-    "population": "全體",
+    "population": "來源未標示",
+    "page_or_table": "新聞稿本文「量血壓時」",
+    "quote": "第一次量血壓時應左右手各量一次，之後用血壓較高那一手來做為測量標的。",
+    "fetched_at": "2026-08-28"
+  },
+  {
+    "indicator_id": "dbp",
+    "org": "衛生福利部國民健康署",
+    "doc_id": "hpa-home-bp-722-press-release-2025",
+    "version": "2025/02/25",
+    "category": "method_requirement",
+    "lower": null,
+    "upper": null,
+    "unit": null,
+    "population": "來源未標示",
     "page_or_table": "新聞稿本文「量血壓時」",
     "quote": "第一次量血壓時應左右手各量一次，之後用血壓較高那一手來做為測量標的。",
     "fetched_at": "2026-08-28"
@@ -1486,7 +1706,8 @@
     "page_or_table": "Table 6. Categories of BP in Adults",
     "quote": "Normal <120 mm Hg and <80 mm Hg",
     "note": "等級名稱：Normal。表列以 and 連接，收縮壓與舒張壓須同時符合。快照為 Chrome get_page_text 抽取之頁面前 50,000 字元（含 §3.1 Definition of High BP 本文與 Table 6 分級表）；本文其餘部分未收錄。",
-    "fetched_at": "2026-08-29"
+    "fetched_at": "2026-08-29",
+    "superseded_by": "aha-acc-hypertension-guideline-2025"
   },
   {
     "indicator_id": "dbp",
@@ -1502,7 +1723,8 @@
     "page_or_table": "Table 6. Categories of BP in Adults",
     "quote": "Normal <120 mm Hg and <80 mm Hg",
     "note": "等級名稱：Normal。表列以 and 連接，收縮壓與舒張壓須同時符合。快照為 Chrome get_page_text 抽取之頁面前 50,000 字元（含 §3.1 Definition of High BP 本文與 Table 6 分級表）；本文其餘部分未收錄。",
-    "fetched_at": "2026-08-29"
+    "fetched_at": "2026-08-29",
+    "superseded_by": "aha-acc-hypertension-guideline-2025"
   },
   {
     "indicator_id": "sbp",
@@ -1517,7 +1739,8 @@
     "page_or_table": "Table 6. Categories of BP in Adults",
     "quote": "Elevated 120–129 mm Hg and <80 mm Hg",
     "note": "等級名稱：Elevated。表列以 and 連接，舒張壓須同時 <80 mm Hg。快照為 Chrome get_page_text 抽取之頁面前 50,000 字元（含 §3.1 Definition of High BP 本文與 Table 6 分級表）；本文其餘部分未收錄。",
-    "fetched_at": "2026-08-29"
+    "fetched_at": "2026-08-29",
+    "superseded_by": "aha-acc-hypertension-guideline-2025"
   },
   {
     "indicator_id": "dbp",
@@ -1533,7 +1756,8 @@
     "page_or_table": "Table 6. Categories of BP in Adults",
     "quote": "Elevated 120–129 mm Hg and <80 mm Hg",
     "note": "等級名稱：Elevated。表列以 and 連接，舒張壓須同時 <80 mm Hg。快照為 Chrome get_page_text 抽取之頁面前 50,000 字元（含 §3.1 Definition of High BP 本文與 Table 6 分級表）；本文其餘部分未收錄。",
-    "fetched_at": "2026-08-29"
+    "fetched_at": "2026-08-29",
+    "superseded_by": "aha-acc-hypertension-guideline-2025"
   },
   {
     "indicator_id": "sbp",
@@ -1548,7 +1772,8 @@
     "page_or_table": "Table 6. Categories of BP in Adults",
     "quote": "Stage 1 130–139 mm Hg or 80–89 mm Hg",
     "note": "等級名稱：Stage 1。表列以 or 連接，收縮壓或舒張壓任一符合即成立。快照為 Chrome get_page_text 抽取之頁面前 50,000 字元（含 §3.1 Definition of High BP 本文與 Table 6 分級表）；本文其餘部分未收錄。",
-    "fetched_at": "2026-08-29"
+    "fetched_at": "2026-08-29",
+    "superseded_by": "aha-acc-hypertension-guideline-2025"
   },
   {
     "indicator_id": "dbp",
@@ -1563,7 +1788,8 @@
     "page_or_table": "Table 6. Categories of BP in Adults",
     "quote": "Stage 1 130–139 mm Hg or 80–89 mm Hg",
     "note": "等級名稱：Stage 1。表列以 or 連接，收縮壓或舒張壓任一符合即成立。快照為 Chrome get_page_text 抽取之頁面前 50,000 字元（含 §3.1 Definition of High BP 本文與 Table 6 分級表）；本文其餘部分未收錄。",
-    "fetched_at": "2026-08-29"
+    "fetched_at": "2026-08-29",
+    "superseded_by": "aha-acc-hypertension-guideline-2025"
   },
   {
     "indicator_id": "sbp",
@@ -1579,7 +1805,8 @@
     "page_or_table": "Table 6. Categories of BP in Adults",
     "quote": "Stage 2 ≥140 mm Hg or ≥90 mm Hg",
     "note": "等級名稱：Stage 2。表列以 or 連接。快照為 Chrome get_page_text 抽取之頁面前 50,000 字元（含 §3.1 Definition of High BP 本文與 Table 6 分級表）；本文其餘部分未收錄。",
-    "fetched_at": "2026-08-29"
+    "fetched_at": "2026-08-29",
+    "superseded_by": "aha-acc-hypertension-guideline-2025"
   },
   {
     "indicator_id": "dbp",
@@ -1595,7 +1822,8 @@
     "page_or_table": "Table 6. Categories of BP in Adults",
     "quote": "Stage 2 ≥140 mm Hg or ≥90 mm Hg",
     "note": "等級名稱：Stage 2。表列以 or 連接。快照為 Chrome get_page_text 抽取之頁面前 50,000 字元（含 §3.1 Definition of High BP 本文與 Table 6 分級表）；本文其餘部分未收錄。",
-    "fetched_at": "2026-08-29"
+    "fetched_at": "2026-08-29",
+    "superseded_by": "aha-acc-hypertension-guideline-2025"
   },
   {
     "indicator_id": "sbp",

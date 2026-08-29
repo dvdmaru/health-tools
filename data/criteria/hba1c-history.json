@@ -27,7 +27,7 @@
     "version": "2003（Diabetes Care 26(11):3160）",
     "page_or_table": "正文（回顧 1997 年委員會決議段）",
     "quote": "The use of HbA1c (A1C) as a diagnostic test for diabetes was not recommended.",
-    "note": "這是理解 2009–2010 轉向的前提：HbA1c 不是一開始就被接受的診斷工具。",
+    "note": "⚠️ 引句取自 ADA 2003 追蹤報告回顧 1997 年委員會決議，不是 1997 年原始論文本身。寫頁面時應寫成「ADA 在 2003 年的追蹤報告中回顧，1997 年委員會…」。",
     "fetched_at": "2026-08-28",
     "status": "已證實"
   },
@@ -41,7 +41,8 @@
     "page_or_table": "正文（回顧 1997 年委員會決議段）",
     "quote": "IFG identified people whose FPG ranged from 110 mg/dl (6.1 mmol/l) to 125 mg/dl (6.9 mmol/l).",
     "fetched_at": "2026-08-28",
-    "status": "已證實"
+    "status": "已證實",
+    "note": "⚠️ 引句取自 ADA 2003 追蹤報告回顧 1997 年委員會決議，不是 1997 年原始論文本身。寫頁面時應寫成「ADA 在 2003 年的追蹤報告中回顧，1997 年委員會…」。"
   },
   {
     "id": "H4",
@@ -70,7 +71,7 @@
         "quote": "The diagnostic cut-point for IFG (6.1 mmol/l; 110 mg/dl) should not be changed."
       }
     ],
-    "note": "主引句出自 ADA 2010（第三方敘述 WHO 的立場），WHO 自己的原文由 corroboration 那句承擔。",
+    "note": "主引句出自 ADA 2010（第三方敘述 WHO 的立場），WHO 自己的原文由 corroboration 那句承擔。year＝2003，即 ADA 下修 IFG 切點（見 H4）當年；WHO 對此的「未跟進」是對同一年事件的反應，故本列年份早於兩份引用文件（2010／2011）的出版年，非標記錯誤。",
     "fetched_at": "2026-08-28",
     "status": "已證實"
   },
@@ -84,7 +85,7 @@
     "page_or_table": "正文（診斷建議與依據段）",
     "quote": "Diabetes should be diagnosed when A1C is ≥6.5%.",
     "quote_extra": [
-      "the optimal cut point for detecting at least moderate retinopathy was an A1C of 6.5%"
+      "the glycemic level at which the prevalence of “any” retinopathy begins to rise above background levels (any retinopathy includes minor changes that can be due to other conditions, such as hypertension), and for the more diabetes-specific “moderate” retinopathy, was 6.5% when the data were examined in 0.5% increments"
     ],
     "fetched_at": "2026-08-28",
     "status": "已證實"

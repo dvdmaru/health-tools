@@ -23,6 +23,16 @@
 - **三個資料檔以「頁面 slug」定位，不是 indicator_id**；「這頁收哪些 `indicator_id`」是 `articles/indicators/<slug>.md` frontmatter 的 `indicator_ids` 決定的（單數 `indicator_id` 仍支援）。多指標頁的中文短標籤只能來自 frontmatter 的 `indicator_labels`，**缺一個就中止**——生成器不從 id 造中文，也不從單位猜。
 - **`classification` 與 `risk_threshold` 都不是 `diagnosis`**：前者＝來源把連續數值切成具名等級（高血壓第一期、BMI 過重），後者＝來源說超過此值風險升高但沒說它構成診斷（腰圍 ≥90 cm）。`risk_threshold` 也不是 `screening_triage`（那是指向下一項檢查的流程門檻）。☠️ 標錯就會在頁面上把「腰圍超標」講成一個診斷。
 
+### 1-1. 判準列體例（2026-08-29 二審裁決，474 列逐列核出的規則；schema 描述為準、這裡是人讀版）
+- **population 只能來自兩處**：引句本身，或該列 `page_or_table` 指到的表題／節名／章名，照原文字面抄。整份文件的標題不算。其餘一律「來源未標示」——「全體」「一般民眾」「成人（來源沒寫）」都是我們加的，二審一次清掉 40 多列。
+- **definition 不帶數值**：來源用「定義為／defined as」把此值定義成某狀態、且那是該機構自己的判準＝`diagnosis`；若只是單一建議的射程定義、或回述他人調查所用的定義（NAHSIT 7.7／6.6、ACR 6.8）＝`definition` 且 lower／upper 皆 null，數字留在 quote。帶數值的 definition 會被「統一規則」誤升成診斷線。
+- **用藥起始門檻＝紅線**，與治療目標同族：JSGNA 8.0／9.0、EULAR >8.0 這類「≥此值開始 ULT」的門檻整列不落地（曾以 `screening_triage` 混進判準表）。`screening_triage` 只收「接下來做哪一項檢查」的分流。
+- **history 的 `org`＝做出變更的機構，不是轉述者**：回述列（status「已證實（需補充）」）的 doc 可以是別人的文件；測試對 criteria 嚴格要求 org＝manifest[doc].org，對 history 放行回述列。`change` 欄要自帶「依某某回顧」的限定語，因為 status／note 不上頁。
+- **同機構新版取代舊版時舊列填 `superseded_by`**（2017 ACC/AHA 八列 → 2025）：生成器據此在表格標「已被取代」、數線不畫舊列；不填就是兩套一樣的分級並排當兩個現行機構。
+- **interference 的 `direction` 只從原文明講的方向來**：「風險被低估」不是「數值偏低」，機轉句（抑制排泄）不推成 high；來源沒指方向就 `unspecified`。
+- **generator 排序不靠檔序**：history 依 (year, id 數字) 排；`indicator_id` 不在頁面 ids 的列會印 ⚠️（曾靜默丟掉 whr 兩列）。
+- 二審方法（可重跑）：`rowctx.py` 把每列＋快照上下文 dump 成 markdown，五席分 slug 逐列問 C1–C8（category 語意／inclusive／unit／population／indicator_id／org／引句撐不撐得起／同 doc 矛盾），只回 findings 不改檔；主席裁決成 RULING.md 再派修正棒。找到引句 ≠ 列正確——收據 gate 只證前者。
+
 ## 2. 來源契約 — 三桶授權，抓法有雷
 
 | `license_bucket` | 誰 | 快照 |

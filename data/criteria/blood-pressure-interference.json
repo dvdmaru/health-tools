@@ -13,7 +13,7 @@
   },
   {
     "id": "L2",
-    "direction": "low",
+    "direction": "unspecified",
     "factor": "隱蔽性高血壓（masked hypertension）：診間量起來正常、實際上是高血壓；其心血管風險與持續性高血壓相當",
     "org": "Taiwan Society of Cardiology／Taiwan Hypertension Society",
     "doc_id": "ths-tsoc-hypertension-guideline-2022",
@@ -23,7 +23,7 @@
     "quote_extra": [
       "with sustained hypertension."
     ],
-    "note": "方向是「診間值偏低於真實血壓」，與白袍高血壓相反。",
+    "note": "二審查核：現引句全文只講「心血管風險相當」（masked hypertension carry a comparable CV risk to those with sustained hypertension），一個字都沒有講量測值偏低——原本標 low 是從 masked hypertension 這個名詞的定義推的，不是引句本身講的。依 schema「沒把握就填 unspecified，不要猜」改標 unspecified。",
     "fetched_at": "2026-08-28"
   },
   {
@@ -45,7 +45,7 @@
   {
     "id": "L4",
     "direction": "high",
-    "factor": "例行診間血壓（ROBP）系統性偏高：收縮壓比自動診間血壓（AOBP）平均高 14.5 mmHg，比標準化診間血壓高 7.0 mmHg",
+    "factor": "ROBP 比 AOBP 高 14.5 mmHg、標準化診間血壓比 AOBP 高 7.0 mmHg",
     "org": "Taiwan Society of Cardiology／Taiwan Hypertension Society",
     "doc_id": "ths-tsoc-hypertension-guideline-2022",
     "version": "2022",

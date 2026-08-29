@@ -1,7 +1,7 @@
 [
   {
     "id": "L1",
-    "direction": "both",
+    "direction": "unspecified",
     "factor": "量測位置各國不同：WHO STEPS 量肋骨下緣與腸骨稜頂端的中點，美國 NIH 量腸骨稜頂端——同一個人用不同 protocol 量出來的腰圍不會一樣",
     "org": "World Health Organization",
     "doc_id": "who-waist-circumference-report-2011",
@@ -11,7 +11,7 @@
     "quote_extra": [
       "indicate that the waist circumference measurement should be made at the top of the iliac crest."
     ],
-    "note": "direction=both：位置不同會讓數字往哪邊跑，取決於個案體型，原文沒有指定單一方向。🔴 必須與 L19 一起寫——量法差異對個人數字有影響，但對族群層級的風險關聯沒有實質影響，只寫一邊會誤導。",
+    "note": "二審查核：原文只講量測位置不同（WHO STEPS 量肋骨下緣與腸骨稜頂端中點 vs 美國 NIH 量腸骨稜頂端），沒有指定哪個方向讓數字偏高或偏低——原標 both 是我們推的，不是引句說兩側都有，改標 unspecified。🔴 必須與 L19 一起寫——量法差異對個人數字有影響，但對族群層級的風險關聯沒有實質影響，只寫一邊會誤導。",
     "fetched_at": "2026-08-28"
   },
   {
@@ -28,7 +28,7 @@
   },
   {
     "id": "L3",
-    "direction": "both",
+    "direction": "unspecified",
     "factor": "呼吸相不同：WHO 要求在正常呼氣末量，NHANES III 要求在最小呼氣時量",
     "org": "World Health Organization",
     "doc_id": "who-waist-circumference-report-2011",
@@ -38,7 +38,7 @@
     "quote_extra": [
       "The NHANES III protocol states that the waist circumference should be measured at minimal expiration"
     ],
-    "note": "direction=both：原文列出兩種不同 protocol，未指哪一種會讓數字偏高或偏低。",
+    "note": "二審查核：原文只列出兩種不同 protocol（WHO 於正常呼氣末量、NHANES III 於最小呼氣時量），未指哪一種會讓數字偏高或偏低——原標 both 是我們推的，不是引句明講兩側都有，改標 unspecified。",
     "fetched_at": "2026-08-28"
   },
   {
@@ -190,14 +190,14 @@
   },
   {
     "id": "L16",
-    "direction": "low",
-    "factor": "族群差異可能導致特定族群的風險被低估",
+    "direction": "unspecified",
+    "factor": "腰圍切點研究以歐裔為主，用在其他族群可能低估風險",
     "org": "World Health Organization",
     "doc_id": "who-waist-circumference-report-2011",
     "version": "2011（會議 Geneva, 8–11 December 2008）",
     "page_or_table": "第 3 章開頭（第 8 頁）",
     "quote": "particularly if such differences could lead to underestimation of risk in certain populations",
-    "note": "direction=low 指的是風險被低估（原文 underestimation of risk），不是數值偏低。",
+    "note": "direction 原標 low，但引句講的是「風險被低估」（原文 underestimation of risk），不是腰圍數值本身偏低，兩者方向甚至相反（同樣腰圍、風險更高）；schema 的 low 定義是「使數值偏低」，這句撐不起，改標 unspecified，factor 同步改寫為風險判讀角度而非數值方向。",
     "fetched_at": "2026-08-28"
   },
   {

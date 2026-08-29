@@ -3,7 +3,7 @@
     "id": "H1",
     "year": 2003,
     "org": "National High Blood Pressure Education Program（National Heart, Lung, and Blood Institute, National Institutes of Health）",
-    "change": "JNC 7 訂出正式分級表：Normal <120 且 <80；Prehypertension 120–139 或 80–89；Stage 1 Hypertension 140–159 或 90–99；Stage 2 Hypertension >160 或 >100——亦即高血壓自 140/90 mmHg 起算",
+    "change": "JNC 7 訂出正式分級表：Normal <120 且 <80；Prehypertension 120–139 或 80–89；Stage 1 Hypertension 140–159 或 90–99；Stage 2 Hypertension ≥160 或 ≥100——亦即高血壓自 140/90 mmHg 起算",
     "doc_id": "nhlbi-jnc7-full-report-2004",
     "version": "NIH Publication No. 04-5230，August 2004",
     "page_or_table": "Table 3（Classification of Blood Pressure for Adults），第 12 頁",
@@ -15,7 +15,7 @@
     ],
     "status": "已證實",
     "fetched_at": "2026-08-28",
-    "note": "一手（美國聯邦政府作品，public domain）。本列快照是 NIH Publication No. 04-5230（August 2004）的完整報告印行版；JNC 7 的期刊版為 Treatment of High Blood Pressure. JAMA 2003;289:2560–71（同檔內可查到此引用）。"
+    "note": "一手（美國聯邦政府作品，public domain）。本列快照是 NIH Publication No. 04-5230（August 2004）的完整報告印行版；JNC 7 的期刊版為 Treatment of High Blood Pressure. JAMA 2003;289:2560–71（同檔內可查到此引用）。　二審查核：Table 3／流程圖字型把 ≥ 顯示為 >（pdftotext -layout 轉檔），但同檔內文其他處的 ≥ 抽得出來（例：SBP ≥180 mmHg or DBP ≥105 mmHg usually necessitates、obesity (BMI ≥30 kg/m2)），且分級本身級距連續（Stage 1 140–159 接 Stage 2，若 >160 則 160 這個值不屬於任何一級）——三重佐證指向原文是 ≥，故 change 欄改用 ≥160／≥100；quote 仍照抄 PDF 轉檔原樣的 <120／and <80（Table 3 標題列本身不受這個轉檔問題影響）。"
   },
   {
     "id": "H2",
@@ -101,7 +101,7 @@
     ],
     "status": "已證實（需補充）",
     "fetched_at": "2026-08-28",
-    "note": "⚠️ 回述列：指引原文本輪未取得（ahajournals.org 對 curl 回 HTTP 403、PMC 查無此文），本列引句是他人文件對它的轉述，不是指引原文。寫頁面時只能寫成「某某文件指出，該指引…」，不得寫成「該指引原文寫道」。"
+    "note": "⚠️ 回述列：指引原文本輪未取得（ahajournals.org 對 curl 回 HTTP 403、PMC 查無此文），本列引句是他人文件對它的轉述，不是指引原文。寫頁面時只能寫成「某某文件指出，該指引…」，不得寫成「該指引原文寫道」。二審 P6：org 欄依站規等於本列 doc_id（ths-tsoc-hypertension-guideline-2022，即引句所在文件）在 manifest 的 org，不是被轉述的 2017 ACC/AHA；原值誤填成被轉述對象的機構名。　org＝做出變更的機構（2017 ACC/AHA），doc 是 TSOC 2022 的轉述，status 已證實（需補充）＝回述列。"
   },
   {
     "id": "H8",
