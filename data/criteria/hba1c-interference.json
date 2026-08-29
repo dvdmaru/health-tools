@@ -53,7 +53,7 @@
     "doc_id": "ada-standards-of-care-2026",
     "version": "2026",
     "page_or_table": "Sec. 2, Recommendation 2.4",
-    "quote": "plasma glucose criteria should be used to diagnose diabetes",
+    "quote": "In conditions associated with an altered relationship between A1C and glycemia, such as some hemoglobin variants, pregnancy, glucose-6-phosphate dehydrogenase deficiency, HIV, and conditions that may alter red blood cell turnover, plasma glucose criteria should be used to diagnose diabetes.",
     "note": "ADA 在這些情況下要求改用血漿葡萄糖判準，也就是不以 A1C 診斷。",
     "fetched_at": "2026-08-28"
   },
@@ -103,7 +103,7 @@
     "doc_id": "who-hba1c-diagnosis-2011",
     "version": "2011",
     "page_or_table": "Annex 1 第 16 頁，4. Erythrocyte destruction",
-    "quote": "Decreased A1c: decreased erythrocyte life span: haemoglobinopathies,",
+    "quote": "Decreased A1c: decreased erythrocyte life span: haemoglobinopathies,\n   splenomegaly, rheumatoid arthritis or drugs such as antiretrovirals,\n   ribavirin and dapsone.",
     "quote_extra": [
       "Increased HbA1c: increased erythrocyte life span: Splenectomy."
     ],
@@ -153,7 +153,7 @@
     "doc_id": "ada-standards-of-care-2026",
     "version": "2026",
     "page_or_table": "Sec. 2（各檢查切點一致性段）",
-    "quote": "diagnostic cut points for the different tests will identify groups with incomplete concordance",
+    "quote": "FPG, 2-h PG, and A1C reflect different aspects of glucose metabolism, and diagnostic cut points for the different tests will identify groups with incomplete concordance (3).",
     "fetched_at": "2026-08-28"
   }
 ]

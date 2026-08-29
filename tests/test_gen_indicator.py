@@ -12,7 +12,9 @@
 4. dormant 雙向：published 兩個值都要驗。翻開關前後只有接線差別，頁面本身不變。
 5. 禁詞 gate 對生成後的 HTML 為 FAIL 0（掃的是產物，不是原稿）。
 """
+import contextlib
 import importlib.util
+import io
 import json
 import pathlib
 import re
@@ -346,6 +348,14 @@ class ValueComposition(unittest.TestCase):
             "≥126 mg/dL",
             gen.value_text({"lower": 126, "upper": None, "lower_inclusive": True,
                             "unit": "mg/dL", "quote": "FPG ≥126 mg/dL"}))
+
+    def test_equal_bounds_render_as_a_single_value(self):
+        """裁決 bp #3（原文「120/80–130/80 mmHg 之間」，舒張壓兩端同為 80）：
+        印單值「80 mmHg」，不印「80–80 mmHg」。"""
+        self.assertEqual(
+            "80 mmHg",
+            gen.value_text({"lower": 80, "upper": 80, "unit": "mmHg",
+                            "quote": "120/80-130/80 mmHg之間"}))
 
 
 class TextWrapping(unittest.TestCase):
@@ -977,6 +987,240 @@ class ErrataDormantWiring(unittest.TestCase):
             live, *_ = build_with_errata(pathlib.Path(b), ERRATA_ROWS, True)
         self.assertNotIn('<a href="/errata/">', dormant)
         self.assertIn('<a href="/errata/">勘誤紀錄</a>', live)
+
+
+# ---------- 二審 P6：org 字串＝manifest[doc_id].org（全站規則） ----------
+
+class CriteriaAndHistoryOrgMatchesManifest(unittest.TestCase):
+    """P6：org 字串必須有出處可查——但「有出處可查」在 criteria 與 history 兩層的
+    意思不一樣，判準不能共用同一條。
+
+    criteria 列的 org＝「誰訂了這條判準」，就是 doc_id 那份文件自己的發布者：一份
+    文件不會替另一個機構發布判準，所以 org 必須逐字等於 manifest[doc_id].org。
+
+    history 列的 org 定義不同：它記的是「做出變更的機構」，doc_id 卻可能是
+    **轉述者**（回顧文獻、期刊評論、另一個機構事後整理的對照表）——quote 在轉述者
+    的文件裡，但做出那個變更的仍是 org 寫的那個機構。主席二審裁決放寬 history 列
+    為三選一（任一成立即通過）：
+      (a) org == manifest[doc_id].org（doc 本身就是該機構發布的一手文件）；
+      (b) org == manifest[任一 corroboration.doc_id].org（另有一份該機構自己發布
+          的佐證文件，corroboration 已經把這個連結補上）；
+      (c) row["status"] == "已證實（需補充）"（history-schema 定義的回述標記：
+          主張成立但有限定條件要一起講，note 會說明這是轉述，不強求 org 對得上
+          任何一份 doc）。
+
+    ☠️ criteria 列沒有這三選一：判準明細的 doc_id 就是唯一出處，org 對不上 doc 的
+    發布者，代表要嘛 org 打錯、要嘛 doc_id 本身指錯文件，兩種都是資料錯誤，不是
+    「轉述」可以解釋的情況。
+    """
+
+    @staticmethod
+    def _history_row_ok(r: dict, mf: dict) -> bool:
+        doc_id = r.get("doc_id")
+        if doc_id in mf and r.get("org") == mf[doc_id]["org"]:
+            return True
+        for c in r.get("corroboration") or []:
+            cid = c.get("doc_id")
+            if cid in mf and r.get("org") == mf[cid]["org"]:
+                return True
+        return r.get("status") == "已證實（需補充）"
+
+    def test_criteria_org_matches_manifest(self):
+        mf = gen.manifest_index()
+        mismatches = []
+        for path in sorted(gen.CRITERIA_DIR.glob("*.json")):
+            name = path.stem
+            if name in ("schema", "history-schema", "interference-schema"):
+                continue
+            if name.endswith("-interference"):
+                continue
+            is_history = name.endswith("-history")
+            rows = json.loads(path.read_text(encoding="utf-8"))
+            for i, r in enumerate(rows):
+                doc_id = r.get("doc_id")
+                if not doc_id or doc_id not in mf:
+                    continue  # 指不到 manifest 是生成器自己的 gate（source_ref）擋，這裡不重複驗
+                if is_history:
+                    if not self._history_row_ok(r, mf):
+                        mismatches.append(
+                            f"{path.name}[{i}]：現值「{r.get('org')}」，manifest[doc_id]"
+                            f"「{mf[doc_id]['org']}」，corroboration 與 status 皆對不上")
+                    continue
+                expected = mf[doc_id]["org"]
+                actual = r.get("org")
+                if actual != expected:
+                    mismatches.append(f"{path.name}[{i}]：現值「{actual}」，"
+                                      f"manifest「{expected}」")
+        self.assertEqual(
+            [], mismatches,
+            f"{len(mismatches)} 列的 org 不一致（清單見 $AUDIT/org-mismatch.md，"
+            "由 F1／F2 對齊各自 slug 的列）：\n" + "\n".join(mismatches))
+
+
+# ---------- 二審 P9：ORG_DISPLAY 新增 WHO expert consultation ----------
+
+class WhoExpertConsultationOrgDisplay(unittest.TestCase):
+    def test_short_label_and_family_match_who(self):
+        self.assertEqual("WHO 專家諮詢會", gen.org_label("WHO expert consultation"))
+        self.assertEqual("intl", gen.org_family("WHO expert consultation"))
+        self.assertEqual(
+            gen.org_color("World Health Organization"),
+            gen.org_color("WHO expert consultation"),
+            "WHO 專家諮詢會與 World Health Organization 同 family，配色應相同")
+
+
+# ---------- 二審 P7：判準沿革依 (year, id 數字) 排序 ----------
+
+_HIST_ROWS_OUT_OF_ORDER = [
+    {"id": "H10", "year": 2014, "org": "American Diabetes Association",
+     "change": "第三次變更", "doc_id": MULTI_DOC, "version": "2026",
+     "page_or_table": "p1", "quote": "fixture quote", "fetched_at": "2026-08-28",
+     "status": "已證實"},
+    {"id": "H1", "year": 2003, "org": "American Diabetes Association",
+     "change": "第一次變更", "doc_id": MULTI_DOC, "version": "2026",
+     "page_or_table": "p1", "quote": "fixture quote", "fetched_at": "2026-08-28",
+     "status": "已證實"},
+    {"id": "H2", "year": 2003, "org": "American Diabetes Association",
+     "change": "第二次變更", "doc_id": MULTI_DOC, "version": "2026",
+     "page_or_table": "p1", "quote": "fixture quote", "fetched_at": "2026-08-28",
+     "status": "已證實"},
+]
+
+
+class HistorySortedChronologically(unittest.TestCase):
+    """P7：render_history／_timeline_svg 依 (year, id 數字) 遞增排序，不管資料檔內
+    的行序（fixture 故意把 H10 放最前面、同年的 H1／H2 反過來放）。"""
+
+    def test_sort_key_is_year_then_numeric_id(self):
+        ordered = sorted(_HIST_ROWS_OUT_OF_ORDER, key=gen.history_sort_key)
+        self.assertEqual(["H1", "H2", "H10"], [r["id"] for r in ordered])
+
+    def test_render_history_ignores_the_source_file_order(self):
+        mf = gen.manifest_index()
+        html = gen.render_history(_HIST_ROWS_OUT_OF_ORDER, mf, "fixture-slug")
+        ids_in_table = re.findall(r"<td>(H\d+)</td>", html)
+        self.assertEqual(["H1", "H2", "H10"], ids_in_table)
+        # 時間軸 svg（寬版＋窄版各一份）內的變更文字也要跟著排序後的順序畫。
+        self.assertLess(html.index("第一次變更"), html.index("第二次變更"))
+        self.assertLess(html.index("第二次變更"), html.index("第三次變更"))
+
+    def test_two_runs_are_byte_identical(self):
+        mf = gen.manifest_index()
+        h1 = gen.render_history(_HIST_ROWS_OUT_OF_ORDER, mf, "fixture-slug")
+        h2 = gen.render_history(list(reversed(_HIST_ROWS_OUT_OF_ORDER)), mf, "fixture-slug")
+        self.assertEqual(h1, h2, "排序鍵只看 (year, id 數字)，餵入順序不同不該影響輸出")
+
+
+# ---------- 二審 P5：superseded_by ----------
+
+SUPERSEDED_SLUG = "bp-superseded-fixture"
+SUPERSEDED_MD = MULTI_MD.replace("slug: bp-fixture", f"slug: {SUPERSEDED_SLUG}")
+SUPERSEDED_DOC_OLD = "acc-aha-hypertension-guideline-2017"   # 2017 ACC/AHA（被取代）
+SUPERSEDED_DOC_NEW = "aha-acc-hypertension-guideline-2025"   # 2025 AHA/ACC（取代者）
+
+
+def _superseded_row(iid, org, doc_id, lower, upper, unit, superseded_by=None):
+    row = {
+        "indicator_id": iid, "org": org, "doc_id": doc_id, "version": "test",
+        "category": "classification", "lower": lower, "upper": upper, "unit": unit,
+        "population": "成人", "page_or_table": "Table X", "quote": "fixture quote",
+        "fetched_at": "2026-08-28",
+    }
+    if superseded_by:
+        row["superseded_by"] = superseded_by
+    return row
+
+
+SUPERSEDED_ROWS = [
+    # sbp 唯一一列被 2025 版取代：這個機構在 sbp 數線上應該整條消失（沒有任何
+    # 可畫的列，不留一個空的機構標籤列）。
+    _superseded_row("sbp", "American College of Cardiology／American Heart Association",
+                    SUPERSEDED_DOC_OLD, 130, 139, "mmHg", superseded_by=SUPERSEDED_DOC_NEW),
+    # sbp 現行判準（2025 版），正常畫。
+    _superseded_row("sbp", "American Heart Association／American College of Cardiology",
+                    SUPERSEDED_DOC_NEW, 130, 139, "mmHg"),
+    # dbp 沒有取代關係，維持原樣（對照組）。
+    _superseded_row("dbp", "American Diabetes Association", MULTI_DOC, 80, 89, "mmHg"),
+]
+
+
+class SupersededCriteriaRows(unittest.TestCase):
+    """P5：superseded_by——判準表依據欄標「已被 X 取代」，數線不畫被取代的列；
+    來源段（⑥）不受影響，這份文件本身仍在清單裡。"""
+
+    def setUp(self):
+        self.tmp = pathlib.Path(tempfile.mkdtemp())
+        self.html = build_fixture_page(self.tmp, SUPERSEDED_MD, SUPERSEDED_ROWS,
+                                       slug=SUPERSEDED_SLUG)
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def _sbp_figure(self) -> str:
+        m = re.search(r'<figcaption class="ct">收縮壓（mmHg）</figcaption>(.*?)</figure>',
+                      self.html, re.S)
+        self.assertTrue(m, "找不到收縮壓的數線 figure")
+        return m.group(1)
+
+    def test_table_marks_the_superseded_row_with_its_replacement(self):
+        mf = gen.manifest_index()
+        expected = gen.superseded_label(SUPERSEDED_DOC_NEW, mf)
+        self.assertEqual("AHA/ACC 2025", expected)
+        self.assertIn(f"（已被 {expected} 取代）", self.html)
+
+    def test_the_superseded_row_itself_still_appears_in_the_table(self):
+        cells = table_cells(self.html)
+        old = next(c for c in cells if "ACC/AHA" == c[0])
+        self.assertIn("已被 AHA/ACC 2025 取代", old[3])
+
+    def test_number_line_does_not_draw_the_superseded_org(self):
+        fig = self._sbp_figure()
+        self.assertNotIn("ACC/AHA", fig, "被取代的機構不該畫在數線（圖例／軸標）上")
+        self.assertIn("AHA/ACC", fig, "取代它的現行版本仍要正常畫出來")
+
+    def test_number_line_declares_the_dropped_row_instead_of_vanishing_silently(self):
+        fig = self._sbp_figure()
+        self.assertIn("另有 1 列已被新版取代，不畫在數線上，只列於上表", fig)
+
+    def test_dbp_line_is_unaffected(self):
+        m = re.search(r'<figcaption class="ct">舒張壓（mmHg）</figcaption>(.*?)</figure>',
+                      self.html, re.S)
+        self.assertTrue(m)
+        self.assertNotIn("取代", m.group(1))
+
+    def test_two_runs_are_byte_identical(self):
+        with tempfile.TemporaryDirectory() as d:
+            other = build_fixture_page(pathlib.Path(d), SUPERSEDED_MD, SUPERSEDED_ROWS,
+                                       slug=SUPERSEDED_SLUG)
+            self.assertEqual(self.html, other)
+
+
+# ---------- 二審 P10：indicator_id 不在 frontmatter ids 內的列，build 印警告不 fail ----------
+
+class OffPageIndicatorIdWarns(unittest.TestCase):
+    """MULTI_ROWS 本來就混了一列 indicator_id="map"（這頁沒宣告 map），過去是靜默丟掉；
+    現在 build 要印警告（含 slug／indicator_id／JSON 陣列索引），但仍不 fail、仍照樣生頁。"""
+
+    def test_warns_with_slug_indicator_id_and_index_but_still_builds(self):
+        buf = io.StringIO()
+        with tempfile.TemporaryDirectory() as d:
+            with contextlib.redirect_stdout(buf):
+                html = build_fixture_page(pathlib.Path(d), MULTI_MD, MULTI_ROWS)
+        out = buf.getvalue()
+        map_index = next(i for i, r in enumerate(MULTI_ROWS) if r["indicator_id"] == "map")
+        expected = (f"⚠️  {MULTI_SLUG}：第 {map_index} 列（JSON 索引）的 indicator_id="
+                   "「map」不在這頁的 indicator_ids ['sbp', 'dbp'] 內，已略過。")
+        self.assertIn(expected, out)
+        self.assertNotIn("90–99", html, "略過的列本來就不進頁面，警告只是讓它不再無聲")
+
+    def test_a_page_with_no_off_page_rows_prints_no_warning(self):
+        """陰性對照：沒有離頁列時不該印這種警告，否則上面那條測不出真的少了什麼。"""
+        buf = io.StringIO()
+        with tempfile.TemporaryDirectory() as d:
+            with contextlib.redirect_stdout(buf):
+                build_fixture_page(pathlib.Path(d), MULTI_MD,
+                                   [r for r in MULTI_ROWS if r["indicator_id"] != "map"])
+        self.assertNotIn("⚠️", buf.getvalue())
 
 
 if __name__ == "__main__":

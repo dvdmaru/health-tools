@@ -2,7 +2,7 @@
 title: 血中尿酸（Uric acid）
 indicator_id: uric-acid
 slug: uric-acid
-criteria_chart_caption: 診斷線只有 7.0 一條，台灣與日本共用；8.0 與 9.0 是分流
+criteria_chart_caption: 診斷線只有 7.0 一條，台灣與日本共用；台灣的 7.0 到 8.0 是要不要進一步檢查的分流
 status: draft
 updated: 2026-08-28
 sources: [tra-gout-hyperuricemia-guideline-2016, tra-gout-hyperuricemia-guideline-2007, hpa-adult-preventive-care, jsgna-hyperuricemia-gout-guideline-2019, acr-gout-guideline-2020, eular-gout-recommendations-2016, medlineplus-uric-acid-test]
@@ -18,7 +18,7 @@ sources: [tra-gout-hyperuricemia-guideline-2016, tra-gout-hyperuricemia-guidelin
 
 同一個數字，不同機構的門檻不一樣，以下並列，不選邊。判準值欄先標明那一列是診斷定義，還是篩檢分流。
 
-日本的 8.0 與 9.0、EULAR 的 8.0 都在篩檢分流那一類，是起始治療評估的分流門檻，不是診斷線；ACR 2020 的 6.8 是它對「無症狀高尿酸血症」的定義切點，不是一般成人的診斷流程。
+台灣與日本的診斷線都在 7.0 mg/dL；台灣另外把 7.0 到 8.0 mg/dL 列為分流門檻，落在這個區間要進一步問病史、做身體檢查，不是診斷線。ACR 2020 的 6.8 mg/dL 不是診斷線，是它替「無症狀高尿酸血症」下的定義用語：血尿酸 ≥6.8 mg/dL 且沒有痛風發作病史，只用在單一條用藥建議的射程裡，這份指引沒有給一般成人的診斷判準。EULAR 2016 沒有給高尿酸血症的定義數字。
 
 ## 2007 到 2016，7.0 沒動，動的是多久回驗一次
 

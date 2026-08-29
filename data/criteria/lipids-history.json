@@ -84,7 +84,7 @@
     "id": "H6",
     "year": 2013,
     "org": "American College of Cardiology／American Heart Association",
-    "change": "2013 ACC/AHA 膽固醇指引放棄 LDL-C 目標值，改為固定強度 statin、不做劑量滴定至特定 LDL 值",
+    "change": "依 2014 年 Ades 評論與 2017 台灣血脂指引回顧，2013 ACC/AHA 膽固醇指引放棄 LDL-C 目標值，改為固定強度 statin、不做劑量滴定至特定 LDL 值",
     "doc_id": "ades-2013-acc-aha-cholesterol-commentary-2014",
     "version": "2014（Coron Artery Dis 2014;25(4):360–363）",
     "page_or_table": "節標題「Not treating to goal」及該節正文",
@@ -110,7 +110,7 @@
     "id": "H7",
     "year": 2013,
     "org": "American College of Cardiology／American Heart Association",
-    "change": "同一改變的另一面：既有 ASCVD 者不再被要求治到 LDL <100 或 <70，改為固定劑量 statin",
+    "change": "依 2014 年 Ades 評論，2013 ACC/AHA 的另一改變：既有 ASCVD 者不再被要求治到 LDL <100 或 <70，改為固定劑量 statin",
     "doc_id": "ades-2013-acc-aha-cholesterol-commentary-2014",
     "version": "2014（Coron Artery Dis 2014;25(4):360–363）",
     "page_or_table": "正文（治療策略段）",
@@ -136,7 +136,7 @@
     "id": "H9",
     "year": 2018,
     "org": "American Heart Association／American College of Cardiology 等多學會聯合（AHA/ACC/AACVPR/AAPA/ABC/ACPM/ADA/AGS/APhA/ASPC/NLA/PCNA）",
-    "change": "二手摘要把 H8 描述為「分層 LDL-C 目標已被重新引入」",
+    "change": "依 2019 年 JAMA Clinical Guidelines Synopsis，把 H8 描述為「分層 LDL-C 目標已被重新引入」",
     "doc_id": "jama-blood-cholesterol-synopsis-2019",
     "version": "2019（JAMA 2019;321(8):800–801）",
     "page_or_table": "Synopsis 正文",
@@ -165,6 +165,24 @@
     "note": "兩端皆一手：舊規定見 corroboration（ATP III 2001）。台灣現行採檢作業規定本輪查無，不得斷言。"
   },
   {
+    "id": "H12",
+    "year": 2017,
+    "org": "台灣血脂及動脈硬化學會（Taiwan Society of Lipids and Atherosclerosis）等八學會",
+    "change": "台灣第一份現行血脂指引：2017 Taiwan Lipid Guidelines for High Risk Patients，只涵蓋高風險族群",
+    "doc_id": "tas-taiwan-lipid-primary-prevention-2022",
+    "version": "2022",
+    "page_or_table": "Introduction",
+    "quote": "The Taiwan Society of Lipids and Atherosclerosis, in asso-",
+    "quote_extra": [
+      "ciation with seven other major societies in Taiwan, pub-",
+      "lished the Taiwan Lipid Guidelines for High Risk Patients in",
+      "2017.10"
+    ],
+    "status": "已證實（需補充）",
+    "fetched_at": "2026-08-28",
+    "note": "☠️ 回述：引句取自 2022 初級預防指引對 2017 版沿革的敘述（2017 原文本身亦在手，可另行覆核）。原 PDF 為雙欄排版，pdftotext -layout 會把左右欄交錯，整句無法連續 grep；quote 與 quote_extra 是原文同一句在轉檔後被切開的相鄰片段，合起來即原句。原文的 ≥ 在轉檔後為控制字元 \\x15。"
+  },
+  {
     "id": "H11",
     "year": 2018,
     "org": "American Heart Association／American College of Cardiology 等多學會聯合（AHA/ACC/AACVPR/AAPA/ABC/ACPM/ADA/AGS/APhA/ASPC/NLA/PCNA）",
@@ -182,24 +200,6 @@
     "status": "已證實",
     "fetched_at": "2026-08-28",
     "note": "兩端皆一手：舊值見 corroboration（ATP III Table 8）。⚠️ 台灣（2022 TAS 指引與國健署）用的仍是 150，不是 175。"
-  },
-  {
-    "id": "H12",
-    "year": 2017,
-    "org": "台灣血脂及動脈硬化學會（Taiwan Society of Lipids and Atherosclerosis）等八學會",
-    "change": "台灣第一份現行血脂指引：2017 Taiwan Lipid Guidelines for High Risk Patients，只涵蓋高風險族群",
-    "doc_id": "tas-taiwan-lipid-primary-prevention-2022",
-    "version": "2022",
-    "page_or_table": "Introduction",
-    "quote": "The Taiwan Society of Lipids and Atherosclerosis, in asso-",
-    "quote_extra": [
-      "ciation with seven other major societies in Taiwan, pub-",
-      "lished the Taiwan Lipid Guidelines for High Risk Patients in",
-      "2017.10"
-    ],
-    "status": "已證實（需補充）",
-    "fetched_at": "2026-08-28",
-    "note": "☠️ 回述：引句取自 2022 初級預防指引對 2017 版沿革的敘述（2017 原文本身亦在手，可另行覆核）。原 PDF 為雙欄排版，pdftotext -layout 會把左右欄交錯，整句無法連續 grep；quote 與 quote_extra 是原文同一句在轉檔後被切開的相鄰片段，合起來即原句。原文的 ≥ 在轉檔後為控制字元 \\x15。"
   },
   {
     "id": "H13",

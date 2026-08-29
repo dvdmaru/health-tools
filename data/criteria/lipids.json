@@ -152,7 +152,7 @@
     "population": "來源未標示",
     "page_or_table": "Table 2. ATP III Classification of LDL, Total, and HDL Cholesterol (mg/dL)",
     "quote": "≥60 High",
-    "note": "等級名稱 High。Table 2 本身未標族群；同份文件另建議 20 歲以上成人每 5 年做一次空腹脂蛋白全套（見本檔 method_requirement 列）。",
+    "note": "等級名稱 High。Table 2 本身未標族群；同份文件另建議 20 歲以上成人每 5 年做一次空腹脂蛋白全套（見本檔 method_requirement 列）。 Table 3 註 † 另指出：達到 ≥60 mg/dL 可從 ASCVD 風險因子總數中扣掉一個（算作「negative」risk factor），此為風險評估用途、非另一道分級判準，故不另立一列。",
     "fetched_at": "2026-08-28"
   },
   {
@@ -340,22 +340,6 @@
     "fetched_at": "2026-08-28"
   },
   {
-    "indicator_id": "hdl-c",
-    "org": "National Cholesterol Education Program（National Heart, Lung, and Blood Institute, National Institutes of Health）",
-    "doc_id": "nhlbi-ncep-atp3-executive-summary-2001",
-    "version": "2001（NIH Publication No. 01-3670）",
-    "category": "risk_threshold",
-    "lower": 60,
-    "upper": null,
-    "lower_inclusive": true,
-    "unit": "mg/dL",
-    "population": "來源未標示",
-    "page_or_table": "Table 3 註 †",
-    "quote": "HDL cholesterol ≥60 mg/dL counts as a “negative” risk factor",
-    "note": "「負向」風險因子：達到此值可從風險因子總數中扣掉一個。引句中的引號是原文的彎引號。",
-    "fetched_at": "2026-08-28"
-  },
-  {
     "indicator_id": "tg",
     "org": "National Cholesterol Education Program（National Heart, Lung, and Blood Institute, National Institutes of Health）",
     "doc_id": "nhlbi-ncep-atp3-executive-summary-2001",
@@ -461,21 +445,6 @@
     "page_or_table": "「secondary dyslipidemia」框",
     "quote": "Any person with elevated LDL cholesterol or other form of hyperlipidemia should undergo clinical or laboratory assessment to rule out secondary dyslipidemia before initiation of lipid-lowering therapy.",
     "note": "次發性血脂異常的成因清單見限制列 L4。",
-    "fetched_at": "2026-08-28"
-  },
-  {
-    "indicator_id": "hdl-c",
-    "org": "National Cholesterol Education Program（National Heart, Lung, and Blood Institute, National Institutes of Health）",
-    "doc_id": "nhlbi-ncep-atp3-executive-summary-2001",
-    "version": "2001（NIH Publication No. 01-3670）",
-    "category": "no_criterion_stated",
-    "lower": null,
-    "upper": null,
-    "unit": null,
-    "population": "來源未標示",
-    "page_or_table": "「Low HDL cholesterol」段",
-    "quote": "ATP III does not specify a goal for HDL raising.",
-    "note": "ATP III 明講自己不訂 HDL 的提升目標——這是「沒有判準」，不是漏寫。",
     "fetched_at": "2026-08-28"
   },
   {
@@ -662,7 +631,7 @@
     "lower": null,
     "upper": null,
     "unit": null,
-    "population": "20 至 65 歲（For people who are ages 20 to 65）",
+    "population": "younger adults（原文未給年齡界線）",
     "page_or_table": "「How often should I get a cholesterol test?」段",
     "quote": "Younger adults should have the test every 5 years",
     "note": "同段另列 45–65 歲男性與 55–65 歲女性每 1–2 年、65 歲以上每年，本輪只落地引得到原句的這一條。",
@@ -677,7 +646,7 @@
     "lower": null,
     "upper": null,
     "unit": null,
-    "population": "20 至 65 歲（For people who are ages 20 to 65）",
+    "population": "younger adults（原文未給年齡界線）",
     "page_or_table": "「How often should I get a cholesterol test?」段",
     "quote": "Younger adults should have the test every 5 years",
     "note": "同段另列 45–65 歲男性與 55–65 歲女性每 1–2 年、65 歲以上每年，本輪只落地引得到原句的這一條。",
@@ -692,7 +661,7 @@
     "lower": null,
     "upper": null,
     "unit": null,
-    "population": "20 至 65 歲（For people who are ages 20 to 65）",
+    "population": "younger adults（原文未給年齡界線）",
     "page_or_table": "「How often should I get a cholesterol test?」段",
     "quote": "Younger adults should have the test every 5 years",
     "note": "同段另列 45–65 歲男性與 55–65 歲女性每 1–2 年、65 歲以上每年，本輪只落地引得到原句的這一條。",
@@ -707,7 +676,7 @@
     "lower": null,
     "upper": null,
     "unit": null,
-    "population": "20 至 65 歲（For people who are ages 20 to 65）",
+    "population": "younger adults（原文未給年齡界線）",
     "page_or_table": "「How often should I get a cholesterol test?」段",
     "quote": "Younger adults should have the test every 5 years",
     "note": "同段另列 45–65 歲男性與 55–65 歲女性每 1–2 年、65 歲以上每年，本輪只落地引得到原句的這一條。",
@@ -722,7 +691,7 @@
     "lower": null,
     "upper": null,
     "unit": null,
-    "population": "來源未標示",
+    "population": "初級預防對象",
     "page_or_table": "4.4. Primary Prevention",
     "quote": "Screening can be performed with fasting or nonfasting measurement of lipids.",
     "note": "本句位於 4.4. Primary Prevention 節。🔴 這是 2001→2018 的方法學翻轉：ATP III 2001 要求空腹（見同檔 2001 列）。台灣現行採檢作業規定本輪查無，不得斷言。",
@@ -737,7 +706,7 @@
     "lower": null,
     "upper": null,
     "unit": null,
-    "population": "來源未標示",
+    "population": "初級預防對象",
     "page_or_table": "4.4. Primary Prevention",
     "quote": "Screening can be performed with fasting or nonfasting measurement of lipids.",
     "note": "本句位於 4.4. Primary Prevention 節。🔴 這是 2001→2018 的方法學翻轉：ATP III 2001 要求空腹（見同檔 2001 列）。台灣現行採檢作業規定本輪查無，不得斷言。",
@@ -752,7 +721,7 @@
     "lower": null,
     "upper": null,
     "unit": null,
-    "population": "來源未標示",
+    "population": "初級預防對象",
     "page_or_table": "4.4. Primary Prevention",
     "quote": "Screening can be performed with fasting or nonfasting measurement of lipids.",
     "note": "本句位於 4.4. Primary Prevention 節。🔴 這是 2001→2018 的方法學翻轉：ATP III 2001 要求空腹（見同檔 2001 列）。台灣現行採檢作業規定本輪查無，不得斷言。",
@@ -767,7 +736,7 @@
     "lower": null,
     "upper": null,
     "unit": null,
-    "population": "來源未標示",
+    "population": "初級預防對象",
     "page_or_table": "4.4. Primary Prevention",
     "quote": "Screening can be performed with fasting or nonfasting measurement of lipids.",
     "note": "本句位於 4.4. Primary Prevention 節。🔴 這是 2001→2018 的方法學翻轉：ATP III 2001 要求空腹（見同檔 2001 列）。台灣現行採檢作業規定本輪查無，不得斷言。",
@@ -1088,26 +1057,6 @@
     "fetched_at": "2026-08-28"
   },
   {
-    "indicator_id": "total-chol",
-    "org": "台灣血脂及動脈硬化學會（Taiwan Society of Lipids and Atherosclerosis）等八學會",
-    "doc_id": "tas-taiwan-lipid-primary-prevention-2022",
-    "version": "2022",
-    "category": "classification",
-    "lower": 240,
-    "upper": null,
-    "lower_inclusive": true,
-    "unit": "mg/dL",
-    "population": "台灣成人（2005–2008 國民營養健康狀況變遷調查族群）",
-    "page_or_table": "Introduction",
-    "quote": "olemia defined as a cholesterol level \u0015240 mg/dL was",
-    "quote_extra": [
-      "in Taiwan performed from 2005 to 2008, hypercholester-",
-      "found in 12.5% in men and 10% in women.11"
-    ],
-    "note": "category＝classification（來源把 TC ≥240 命名為 hypercholesterolemia）。☠️ 這是 2022 指引回述 2005–2008 NAHSIT 調查所用的流行病學定義，不是臨床診斷判準；數值與 ATP III Table 2 的 ≥240 High 相同。原 PDF 為雙欄排版，pdftotext -layout 會把左右欄交錯，整句無法連續 grep；quote 與 quote_extra 是原文同一句在轉檔後被切開的相鄰片段，合起來即原句。原文的 ≥ 在轉檔後為控制字元 \\x15。",
-    "fetched_at": "2026-08-28"
-  },
-  {
     "indicator_id": "ldl-c",
     "org": "台灣血脂及動脈硬化學會（Taiwan Society of Lipids and Atherosclerosis）等八學會",
     "doc_id": "tas-taiwan-lipid-primary-prevention-2022",
@@ -1121,7 +1070,9 @@
     "page_or_table": "「High risk (DM, CKD and LDL-C ≥190 mg/dL)」節",
     "quote": "presence of FH. Approximately 7% of the subjects with LDL-",
     "quote_extra": [
-      "C \u0015190 mg/dL may fulfill the diagnostic criteria of FH.33"
+      "C \u0015190 mg/dL may fulfill the diagnostic criteria of FH.33",
+      "Genetic testing should be considered for this group of",
+      "subjects for diagnosis of FH."
     ],
     "note": "LDL-C ≥190 者約 7% 符合家族性高膽固醇血症（FH）診斷標準，指引建議此族群考慮基因檢測——這是後續檢查的分流，不是診斷。原 PDF 為雙欄排版，pdftotext -layout 會把左右欄交錯，整句無法連續 grep；quote 與 quote_extra 是原文同一句在轉檔後被切開的相鄰片段，合起來即原句。原文的 ≥ 在轉檔後為控制字元 \\x15。",
     "fetched_at": "2026-08-28"
@@ -1213,7 +1164,7 @@
     "lower": null,
     "upper": null,
     "unit": null,
-    "population": "來源未標示",
+    "population": "30歲以上未滿40歲民眾每5年1次、40歲以上未滿65歲民眾每3年1次、55歲以上原住民、罹患小兒麻痺且年在35歲以上者、65歲以上民眾每年1次",
     "page_or_table": "成人預防保健880方案 服務項目「3.實驗室檢查 (3)血液生化檢查」",
     "quote": "血脂（總膽固醇、三酸甘油酯、高密度脂蛋白膽固醇、低密度脂蛋白膽固醇計算）",
     "fetched_at": "2026-08-28"
@@ -1227,7 +1178,7 @@
     "lower": null,
     "upper": null,
     "unit": null,
-    "population": "來源未標示",
+    "population": "30歲以上未滿40歲民眾每5年1次、40歲以上未滿65歲民眾每3年1次、55歲以上原住民、罹患小兒麻痺且年在35歲以上者、65歲以上民眾每年1次",
     "page_or_table": "成人預防保健880方案 服務項目「3.實驗室檢查 (3)血液生化檢查」",
     "quote": "血脂（總膽固醇、三酸甘油酯、高密度脂蛋白膽固醇、低密度脂蛋白膽固醇計算）",
     "fetched_at": "2026-08-28"
@@ -1241,7 +1192,7 @@
     "lower": null,
     "upper": null,
     "unit": null,
-    "population": "來源未標示",
+    "population": "30歲以上未滿40歲民眾每5年1次、40歲以上未滿65歲民眾每3年1次、55歲以上原住民、罹患小兒麻痺且年在35歲以上者、65歲以上民眾每年1次",
     "page_or_table": "成人預防保健880方案 服務項目「3.實驗室檢查 (3)血液生化檢查」",
     "quote": "血脂（總膽固醇、三酸甘油酯、高密度脂蛋白膽固醇、低密度脂蛋白膽固醇計算）",
     "fetched_at": "2026-08-28"
@@ -1255,7 +1206,7 @@
     "lower": null,
     "upper": null,
     "unit": null,
-    "population": "來源未標示",
+    "population": "30歲以上未滿40歲民眾每5年1次、40歲以上未滿65歲民眾每3年1次、55歲以上原住民、罹患小兒麻痺且年在35歲以上者、65歲以上民眾每年1次",
     "page_or_table": "成人預防保健880方案 服務項目「3.實驗室檢查 (3)血液生化檢查」",
     "quote": "血脂（總膽固醇、三酸甘油酯、高密度脂蛋白膽固醇、低密度脂蛋白膽固醇計算）",
     "note": "項目頁標示為計算值。",

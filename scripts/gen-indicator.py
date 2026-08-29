@@ -143,6 +143,7 @@ ORG_DISPLAY = {
     "Taiwan Society of Cardiology／Taiwan Hypertension Society": ("心臟學會／高血壓學會", "tw-society"),
     "中華民國風濕病醫學會": ("風濕病醫學會", "tw-society"),
     "台灣血脂及動脈硬化學會（Taiwan Society of Lipids and Atherosclerosis）等八學會": ("血脂學會等八學會", "tw-society"),
+    "WHO expert consultation": ("WHO 專家諮詢會", "intl"),
 }
 # 名單外的機構＝去強調灰，不配系列色（系列色是已具名機構屬性的識別，不能被稀釋）。
 ORG_FALLBACK_FAMILY = "other"
@@ -205,6 +206,33 @@ def source_ref(doc_id: str, mf: dict, page_or_table: str = "") -> str:
     out = f"《{m['title']}》{m['version_or_date']}"
     if page_or_table:
         out += f"，{page_or_table}"
+    return out
+
+
+def superseded_label(doc_id: str, mf: dict) -> str:
+    """P5：判準表依據欄「已被 X 取代」的短標——機構短標＋年份，不是完整 source_ref
+    （完整出處已在來源段），只給讀者夠短的線索去找取代它的那一份文件。
+
+    doc_id 指不到 manifest＝取代關係本身沒有出處，直接中止（與 source_ref 同紅線）。
+    """
+    m = mf.get(doc_id)
+    if not m:
+        raise SystemExit(f"❌ superseded_by 指不到 manifest：{doc_id}（取代關係缺出處，不渲染）")
+    label = ORG_DISPLAY.get(m["org"], (m["org"], ORG_FALLBACK_FAMILY))[0]
+    year = re.search(r"\d{4}", m.get("version_or_date", ""))
+    return f"{label} {year.group(0)}" if year else label
+
+
+def source_cell(row: dict, mf: dict) -> str:
+    """判準表／時間軸「依據」欄的完整文字：source_ref＋（若被取代）取代註記。
+
+    ☠️ 只有判準表這一欄要標「已被誰取代」（P5）；來源段照常列出這份文件本身，
+    不因為它被取代就從清單移除或改寫。
+    """
+    out = source_ref(row["doc_id"], mf, row["page_or_table"])
+    sup = row.get("superseded_by")
+    if sup:
+        out += f"（已被 {superseded_label(sup, mf)} 取代）"
     return out
 
 
@@ -539,7 +567,7 @@ def render_criteria_table(rows: list, mf: dict, multi: bool = False,
             f"<td>{esc(org_label(r['org']))}</td>"
             f"<td>{esc(criteria_cell(r))}</td>"
             f"<td>{esc(r['population'])}</td>"
-            f"<td>{esc(source_ref(r['doc_id'], mf, r['page_or_table']))}</td>"
+            f"<td>{esc(source_cell(r, mf))}</td>"
             "</tr>" for r in grp)
         name = (f"{esc(labels.get(iid, iid))}｜" if iid else "") + esc(CATEGORY_LABEL[cat])
         op = " open" if (open_all or cat in CRIT_OPEN_CATEGORIES) else ""
@@ -588,10 +616,17 @@ def render_number_line(rows: list, indicator_id: str, mf: dict, slug: str,
     def X(v):
         return f"{round(X0 + (v - vmin) / (vmax - vmin) * (X1 - X0), 1):g}"
 
-    orgs = list(dict.fromkeys(r["org"] for r in rows))
-    by_org = {o: [r for r in rows if r["org"] == o] for o in orgs}
+    # P5：已被取代的列不畫上數線——它的數字已經不是現行判準，繼續畫出來會讓
+    # 讀者以為新舊兩條線同時有效。表上仍完整保留這一列（依據欄標「已被 X 取代」），
+    # 只有這張圖不畫；被排除的機構若因此沒有任何可畫的列，也整條標籤一起消失
+    # （不留一個沒有內容的機構列）。
+    superseded = [r for r in rows if r.get("superseded_by")]
+    draw_rows = [r for r in rows if not r.get("superseded_by")]
 
-    diag_units = [r for r in rows if r["category"] == "diagnosis" and r.get("lower") is not None]
+    orgs = list(dict.fromkeys(r["org"] for r in draw_rows))
+    by_org = {o: [r for r in draw_rows if r["org"] == o] for o in orgs}
+
+    diag_units = [r for r in draw_rows if r["category"] == "diagnosis" and r.get("lower") is not None]
     refs = sorted({r["lower"] for r in diag_units})
     ref_unit = "%"
     if diag_units:
@@ -683,22 +718,26 @@ def render_number_line(rows: list, indicator_id: str, mf: dict, slug: str,
                  if c not in ("diagnosis", "screening_triage")
                  and any(r["category"] == c
                          and (r.get("lower") is not None or r.get("upper") is not None)
-                         for r in rows)]
+                         for r in draw_rows)]
     # 多個類別共用同一個淡色帶時併成一個圖例項：同一個色塊給兩行圖例，等於讓一個
     # 視覺通道承載兩種語意，讀者會以為深淺之外還有別的差別。
     if wash_cats:
         legend += ('<span><i style="background:var(--c-ada);opacity:.32"></i>淡色帶＝'
                    + esc("／".join(CATEGORY_LABEL[c] for c in wash_cats)) + '</span>')
-    if any(r["category"] == "screening_triage" and r.get("lower") is not None for r in rows):
+    if any(r["category"] == "screening_triage" and r.get("lower") is not None for r in draw_rows):
         legend += ('<span><i class="dash"></i>虛線框＝'
                    f'{esc(CATEGORY_LABEL["screening_triage"])}</span>')
     for v in refs:
         legend += f'<span><i class="rule"></i>{num(v)}{ref_unit} 參考線</span>'
 
-    note = ""
+    note_parts = []
     if undrawable:
-        note = ("　另有 " + str(len(undrawable))
-                + " 列的來源未給數值區間（流程圖型判準），畫不到數線上，只列於上表。")
+        note_parts.append("另有 " + str(len(undrawable))
+                          + " 列的來源未給數值區間（流程圖型判準），畫不到數線上，只列於上表。")
+    if superseded:
+        note_parts.append("另有 " + str(len(superseded))
+                          + " 列已被新版取代，不畫在數線上，只列於上表（依據欄標示取代關係）。")
+    note = ("　" + "".join(note_parts)) if note_parts else ""
     # criteria 列沒有 id 欄，用「原始檔案內的第幾列」當索引（_row_no 在 build() 標上，
     # 不用 list.index——相同內容的兩列會讓 index() 都指回第一列，那是靜默的錯指）。
     basis = "、".join(f"第 {r['_row_no']} 列（{r['doc_id']}）" for r in rows)
@@ -747,8 +786,19 @@ def _timeline_svg(rows: list, vb_w: int, wrap: int, dot_x: int, text_x: int, cls
             f'{axis}{"".join(entries)}</svg>')
 
 
+def history_sort_key(r: dict) -> tuple:
+    """P7：(year, id 數字) 遞增——純資料鍵，不含檔案順序，重跑仍 byte-identical。
+
+    ☠️ id 不能照字串排（H10 會排在 H2 前面），取數字部分，同 errata_order() 的作法。"""
+    return (r["year"], int(r["id"][1:]))
+
+
 def render_history(rows: list, mf: dict, slug: str) -> str:
-    """判準沿革時間軸。history 檔以頁面 slug 定位，多指標頁共用一條時間軸。"""
+    """判準沿革時間軸。history 檔以頁面 slug 定位，多指標頁共用一條時間軸。
+
+    ☠️ 資料檔內的順序不再重要：這裡先依 (year, id 數字) 排過，時間軸與下表兩處
+    渲染都吃排序後的結果，資料檔要怎麼擺（可讀性）與頁面要怎麼畫（時序）分開。"""
+    rows = sorted(rows, key=history_sort_key)
     orgs = list(dict.fromkeys(r["org"] for r in rows))
     legend = "".join(
         f'<span><i class="dot" style="background:{org_color(o)}"></i>{esc(org_label(o))}</span>'
@@ -1105,9 +1155,20 @@ def build(slugs=None, out_root=None, parts_dir=None, llms_path=None, published=N
         crit_path = CRITERIA_DIR / f"{slug}.json"
         if not crit_path.exists():
             raise SystemExit(f"❌ 找不到判準明細：{crit_path}（沒有資料就不生成頁面）")
+        # P10：indicator_id 不在這頁 frontmatter ids 內的列，過去是靜默丟掉（例：
+        # bmi-waist.json 混了 whr 兩列，頁面只收 bmi／waist）。改成印警告不 fail——
+        # 資料層允許一個檔混放屬於別頁的列，但丟列這件事不能無聲：可能是真的不屬於
+        # 這頁，也可能是打錯 indicator_id。索引＝JSON 陣列位置（0 起算，與稽核 findings
+        # 的列號口徑一致），與下面 _row_no（1 起算、只用於圖下依據行）是兩套不同的數。
+        crit_raw = load_json(crit_path)
+        off_page = [(i, r) for i, r in enumerate(crit_raw) if r["indicator_id"] not in ids]
+        for i, r in off_page:
+            print(f"⚠️  {slug}：第 {i} 列（JSON 索引）的 indicator_id="
+                 f"「{r['indicator_id']}」不在這頁的 indicator_ids {ids} 內，已略過。")
+
         # _row_no＝該列在原始 json 檔裡的行序（1 起算），只用於圖下「依據」行的回指，
         # 不寫回資料檔（判準層只存明細，不存衍生欄位）。
-        crit = [dict(r, _row_no=i) for i, r in enumerate(load_json(crit_path), start=1)
+        crit = [dict(r, _row_no=i) for i, r in enumerate(crit_raw, start=1)
                 if r["indicator_id"] in ids and r["category"] in TABLE_CATEGORIES]
         if not crit:
             raise SystemExit(f"❌ {slug}（{'、'.join(ids)}）沒有可渲染的判準列"

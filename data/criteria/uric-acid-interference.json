@@ -48,14 +48,15 @@
   },
   {
     "id": "L5",
-    "direction": "high",
+    "direction": "unspecified",
     "factor": "高脂肪食物（抑制尿酸排泄）",
     "org": "中華民國風濕病醫學會",
     "doc_id": "tra-gout-hyperuricemia-guideline-2016",
     "version": "第三版（2016 年 9 月完成）",
     "page_or_table": "第二章 第九節 高尿酸血症與痛風日常生活指導與飲食建議",
     "quote": "由於高脂肪食物會抑制尿酸排泄，在急性痛風發作期需避免大量食用",
-    "fetched_at": "2026-08-28"
+    "fetched_at": "2026-08-28",
+    "note": "原文只講機轉（抑制排泄），未明講血中值偏高；不得從機轉自行推論方向。"
   },
   {
     "id": "L6",
@@ -136,7 +137,10 @@
     "version": "第三版（2016 年 9 月完成）",
     "page_or_table": "第二章 第四節 痛風的診斷",
     "quote": "即使血中尿酸值 >10 mg/dL，仍有 ≥10% 的病患",
-    "fetched_at": "2026-08-28"
+    "fetched_at": "2026-08-28",
+    "quote_extra": [
+      "之關節腫痛並非是痛風。"
+    ]
   },
   {
     "id": "L12",
@@ -195,11 +199,14 @@
     "version": "Last updated July 15, 2026",
     "page_or_table": "What is it used for?",
     "quote": "When treatment kills cancer cells quickly, they release large amounts of purines into the blood.",
-    "fetched_at": "2026-08-28"
+    "fetched_at": "2026-08-28",
+    "quote_extra": [
+      "This can lead to serious problems from high uric acid levels."
+    ]
   },
   {
     "id": "L17",
-    "direction": "low",
+    "direction": "unspecified",
     "factor": "低尿酸值罕見，且通常不造成健康問題",
     "org": "MedlinePlus（U.S. National Library of Medicine）",
     "doc_id": "medlineplus-uric-acid-test",

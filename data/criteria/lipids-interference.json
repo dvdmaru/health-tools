@@ -78,20 +78,8 @@
     "note": "對應判準列的 category 為 no_criterion_stated。"
   },
   {
-    "id": "L8",
-    "direction": "unspecified",
-    "factor": "三酸甘油酯 ≥500 mg/dL 時處置順序反轉：先把三酸甘油酯降到 <500 才回頭處理 LDL",
-    "org": "National Cholesterol Education Program（National Heart, Lung, and Blood Institute, National Institutes of Health）",
-    "doc_id": "nhlbi-ncep-atp3-executive-summary-2001",
-    "version": "2001（NIH Publication No. 01-3670）",
-    "page_or_table": "「Very high triglycerides」段",
-    "quote": "Only after triglyceride levels have been lowered to <500 mg/dL should attention turn to LDL lowering to reduce risk for CHD.",
-    "fetched_at": "2026-08-28",
-    "note": "極高三酸甘油酯的臨床意義是胰臟炎風險而不只是心血管風險；此句只講處置順序，未講數值偏差方向。"
-  },
-  {
     "id": "L9",
-    "direction": "both",
+    "direction": "unspecified",
     "factor": "現有 ASCVD 風險預測模型沒有一個是在東亞族群推導或前瞻驗證的",
     "org": "台灣血脂及動脈硬化學會（Taiwan Society of Lipids and Atherosclerosis）等八學會",
     "doc_id": "tas-taiwan-lipid-primary-prevention-2022",
@@ -118,17 +106,5 @@
     "quote": "■ Recommends a complete lipoprotein profile (total cholesterol, LDL cholesterol, HDL cholesterol, and triglycerides) as the preferred initial test, rather than screening for total cholesterol and HDL alone.",
     "fetched_at": "2026-08-28",
     "note": "同一句亦登錄為變更史 H5。"
-  },
-  {
-    "id": "L11",
-    "direction": "unspecified",
-    "factor": "2018 ACC/AHA 的代謝症候群三酸甘油酯門檻是 >175 mg/dL",
-    "org": "American Heart Association／American College of Cardiology 等多學會聯合（AHA/ACC/AACVPR/AAPA/ABC/ACPM/ADA/AGS/APhA/ASPC/NLA/PCNA）",
-    "doc_id": "acc-aha-blood-cholesterol-guideline-2018",
-    "version": "2018",
-    "page_or_table": "Table 6",
-    "quote": "Metabolic syndrome (increased waist circumference, elevated triglycerides [>175 mg/dL], elevated blood pressure, elevated glucose, and low HDL-C [<40 mg/dL in men; <50 in women mg/dL] are factors; tally of 3 makes the diagnosis)",
-    "fetched_at": "2026-08-28",
-    "note": "☠️ 同一個「代謝症候群三酸甘油酯門檻」在不同年份／地區不是同一個數字：ATP III 2001＝≥150、2018 ACC/AHA＝>175、台灣 2022 指引與國健署＝150。三個數字各自有獨立的判準列可查，不要合併成一個「150」。本列的引句只撐得起 2018 的 >175，其餘兩個數字請看各自的判準列。"
   }
 ]
