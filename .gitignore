@@ -60,3 +60,16 @@ data/sources/who-asian-bmi-lancet-summary-2004.txt
 
 # 二審用 dump（scripts/audit-rowctx.py 產物）
 .audit/
+
+# --- secrets (added 2026-08-29 after Zeabur env-var leak audit) ---
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+credentials*.json
+service-account*.json
+service_account*.json
+.mcp.json
+.claude/settings.local.json
