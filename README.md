@@ -15,7 +15,7 @@
 
 **5 個指標頁已生成（dormant，未部署）**：`/indicators/hba1c/`（M3 定調）、`/indicators/blood-pressure/`
 （sbp＋dbp）、`/indicators/lipids/`（total-chol／ldl-c／hdl-c／tg）、`/indicators/uric-acid/`、
-`/indicators/bmi-waist/`（bmi＋waist）。來源 manifest 46 份（licensed-cite-only 快照本機留、CI SKIP），
+`/indicators/bmi-waist/`（bmi＋waist）。來源 manifest 52 份（M6 補 6 份未落地來源；licensed-cite-only 快照本機留、CI SKIP），
 判準明細＋沿革＋失真列全部過收據 gate。M4 落地時的紀律與坑：
 
 - **一頁多指標**：frontmatter `indicator_ids`＋`indicator_labels`，資料檔以 slug 定位；每個 indicator_id
@@ -132,7 +132,7 @@ python3 scripts/fetch-health-source.py --id <id> --url <url> \
 01:00 UTC（台北 09:00）跑一次，也能 `workflow_dispatch` 手動觸發。
 
 **驗的不是任何一種 sha256（raw bytes 也好、正規化後的文字也好），是判準列引用的那句
-話還在不在**。理由跟上面「快照不入版控只留 sha256」是同一個：46 份來源裡 13 份是
+話還在不在**。理由跟上面「快照不入版控只留 sha256」是同一個：52 份來源裡 19 份是
 瀏覽器抽出的純文字快照，跟線上 raw bytes 本來就對不上；線上 HTML 每次抓也可能因
 nonce／時間戳／廣告位變動，raw sha 比對只會天天假警報。PDF 也一樣不穩——EULAR 的
 PDF 實測連續 curl 三次，同 size 卻出現兩種不同 raw sha256。2026-08-28 CI 首次實跑
@@ -201,7 +201,9 @@ CI 對 exit 1／2 用 label `source-drift` 找開著的 issue，有就貼新報�
 5. `blocked`／`unreachable` 的來源監測不到訊號，只能靠人定期拿瀏覽器複查。名單以每週
    報告為準，不要從 manifest 的 `retrieval` 欄推——2026-08-28 首次建 baseline 時
    `blocked` 只有 3 份（全是 diabetesjournals.org 的 403），hpa.gov.tw 當天 curl 抓得到；
-   網域政策會變，下週可能反過來。見 MODEL.md §5。
+   網域政策會變，下週可能反過來。2026-08-29 M6 重建 baseline（52 份）：`blocked` 7 份——
+   多出的 4 份是用瀏覽器抓的指引原文（ahajournals 2017／2025、jamanetwork JNC 8、Lancet
+   2004 摘要），這些本來就只能人工複查。見 MODEL.md §5。
 
 ## 部署方式
 

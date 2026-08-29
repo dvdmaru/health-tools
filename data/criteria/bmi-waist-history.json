@@ -113,5 +113,21 @@
     "note": "year 記的是會議年（2008），報告出版年是 2011。🔴 到本次查證日為止，WHO 官方仍沒有一套自己的腰圍切點。⚠️ 引句中的連字號是 U+2010，不是 ASCII `-`。",
     "fetched_at": "2026-08-28",
     "status": "已證實"
+  },
+  {
+    "id": "H6",
+    "year": 2004,
+    "org": "WHO expert consultation",
+    "change": "WHO 專家諮詢會就亞洲人 BMI 議題做出正式結論：保留既有 WHO 國際切點不變，另外提出四個 public health action points 供各國自行決定風險定義的方法",
+    "doc_id": "who-asian-bmi-lancet-summary-2004",
+    "version": "The Lancet, Volume 363, Issue 9403, p157-163, January 10, 2004",
+    "page_or_table": "Summary（摘要頁）",
+    "quote": "The consultation also agreed that the WHO BMI cut-off points should be retained as international classifications.",
+    "quote_extra": [
+      "The consultation identified further potential public health action points (23·0, 27·5, 32·5, and 37·5 kg/m2) along the continuum of BMI"
+    ],
+    "note": "☠️ 只取得 Lancet 摘要頁（Summary），全文在付費牆後未取得——本列填補的是 2000 年亞太臨時值（H3）與 WHO 2011 年回顧 2002/2008 諮詢會（H7、H9）之間、2004 年這場諮詢會本身的空白。quote_extra 的 action points（23·0／27·5／32·5／37·5 kg/m2）是「沿 BMI 連續軸線的公衛行動點」，不是重新定義的診斷或分級切點；摘要沒有給這四個數字的 ≥／> 關係與適用族群，data/criteria 的 method_requirement／classification 等列都需要 lower/upper/population 可回查，摘要給不了，故這四個數字**不落 criteria 列**（見同 doc 未來若取得全文再議）。引句中的 `23·0` 等使用 U+00B7 中點，不是 ASCII 句號，照抄。⚠️ **status 欄位裁決**：brief 原文建議寫「已證實（摘要層）」，但 `data/criteria/history-schema.json` 的 status enum 只有「已證實」／「已證實（需補充）」／「未證實」三種，沒有「摘要層」這個值——本列改採「已證實（需補充）」，「僅摘要層、全文未取得」的限定寫在本 note 裡承載，未擅自修改 schema。",
+    "fetched_at": "2026-08-29",
+    "status": "已證實（需補充）"
   }
 ]

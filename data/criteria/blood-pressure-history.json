@@ -51,27 +51,40 @@
     "fetched_at": "2026-08-28"
   },
   {
+    "id": "H10",
+    "year": 2014,
+    "org": "Panel Members Appointed to the Eighth Joint National Committee (JNC 8)",
+    "change": "JNC 8 沒有重新定義高血壓與高血壓前期，只訂用藥門檻",
+    "doc_id": "jnc8-hypertension-guideline-2014",
+    "version": "2014（JAMA. 2014;311(5):507-520）",
+    "page_or_table": "Table 1. Comparison of Current Recommendations With JNC 7 Guidelines（Definitions 列）",
+    "quote": "Definitions of hypertension and prehypertension not addressed, but thresholds for pharmacologic treatment were defined",
+    "status": "已證實",
+    "fetched_at": "2026-08-29",
+    "note": "填補 2003（JNC 7）→2017（ACC/AHA）之間的變更史空白：JNC 8（2014）本身未重新定義高血壓或高血壓前期，只訂了開始用藥的門檻（依 Table 1 對照列，JNC 7 訂了定義、2014 版沒有訂，只訂治療門檻）。用藥門檻數字（150/90、140/90 等）依本站規則屬治療門檻，不落 criteria。快照為 Chrome get_page_text 抽取之頁面前 50,000 字元（含 Table 1 對照表）；本文其餘部分未收錄。"
+  },
+  {
     "id": "H4",
     "year": 2017,
     "org": "American College of Cardiology／American Heart Association",
     "change": "2017 ACC/AHA 指引把高血壓定義由 140/90 mmHg 下修為 130/80 mmHg，分級改為 Normal／Elevated／Stage 1／Stage 2",
-    "doc_id": "ths-tsoc-hypertension-guideline-2022",
-    "version": "2022",
-    "page_or_table": "§2.1 本文（亞洲族群風險論證段）",
-    "quote": "threshold (³ 130/80 mmHg), such as that defined by",
-    "quote_extra": [
-      "2017 ACC/AHA Hypertension Guideline, would be more",
-      "appropriate for Asian patients."
-    ],
+    "doc_id": "acc-aha-hypertension-guideline-2017",
+    "version": "Originally Published 13 November 2017",
+    "page_or_table": "§3.1. Definition of High BP 本文（Synopsis 段）",
+    "quote": "This categorization differs from that previously recommended in the JNC 7 report, with stage 1 hypertension now defined as an SBP of 130–139 or a DBP of 80–89 mm Hg",
     "corroboration": [
+      {
+        "doc_id": "ths-tsoc-hypertension-guideline-2022",
+        "quote": "threshold (³ 130/80 mmHg), such as that defined by"
+      },
       {
         "doc_id": "nhlbi-high-blood-pressure-page",
         "quote": "130 to 139 systolic pressure OR 80 to 89 diastolic pressure"
       }
     ],
-    "status": "已證實（需補充）",
+    "status": "已證實",
     "fetched_at": "2026-08-28",
-    "note": "⚠️ 回述列：指引原文本輪未取得（ahajournals.org 對 curl 回 HTTP 403、PMC 查無此文），本列引句是他人文件對它的轉述，不是指引原文。寫頁面時只能寫成「某某文件指出，該指引…」，不得寫成「該指引原文寫道」。　本列的一手佐證是 NHLBI 現行頁面採用同一套分級（Stage 1＝130–139 或 80–89）。另：原句在 PDF 雙欄排版下被切斷，句首的「A lower」落在前一行，故引句自 threshold 起。PDF 轉檔（pdftotext -layout）把 ≥ 顯示為 ³、≤ 顯示為 £，引句照抄轉檔原樣。"
+    "note": "一手：2017 ACC/AHA 指引原文（ahajournals.org，Chrome 瀏覽器快照，前 50,000 字元）。同句見 §3.1 Definition of High BP 本文（Synopsis 段），緊接 Table 6 分級表之前。佐證：TSOC 2022 台灣指引轉述同一句；NHLBI 現行頁面採用同一套分級（Stage 1＝130–139 或 80–89 mm Hg）。"
   },
   {
     "id": "H5",
@@ -89,6 +102,22 @@
     "status": "已證實（需補充）",
     "fetched_at": "2026-08-28",
     "note": "⚠️ 回述列：指引原文本輪未取得（ahajournals.org 對 curl 回 HTTP 403、PMC 查無此文），本列引句是他人文件對它的轉述，不是指引原文。寫頁面時只能寫成「某某文件指出，該指引…」，不得寫成「該指引原文寫道」。"
+  },
+  {
+    "id": "H8",
+    "year": 2021,
+    "org": "World Health Organization",
+    "change": "WHO 發布 2021 年高血壓藥物治療指引，取代 1999 年的舊指引；但明文不處理血壓量測與高血壓診斷（＝WHO 這份現行文件沒有給定義／分級）",
+    "doc_id": "who-hypertension-pharmacotherapy-guideline-2021",
+    "version": "2021",
+    "page_or_table": "§1 Introduction／Scope",
+    "quote": "The guideline does not address measurement of blood pressure or diagnosis of hypertension.",
+    "quote_extra": [
+      "A World Health Organization (WHO) guideline dealing specifically with raised blood pressure was last",
+      "published more than 20 years ago – in 1999 – and is now outdated."
+    ],
+    "status": "已證實",
+    "fetched_at": "2026-08-28"
   },
   {
     "id": "H6",
@@ -125,35 +154,25 @@
     "note": "Table 4 的對應值表是這條的表格證據：120/80 與 130/80 兩條線上，家用與診間值相同；差異要到 135/85 那一列才出現。"
   },
   {
-    "id": "H8",
-    "year": 2021,
-    "org": "World Health Organization",
-    "change": "WHO 發布 2021 年高血壓藥物治療指引，取代 1999 年的舊指引；但明文不處理血壓量測與高血壓診斷（＝WHO 這份現行文件沒有給定義／分級）",
-    "doc_id": "who-hypertension-pharmacotherapy-guideline-2021",
-    "version": "2021",
-    "page_or_table": "§1 Introduction／Scope",
-    "quote": "The guideline does not address measurement of blood pressure or diagnosis of hypertension.",
-    "quote_extra": [
-      "A World Health Organization (WHO) guideline dealing specifically with raised blood pressure was last",
-      "published more than 20 years ago – in 1999 – and is now outdated."
-    ],
-    "status": "已證實",
-    "fetched_at": "2026-08-28"
-  },
-  {
     "id": "H9",
     "year": 2025,
     "org": "American Heart Association／American College of Cardiology",
     "change": "2017 版之後首度改版的 2025 AHA/ACC 指引，血壓分級與 130/80 mmHg 的診斷門檻維持不變，改動集中在風險計算（PREVENT）、原發性醛固酮增多症篩檢、腎去神經術等",
-    "doc_id": "cvder-aha-acc-guideline-editorial-2025",
-    "version": "2025 Aug 26（Cardiovasc Diabetol Endocrinol Rep 11:21）",
-    "page_or_table": "正文（2025 指引與 2017／ESC 2024 比較段）",
-    "quote": "The 2025 guidelines maintain the 130/80 mmHg cutoff for both diagnosis and initiation of treatment",
+    "doc_id": "aha-acc-hypertension-guideline-2025",
+    "version": "Originally Published 14 August 2025",
+    "page_or_table": "Abstract AIM；Table 4. Categories of Blood Pressure in Adults",
+    "quote": "The “2025 AHA/ACC/AANP/AAPA/ABC/ACCP/ACPM/AGS/AMA/ASPC/NMA/PCNA/SGIM Guideline for the Prevention, Detection, Evaluation, and Management of High Blood Pressure in Adults” retires and replaces the “2017 ACC/AHA/AAPA/ABC/ACPM/AGS/APhA/ASH/ASPC/NMA/PCNA Guideline for the Prevention, Detection, Evaluation, and Management of High Blood Pressure in Adults.”",
     "quote_extra": [
-      "Both AHA 2017 and 2025 use 130/80 mmHg as diagnostic and treatment thresholds, whereas ESC 2024 retains a higher threshold for initiation (140/90 mmHg)"
+      "Stage 1 130 to 139 mm Hg or 80 to 89 mm Hg"
     ],
-    "status": "已證實（需補充）",
+    "status": "已證實",
     "fetched_at": "2026-08-28",
-    "note": "⚠️ 回述列：指引原文本輪未取得（ahajournals.org 對 curl 回 HTTP 403、PMC 查無此文），本列引句是他人文件對它的轉述，不是指引原文。寫頁面時只能寫成「某某文件指出，該指引…」，不得寫成「該指引原文寫道」。　本列的來源是一篇 2025 年期刊述評（editorial），不是 2025 AHA/ACC 指引原文；已確認的事實是：2025 版於 2025-08-14 發布，分級與 130/80 門檻未變。"
+    "note": "一手：2025 AHA/ACC 指引原文 Abstract（ahajournals.org，Chrome 瀏覽器快照，前 50,000 字元）。同份文件 Table 4 分級與 130/80 mm Hg 門檻維持不變（Stage 1＝130–139 或 80–89 mm Hg，同 2017 版）。佐證：一篇獨立期刊述評（S11／PMC 全文）對同一結論的轉述。頁面標明本文有三次 correction（2025-11-10、2026-04-13、2026-05-26），本輪未逐一核對各次更正內容是否影響本列引用的段落。",
+    "corroboration": [
+      {
+        "doc_id": "cvder-aha-acc-guideline-editorial-2025",
+        "quote": "The 2025 guidelines maintain the 130/80 mmHg cutoff for both diagnosis and initiation of treatment"
+      }
+    ]
   }
 ]

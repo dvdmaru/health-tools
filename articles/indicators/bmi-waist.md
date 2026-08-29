@@ -5,7 +5,7 @@ indicator_labels: {bmi: BMI, waist: 腰圍}
 slug: bmi-waist
 status: draft
 updated: 2026-08-28
-sources: [hpa-adult-healthy-body-weight-standard, hpa-overweight-obesity-about, hpa-metabolic-syndrome-topic-page, hpa-adult-preventive-care, who-asia-pacific-obesity-2000, who-trs894-obesity-report-2000, who-waist-circumference-report-2011, nhlbi-practical-guide-obesity-2000, nhlbi-ncep-atp3-executive-summary-2001, idf-metabolic-syndrome-consensus-2006]
+sources: [hpa-adult-healthy-body-weight-standard, hpa-overweight-obesity-about, hpa-metabolic-syndrome-topic-page, hpa-adult-preventive-care, who-asia-pacific-obesity-2000, who-trs894-obesity-report-2000, who-waist-circumference-report-2011, nhlbi-practical-guide-obesity-2000, nhlbi-ncep-atp3-executive-summary-2001, idf-metabolic-syndrome-consensus-2006, who-asian-bmi-lancet-summary-2004, hpa-waist-circumference-press-release-2022, hpa-waist-measurement-press-release-2026]
 ---
 
 # 身體質量指數（BMI）與腰圍
@@ -22,11 +22,11 @@ BMI 是國際通用的肥胖指標，腰圍代表的是脂肪的分布，兩項�
 
 ## 亞洲人的 23 與 25，原文自己寫著 provisional
 
-WHO 1997 年諮詢會訂的國際 BMI 分級是 18.5、25、30、35、40，至今沒換。亞洲人的過重 23、肥胖 25、腰圍男 90、女 80 公分，出自 2000 年 WHO 西太平洋處與 IASO、IOTF 的亞太報告，原文自稱 provisional、interim。2002 年專家諮詢會建議拿腰圍細化 BMI 的行動門檻。
+WHO 1997 年諮詢會訂的國際 BMI 分級是 18.5、25、30、35、40，至今沒換。亞洲人的過重 23、肥胖 25、腰圍男 90、女 80 公分，出自 2000 年 WHO 西太平洋處與 IASO、IOTF 的亞太報告，原文自稱 provisional、interim。2002 年專家諮詢會建議拿腰圍細化 BMI 的行動門檻。2004 年 WHO 專家諮詢會決定保留國際切點，另外提出 23.0、27.5、32.5、37.5 四個公衛行動點供各國參考——依該文摘要，這是行動點，不是新的診斷切點。
 
 ## 肌肉多的人 BMI 會被算進過重，換一種量法腰圍也會不一樣
 
-肌肉比脂肪重，肌肉量高的運動員 BMI 會落在過重區間；老年人肌肉流失，相同 BMI 下體脂較高，水腫者則較低。常用的腰圍切點研究人口以歐裔為主，WHO 寫這可能低估某些族群的風險。量法也不一樣：WHO 量肋骨下緣與腸骨稜的中點，美國 NIH 量腸骨稜頂端；但同報告的回顧說，量法對族群層級的風險關聯沒有實質影響。
+肌肉比脂肪重，肌肉量高的運動員 BMI 會落在過重區間；老年人肌肉流失，相同 BMI 下體脂較高，水腫者則較低。常用的腰圍切點研究人口以歐裔為主，WHO 寫這可能低估某些族群的風險。量法也不一樣：WHO 量肋骨下緣與腸骨稜的中點，美國 NIH 量腸骨稜頂端，國民健康署量的是骨盆上緣至肋骨下緣的中線——早晨空腹、皮尺與地面平行、貼緊不擠壓皮膚，正常呼吸在吐氣結束時讀數；但同報告的回顧說，量法對族群層級的風險關聯沒有實質影響。
 
 ## BMI 在健康體重範圍、腰圍卻超過門檻，可以和醫師討論
 
