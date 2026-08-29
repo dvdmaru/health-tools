@@ -1,4 +1,4 @@
-# 來源改版監測：每週跑一次，抓 46 份 manifest 來源的線上現況，跟本機 baseline 比對
+# 來源改版監測：每週跑一次，抓 manifest 全部來源（2026-08-29 起 52 份）的線上現況，跟本機 baseline 比對
 # 判準列引用的那句話還在不在——不是比對 raw bytes 的 sha256。
 #
 # 為什麼不是「重抓比 sha256」：manifest 裡有 13 份 browser-text／manual 快照是瀏覽器

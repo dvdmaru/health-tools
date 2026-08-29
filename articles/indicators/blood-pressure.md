@@ -5,7 +5,7 @@ indicator_labels: {sbp: 收縮壓, dbp: 舒張壓}
 slug: blood-pressure
 status: draft
 updated: 2026-08-28
-sources: [hpa-hypertension-topic-page, ths-tsoc-hypertension-guideline-2022, nhlbi-high-blood-pressure-page, medlineplus-high-blood-pressure, who-hypertension-pharmacotherapy-guideline-2021, nhlbi-jnc7-full-report-2004, cvder-aha-acc-guideline-editorial-2025, hpa-metabolic-syndrome-topic-page, hpa-home-bp-722-press-release-2025, mohw-hypertension-722-press-release-2023]
+sources: [hpa-hypertension-topic-page, ths-tsoc-hypertension-guideline-2022, nhlbi-high-blood-pressure-page, medlineplus-high-blood-pressure, who-hypertension-pharmacotherapy-guideline-2021, nhlbi-jnc7-full-report-2004, jnc8-hypertension-guideline-2014, acc-aha-hypertension-guideline-2017, aha-acc-hypertension-guideline-2025, hpa-metabolic-syndrome-topic-page, hpa-home-bp-722-press-release-2025, mohw-hypertension-722-press-release-2023]
 ---
 
 # 血壓（收縮壓 SBP／舒張壓 DBP）
@@ -22,7 +22,7 @@ sources: [hpa-hypertension-topic-page, ths-tsoc-hypertension-guideline-2022, nhl
 
 ## 140/90 沒有作廢，它被降成第 2 級
 
-2003 年 JNC 7 把高血壓從 140/90 mmHg 起算。依 2022 台灣高血壓指引的轉述，2017 年 ACC/AHA 下修到 130/80 mmHg。2022 年台灣改為 ≥130/80 mmHg，改以家用血壓為診斷基礎，三條切點家用與診間相同，140/90 降成第 2 級。2003 到 2017 之間的版本，時間軸未收。
+2003 年 JNC 7 把高血壓從 140/90 mmHg 起算。2014 年的 JNC 8 沒有重新定義高血壓與高血壓前期，只訂了用藥門檻。2017 年 ACC/AHA 指引把門檻下修到 130/80 mmHg，第 1 級是收縮壓 130 到 139 或舒張壓 80 到 89 mmHg。2022 年台灣改為 ≥130/80 mmHg，改以家用血壓為診斷基礎，三條切點家用與診間相同，140/90 降成第 2 級。2025 年新版取代 2017 版，分級與 130/80 mmHg 門檻沒有改。
 
 ## 診間和家裡對不上的比例，台灣本土數字是 21% 與 11%
 

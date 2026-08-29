@@ -4,7 +4,7 @@
 
 ☠️ 為什麼不是「重抓比 sha256」(連正規化後的文字 sha 也不行)
 ------------------------------------------------------------
-data/sources/manifest.json 46 份來源裡,有 13 份是 browser-text／manual（瀏覽器抽出
+data/sources/manifest.json 52 份來源裡（2026-08-29 M6 後）,有 19 份是 browser-text／manual（瀏覽器抽出
 的純文字,前 3 行是 SOURCE_URL／FETCHED_AT／METHOD 標頭）與 html-text,跟線上 raw
 bytes 永遠對不上;線上 HTML 每次抓都可能因 nonce／時間戳／廣告位變,raw sha 比對
 ＝天天假警報,警報疲勞後沒人看＝等於沒監測。PDF 也一樣不穩——EULAR 的 PDF 實測連續

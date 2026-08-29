@@ -51,3 +51,9 @@ data/sources/who-trs894-obesity-report-2000.pdf
 data/sources/who-waist-circumference-report-2011.pdf
 data/sources/idf-metabolic-syndrome-consensus-2006.pdf
 data/sources/who-asia-pacific-obesity-2000.txt
+# M6 blood-pressure（licensed-cite-only）
+data/sources/acc-aha-hypertension-guideline-2017.txt
+data/sources/aha-acc-hypertension-guideline-2025.txt
+data/sources/jnc8-hypertension-guideline-2014.txt
+# M6 bmi-waist（licensed-cite-only）
+data/sources/who-asian-bmi-lancet-summary-2004.txt
