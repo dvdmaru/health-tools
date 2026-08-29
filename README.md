@@ -154,6 +154,8 @@ python3 scripts/check-source-drift.py --only <id>
 
 # 重建 baseline（平常執行只讀不寫，CI 不會、也不准 commit）
 python3 scripts/check-source-drift.py --update-baseline
+# ⚠️ --update-baseline 會把整份 baseline 重寫成「這次跑到的來源」——不要跟 --only 一起用，
+#    否則 baseline 只剩那一筆；新增來源後一律全量重建（52 份約 3 分鐘）。
 
 # 指定報告輸出位置
 python3 scripts/check-source-drift.py --report PATH.md --json PATH.json
