@@ -57,3 +57,6 @@ data/sources/aha-acc-hypertension-guideline-2025.txt
 data/sources/jnc8-hypertension-guideline-2014.txt
 # M6 bmi-waist（licensed-cite-only）
 data/sources/who-asian-bmi-lancet-summary-2004.txt
+
+# 二審用 dump（scripts/audit-rowctx.py 產物）
+.audit/

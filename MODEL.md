@@ -31,7 +31,7 @@
 - **同機構新版取代舊版時舊列填 `superseded_by`**（2017 ACC/AHA 八列 → 2025）：生成器據此在表格標「已被取代」、數線不畫舊列；不填就是兩套一樣的分級並排當兩個現行機構。
 - **interference 的 `direction` 只從原文明講的方向來**：「風險被低估」不是「數值偏低」，機轉句（抑制排泄）不推成 high；來源沒指方向就 `unspecified`。
 - **generator 排序不靠檔序**：history 依 (year, id 數字) 排；`indicator_id` 不在頁面 ids 的列會印 ⚠️（曾靜默丟掉 whr 兩列）。
-- 二審方法（可重跑）：`rowctx.py` 把每列＋快照上下文 dump 成 markdown，五席分 slug 逐列問 C1–C8（category 語意／inclusive／unit／population／indicator_id／org／引句撐不撐得起／同 doc 矛盾），只回 findings 不改檔；主席裁決成 RULING.md 再派修正棒。找到引句 ≠ 列正確——收據 gate 只證前者。
+- 二審方法（可重跑）：`scripts/audit-rowctx.py <slug>` 把每列＋快照上下文 dump 成 `.audit/<slug>-rows.md`，五席分 slug 逐列問 C1–C8（category 語意／inclusive／unit／population／indicator_id／org／引句撐不撐得起／同 doc 矛盾），只回 findings 不改檔；主席裁決成 RULING.md 再派修正棒。找到引句 ≠ 列正確——收據 gate 只證前者。
 
 ## 2. 來源契約 — 三桶授權，抓法有雷
 
