@@ -49,7 +49,7 @@ jobs:
       # 報告永遠上傳，不管上面是不是紅——drift／never-verified／blocked 明細只有這裡看得到。
       - name: 上傳報告
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: source-drift-report
           path: |
