@@ -1949,5 +1949,41 @@
     "quote": "Stage 2 ≥140 mm Hg or ≥90 mm Hg",
     "note": "等級名稱：Stage 2。表列以 or 連接。快照為 Chrome get_page_text 抽取之頁面前 50,000 字元（含 Abstract AIM「retires and replaces」句與 Table 4 分級表）；本文其餘部分未收錄。頁面標明本文有三次 correction（2025-11-10、2026-04-13、2026-05-26），本輪未逐一核對各次更正內容是否影響分級表或門檻值。",
     "fetched_at": "2026-08-29"
+  },
+  {
+    "indicator_id": "sbp",
+    "org": "MedlinePlus（U.S. National Library of Medicine）",
+    "doc_id": "medlineplus-high-blood-pressure",
+    "version": "Last updated January 22, 2026（DC.Date.Modified 2026-01-22）",
+    "category": "definition",
+    "lower": null,
+    "upper": null,
+    "unit": null,
+    "population": "來源未標示",
+    "page_or_table": "Summary 段「What is blood pressure?」",
+    "fetched_at": "2026-08-28",
+    "quote": "Blood pressure is the force of your blood pushing against the walls of your arteries.",
+    "quote_extra": [
+      "Your blood pressure is highest when your heart beats, pumping the blood. This is called systolic pressure."
+    ],
+    "note": "白話定義，不是判準；lower／upper 皆空，不進數線。頁面首段「血壓是什麼」那句的出處。"
+  },
+  {
+    "indicator_id": "dbp",
+    "org": "MedlinePlus（U.S. National Library of Medicine）",
+    "doc_id": "medlineplus-high-blood-pressure",
+    "version": "Last updated January 22, 2026（DC.Date.Modified 2026-01-22）",
+    "category": "definition",
+    "lower": null,
+    "upper": null,
+    "unit": null,
+    "population": "來源未標示",
+    "page_or_table": "Summary 段「What is blood pressure?」",
+    "fetched_at": "2026-08-28",
+    "quote": "When your heart is at rest, between beats, your blood pressure falls. This is called diastolic pressure.",
+    "quote_extra": [
+      "Your blood pressure reading uses these two numbers. Usually the systolic number comes before or above the diastolic number."
+    ],
+    "note": "白話定義，不是判準；lower／upper 皆空，不進數線。與同來源的 sbp 列成對，收縮／舒張分開落地。"
   }
 ]
