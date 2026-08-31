@@ -120,6 +120,12 @@ THEME_SWITCH_CSS = """
 .ts-dot:hover { transform: scale(1.14); }
 .ts-dot.active { box-shadow: 0 0 0 2px var(--sw); transform: scale(1.05); }
 @media (max-width: 520px) { .theme-switch { top: 10px; right: 10px; padding: 6px 11px; gap: 9px; } .ts-label { display: none; } }
+/* .theme-switch 是 position:fixed，列印時每一頁的固定位置都會被印出來（2026-08-31
+   第三次主席裁決：Charlie 實際列印 /worksheet/ 發現每頁左上角都有一塊配色切換器）。
+   這是全站共用元件，擋在共用 CSS 這裡，每一頁列印都受益，不是只在 worksheet 局部
+   蓋掉。全站目前只有這一個 position:fixed 元素（已檢查 healthlib.py 其餘 CSS：
+   .site-header 是 position:sticky，列印時本來就不會固定在每頁重複，不需要處理）。 */
+@media print { .theme-switch { display: none !important; } }
 """
 
 THEME_SWITCH_HTML = (

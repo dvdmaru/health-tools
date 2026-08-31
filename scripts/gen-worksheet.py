@@ -55,6 +55,7 @@ dormant（config/site.json 的 published 為 false）：頁面照生（要能看
 用法：python3 scripts/gen-worksheet.py
 """
 import argparse
+import collections
 import importlib.util
 import json
 import pathlib
@@ -160,12 +161,11 @@ WORKSHEET_CSS = """
 .ws-intro{ font-size:15px; color:var(--fg-soft); margin:10px 0 4px; line-height:1.9; }
 .ws-blocks{ margin:22px 0 0; }
 .ws-block{ border:1px solid var(--line); border-radius:var(--radius); background:var(--surface);
-           padding:18px 20px 16px; margin:0 0 20px;
-           break-inside:avoid; page-break-inside:avoid; }
+           padding:18px 20px 16px; margin:0 0 20px; }
 .ws-h2{ font-family:var(--font-display); font-size:20px; font-weight:800; margin:0 0 6px; }
 .ws-ref{ font-size:12.5px; color:var(--dim); margin:0 0 14px; }
 .ws-ref a{ color:var(--dim); }
-.ws-indicator{ margin:16px 0 4px; break-inside:avoid; page-break-inside:avoid; }
+.ws-indicator{ margin:16px 0 4px; }
 .ws-indicator + .ws-indicator{ border-top:1px dashed var(--line); padding-top:14px; }
 .ws-h3{ font-size:15.5px; font-weight:700; margin:0 0 8px; }
 .ws-fields{ display:flex; flex-wrap:wrap; gap:10px 28px; margin:0 0 10px; font-size:14px; }
@@ -173,11 +173,14 @@ WORKSHEET_CSS = """
 .ws-blank{ display:inline-block; min-width:130px; border-bottom:1px solid var(--line-2); height:1.3em; }
 .ws-unit{ color:var(--dim); font-size:12.5px; }
 .ws-table th, .ws-table td{ font-size:13.5px; }
+.ws-val{ white-space:nowrap; }
 .ws-src{ min-width:110px; }
 .ws-src a{ color:var(--accent); text-decoration:none; font-weight:600; }
 .ws-src a:hover{ text-decoration:underline; }
 .ws-pageref{ color:var(--dim); }
-.ws-sources{ margin-top:14px; font-size:12.5px; color:var(--dim); }
+.ws-pop a{ color:var(--accent); text-decoration:none; font-weight:600; }
+.ws-pop a:hover{ text-decoration:underline; }
+.ws-sources, .ws-population-refs{ margin-top:14px; font-size:12.5px; color:var(--dim); }
 .ws-h4{ font-size:12.5px; font-weight:700; margin:0 0 6px; color:var(--fg-soft);
         text-transform:uppercase; letter-spacing:.5px; }
 .ws-source-list{ margin:0 0 0 1.2em; padding:0; line-height:1.85; }
@@ -186,16 +189,48 @@ WORKSHEET_CSS = """
           padding-top:10px; margin-top:14px; }
 @media (max-width:560px){ .ws-fields{ flex-direction:column; align-items:flex-start; gap:8px; } }
 @media print{
-  .theme-switch, .site-header, .foot-links, .sister-sites, .ws-noprint{ display:none !important; }
+  /* .theme-switch 的隱藏規則已搬進 healthlib.py 的共用 CSS（全站每一頁列印都受益，
+     不是本頁局部蓋掉——見 2026-08-31 第三次主席裁決）。本頁的 site-header 仍是
+     本頁專屬的隱藏（判準對照表不需要導覽列跟著印出來），留在這裡。 */
+  .site-header, .foot-links, .sister-sites, .ws-noprint{ display:none !important; }
   body{ padding:0 !important; background:#fff !important; color:#000 !important; }
   a{ color:#000 !important; text-decoration:none !important; }
   .container{ max-width:100% !important; }
   .pg-h1, .ws-h2, .ws-h3, .ws-h4, .ws-intro, .ws-ref, .ws-unit, .ws-foot,
-  .ws-sources, .ws-source-list, .ws-pageref, .site-disclaimer{ color:#000 !important; }
+  .ws-sources, .ws-population-refs, .ws-source-list, .ws-pageref, .site-disclaimer{
+    color:#000 !important; }
   .ws-block{ border-color:#000 !important; box-shadow:none !important; background:#fff !important; }
   .ws-blank{ border-color:#000 !important; }
   .std-table th, .std-table td{ border-color:#000 !important; color:#000 !important; }
-  .ws-block, .ws-indicator{ break-inside:avoid; page-break-inside:avoid; }
+
+  /* ① 大量空白頁的根因：break-inside:avoid 之前套在 .ws-block／.ws-indicator 這種
+     大容器上——一個 32 列的表放不進剩餘頁面高度就整塊被推到下一頁，前一頁下半段
+     留白、標題落單在新頁頂端。改法：容器不設 break-inside（讓表格本身可以跨頁），
+     只在「列」這個最小單位上擋（tr 不被從中間腰斬），標題用 break-after 跟它後面
+     的內容黏住（不會有 h2/h3 自己落在頁尾、內容被推到下一頁）。 */
+  .ws-table tbody tr{ break-inside:avoid; page-break-inside:avoid; }
+  .ws-h2, .ws-h3{ break-after:avoid; page-break-after:avoid; }
+
+  /* ② 表頭跨頁不重複，根因不是缺了 display:table-header-group（那本來就是 thead
+     的預設值）——是 .tbl-scroll 的 overflow-x:auto 把表格包進一個會建立新格式化
+     上下文的容器，Chrome 的分頁引擎因此不把它當一般表格跨頁重複表頭。列印時關掉
+     這層 overflow，thead 的 table-header-group 才吃得到。 */
+  .tbl-scroll{ overflow-x:visible; }
+  thead{ display:table-header-group; }
+
+  /* ⑥ 列印字級與間距收緊（螢幕版不動，只在這個 media block 裡）。 */
+  .ws-block{ padding:9px 12px 6px; margin:0 0 8px; }
+  .ws-h2{ font-size:14px; margin:0 0 3px; }
+  .ws-h3{ font-size:11.5px; margin:7px 0 3px; }
+  .ws-ref{ font-size:9.5px; margin:0 0 6px; }
+  .ws-intro{ font-size:10px; margin:2px 0; line-height:1.5; }
+  .ws-fields{ font-size:10px; gap:4px 14px; margin:0 0 5px; }
+  .ws-blank{ min-width:70px; height:1em; }
+  .ws-table th, .ws-table td{ font-size:9.5px; padding:2.5px 4px; }
+  .ws-foot{ font-size:9.5px; margin-top:6px; padding-top:5px; }
+  .ws-sources, .ws-population-refs{ font-size:9px; margin-top:6px; }
+  .ws-h4{ font-size:9px; margin:0 0 3px; }
+  .ws-source-list{ line-height:1.35; }
 }
 """
 
@@ -211,6 +246,42 @@ def block_doc_order(block: dict) -> list:
             if d not in seen:
                 seen.add(d)
                 order.append(d)
+    return order
+
+
+# ⑤ 族群欄編號（P{n}）：2026-08-31 第三次主席裁決加，跟出處欄同一型問題——同一個
+# 子區塊內，好幾列重複印同一段長族群敘述（例：血壓收縮壓表有 8 列都印「成人（依
+# 醫療照護場所測得之診間血壓平均值，≥2 次讀數、≥2 個場次）」），紙本白白多佔版面。
+#
+# 門檻＝「同一子區塊內重複 ≥2 次」且「長度 > POP_NUMBER_MIN_LENGTH」兩個條件同時
+# 成立才編號。長度門檻定在 15 字：
+#   - 主席點名要維持原樣的三個例子——「成人」(2 字)、「18歲以上民眾」(7 字)、
+#     「來源未標示」(5 字)——連同其餘常見短族群（「男性（men）」7 字、「篩檢對象」
+#     4 字、「18歲（含）以上的成人」11 字）全部落在 15 字以下，門檻抓在它們與
+#     真正的長敘述（22 字以上，如「初級預防對象（無臨床顯著 ASCVD 之成人）」23 字、
+#     「成人（依 722 協定量得的家用血壓...）」34 字）之間，留了足夠餘裕不會抓錯邊。
+#   - 短字串就算重複 10 次也不編號：短字串本來就不佔版面，編號後讀者還要往下翻
+#     清單才看得懂 P3 是什麼，對 4～11 字的字串是負優化。
+POP_NUMBER_MIN_REPEAT = 2
+POP_NUMBER_MIN_LENGTH = 15
+
+
+def block_population_order(block: dict) -> list:
+    """族群編號池：跟 block_doc_order() 同一種做法（依子指標順序、原始 json 行序
+    找出第一次出現、且符合編號門檻的敘述），編號在整個區塊內共用（同一份敘述若
+    在血壓的收縮壓與舒張壓兩個子表都重複出現，共用同一個 P{n}，不必各自編一次）。
+    門檻判定的分母是**各子指標自己的列**（同一子區塊內重複 ≥2 次），不是跨子指標
+    合併計數——這樣才是主席說的「同一子區塊內」重複。
+    """
+    order, seen = [], set()
+    for ind in block["indicators"]:
+        counts = collections.Counter(r["population"] for r in ind["rows"])
+        for r in ind["rows"]:
+            p = r["population"]
+            if (p not in seen and counts[p] >= POP_NUMBER_MIN_REPEAT
+                    and len(p) > POP_NUMBER_MIN_LENGTH):
+                seen.add(p)
+                order.append(p)
     return order
 
 
@@ -286,7 +357,33 @@ def render_sources(block: dict, mf: dict) -> str:
             f'<ol class="ws-source-list">{items}</ol></div>')
 
 
-def render_indicator(ind: dict, slug: str, num_of: dict) -> str:
+def render_population_refs(block: dict) -> str:
+    """族群清單：跟 render_sources() 同一種結構，只在有東西可列時才輸出——多數
+    區塊裡沒有任何族群敘述踩到編號門檻，這種情況不生一個空的 <div>。population
+    欄一樣是逐字照抄來源（MODEL.md「引句照抄」），不是本站的話，同樣包
+    data-quoted="1"（「族群」這個標題本身仍受檢）。"""
+    order = block_population_order(block)
+    if not order:
+        return ""
+    items = "".join(
+        f'<li id="{esc(block["slug"])}-P{n}">P{n}　{esc(p)}</li>'
+        for n, p in enumerate(order, start=1))
+    return (f'<div class="ws-population-refs" data-quoted="1"><h4 class="ws-h4">族群</h4>'
+            f'<ol class="ws-source-list">{items}</ol></div>')
+
+
+def population_cell(row: dict, slug: str, pop_num_of: dict) -> str:
+    """族群欄一格：踩到編號門檻（block_population_order()）的敘述印 P{n}（連到
+    區塊底部的族群清單）；沒踩到的短敘述照舊直接印原文，不因為統一而編號
+    （見 block_population_order() 上方門檻理由）。"""
+    p = row["population"]
+    n = pop_num_of.get(p)
+    if n is None:
+        return esc(p)
+    return f'<a href="#{esc(slug)}-P{n}">P{n}</a>'
+
+
+def render_indicator(ind: dict, slug: str, num_of: dict, pop_num_of: dict) -> str:
     unit_note = f'<span class="ws-unit">（{esc(ind["unit"])}）</span>' if ind["unit"] else ""
     fields = (
         '<div class="ws-fields">'
@@ -298,7 +395,7 @@ def render_indicator(ind: dict, slug: str, num_of: dict) -> str:
         f'<td>{esc(gen.org_label(r["org"]))}</td>'
         f'<td>{esc(gen.CATEGORY_LABEL[r["category"]])}</td>'
         f'<td class="ws-val">{esc(gen.value_text(r))}</td>'
-        f'<td>{esc(r["population"])}</td>'
+        f'<td class="ws-pop">{population_cell(r, slug, pop_num_of)}</td>'
         f'<td class="ws-src">{citation_html(r, slug, num_of)}</td>'
         "</tr>" for r in ind["rows"])
     table = (
@@ -312,16 +409,17 @@ def render_indicator(ind: dict, slug: str, num_of: dict) -> str:
 def render_block(block: dict, mf: dict) -> str:
     multi = len(block["indicators"]) > 1
     num_of = {d: i for i, d in enumerate(block_doc_order(block), start=1)}
+    pop_num_of = {p: i for i, p in enumerate(block_population_order(block), start=1)}
     heads = "".join(
         (f'<h3 class="ws-h3">{esc(ind["label"])}</h3>' if multi else "")
-        + render_indicator(ind, block["slug"], num_of)
+        + render_indicator(ind, block["slug"], num_of, pop_num_of)
         for ind in block["indicators"])
     return (
         f'<section class="ws-block" id="{esc(block["slug"])}">'
         f'<h2 class="ws-h2">{esc(block["title"])}</h2>'
         f'<p class="ws-ref">{esc(BLOCK_REF_LABEL)}'
         f'<a href="{esc(block["href"])}">{esc(block["href"])}</a></p>'
-        f'{heads}{render_sources(block, mf)}</section>')
+        f'{heads}{render_sources(block, mf)}{render_population_refs(block)}</section>')
 
 
 def render_page(blocks: list, mf: dict) -> str:
