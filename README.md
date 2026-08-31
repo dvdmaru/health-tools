@@ -3,7 +3,7 @@
 健康檢查報告上的數字，逐項並列不同機構公布的判準值；每一列都綁「機構＋文件＋版本＋頁碼」，
 四項不齊備的數字不渲染。100% 靜態、server-rendered、零 client fetch（為被 AI 引用而設計）。
 
-- 站台：https://health.twtools.cc/ （**尚未部署**，見下方「目前狀態」）
+- 站台：https://health.twtools.cc/ （**2026-08-28 已上線**）
 - 定位：不替讀者選邊、不下醫療判斷；本站整理的是「公開文件寫了什麼」。
 
 ## 目前狀態（M5 索引＋折疊＋勘誤，2026-08-28）
@@ -13,7 +13,7 @@
 折疊（診斷／分級／風險門檻預設展開，整頁 ≤12 列全展開，無 JS、內容都在 DOM）；勘誤機制（見下）。
 `published` 已於 2026-08-28 翻 true（Story 6，Charlie 授權公開）；翻開關前後 186 tests 皆綠。
 
-**5 個指標頁已生成（dormant，未部署）**：`/indicators/hba1c/`（M3 定調）、`/indicators/blood-pressure/`
+**5 個指標頁（2026-08-28 起線上）**：`/indicators/hba1c/`（M3 定調）、`/indicators/blood-pressure/`
 （sbp＋dbp）、`/indicators/lipids/`（total-chol／ldl-c／hdl-c／tg）、`/indicators/uric-acid/`、
 `/indicators/bmi-waist/`（bmi＋waist）。來源 manifest 52 份（M6 補 6 份未落地來源；licensed-cite-only 快照本機留、CI SKIP），
 判準明細＋沿革＋失真列全部過收據 gate。M4 落地時的紀律與坑：
@@ -221,6 +221,22 @@ npx wrangler deploy -c wrangler-health.jsonc </dev/null
 Cloudflare 會自動建 DNS 記錄與憑證（前提：`twtools.cc` zone 在同一帳號）。
 Token 與 account id 永不入 repo，走環境變數或 GitHub Secrets
 （`CLOUDFLARE_API_TOKEN`／`CLOUDFLARE_ACCOUNT_ID`）。
+
+### 部署後：通知搜尋引擎（IndexNow）
+
+```bash
+node scripts/indexnow-ping.mjs --sitemap          # 推 sitemap 內全部 URL
+node scripts/indexnow-ping.mjs https://health.twtools.cc/indicators/hba1c/   # 或只推幾頁
+```
+
+金鑰正本在 `data/indexnow-key.txt`，`build-articles.py` 會據此在站根產出 `<key>.txt`
+（引擎抓那個檔驗擁有權）。☠️ **IndexNow 金鑰是設計上就要公開的值，不是密鑰**——它必須
+對外可讀，所以正本進 repo 是對的；但也因此不能拿它當任何形式的憑證。金鑰未設定時
+build 會明說「未產出金鑰檔」、ping 腳本會直接中止，不假裝送出。
+
+⚠️ **要先部署、確認 `https://health.twtools.cc/<key>.txt` 線上讀得到，再 ping**；
+金鑰檔還沒上線就送，引擎驗不過。ping 只接受本站網域的 URL，其他一律拒收
+（誤 ping 別人的站會吃信譽懲罰）。
 
 ### 驗證部署（不要自己挑哨兵字串）
 
