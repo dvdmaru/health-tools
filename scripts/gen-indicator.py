@@ -435,6 +435,30 @@ def criteria_cell(row: dict) -> str:
     return f"{label}{v}" if v == NO_RANGE else f"{label}：{v}"
 
 
+# ---------- 數值定位（純前端對照，SPEC-compare-feature.md 技術決策①） ----------
+# JS 不解析「≥130 mmHg」這種顯示字串（單位／符號一變就錯），改讀 <tr> 上的 data-*
+# 屬性；值直接取自 criteria 欄位，null 就不輸出該屬性。inclusive 語意（≥/> 之分）
+# 規格只點名 data-lower／data-upper／data-unit／data-indicator 四個，但沒有邊界
+# 含等於與否的旗標 JS 就沒辦法照「criteria 既有的 inclusive 語意」比對——這裡多加
+# data-lower-inclusive／data-upper-inclusive，只在該側為 false（criteria 的
+# lower_inclusive／upper_inclusive schema 預設 true）時才輸出，同一套「null／預設
+# 不輸出屬性」的規則，不是另立一套。
+def row_data_attrs(r: dict) -> str:
+    attrs = [f' data-indicator="{esc(r["indicator_id"])}"']
+    lo, up, unit = r.get("lower"), r.get("upper"), r.get("unit")
+    if lo is not None:
+        attrs.append(f' data-lower="{esc(json.dumps(lo))}"')
+        if r.get("lower_inclusive") is False:
+            attrs.append(' data-lower-inclusive="false"')
+    if up is not None:
+        attrs.append(f' data-upper="{esc(json.dumps(up))}"')
+        if r.get("upper_inclusive") is False:
+            attrs.append(' data-upper-inclusive="false"')
+    if unit:
+        attrs.append(f' data-unit="{esc(unit)}"')
+    return "".join(attrs)
+
+
 # ---------- 圖表 CSS（色票＝M3 定調頁；深淺色兩套，不載外部函式庫） ----------
 
 CHART_CSS = """
@@ -505,6 +529,195 @@ details.crit-grp .std-table{ margin:10px 0 12px; }
 """
 
 
+# ---------- 數值定位（純前端對照） ----------
+# 這段 CSS 是靜態的，全站每一頁都會多這幾個 byte——但只定義樣式，沒有配對的
+# class 就不會有任何視覺效果；無 JS 時沒有元素會用到這些 class，頁面外觀不變，
+# 符合「無 JS 時 DOM／外觀跟現在一模一樣」（輸入框與標記本身仍完全由 JS 插入）。
+# ☠️ 2026-09-01 主席裁決：措辭檢查的射程含這份 CSS（特別是任何 content: 屬性——
+# 那是唯一能從 style 洩字到畫面上的路徑）。這裡刻意不放任何 content:，也不放
+# 任何看得出中文字面的規則，違者會被 tests/test_value_locator.py 的禁詞掃描抓到。
+VALUE_LOCATOR_CSS = """
+.vloc{ margin:10px 0 14px; padding:11px 13px; border:1px solid var(--line);
+       border-radius:var(--radius-sm); background:var(--surface);
+       display:flex; flex-wrap:wrap; align-items:center; gap:7px 12px; }
+.vloc label{ font-size:13.5px; font-weight:700; color:var(--fg); }
+.vloc-input{ font:inherit; font-size:14px; padding:5px 9px; width:8.5em;
+             border:1px solid var(--line-2); border-radius:6px;
+             background:var(--bg); color:var(--fg); }
+.vloc-input:focus{ outline:2px solid var(--accent-line); outline-offset:1px; }
+.vloc-note{ flex-basis:100%; font-size:12px; color:var(--dim); margin:0; }
+.vloc-status{ flex-basis:100%; font-size:12.5px; color:var(--fg); margin:0;
+              min-height:1.2em; }
+tr.vloc-hit{ background:var(--accent-soft); }
+.vloc-badge{ font-size:12px; font-weight:700; color:var(--accent-bright); }
+@media print{
+  .vloc{ display:none !important; }
+  tr.vloc-hit{ background:none !important; }
+  .vloc-badge{ display:none !important; }
+}
+"""
+
+# 這支 JS 只做一件事：讀 <tr> 上既有的 data-* 屬性做數值比較，插入輸入框與標記。
+# 零 fetch、零 storage（不用 localStorage／sessionStorage／cookie／document.cookie，
+# 不打 fetch()／XMLHttpRequest／sendBeacon）；輸入框由這裡動態建立，不寫進
+# server-rendered HTML（SPEC-compare-feature.md 技術決策②）。
+#
+# 文案常數集中在最前面五個，方便 tests/test_value_locator.py 逐一掃禁詞：
+# NOTE（規格規定的固定字面，全檔只出現這一次）、LABEL、MARK_PREFIX（「此列包含 」
+# ＋使用者輸入原樣）、NO_HIT_PREFIX（無命中時的對稱句「沒有列包含 」，同樣不加
+# 任何評語）、SEP（＋分隔字元，2026-09-01 主席裁決：標記移進「判準值」欄要有
+# 文字層分隔，不能直接黏在既有文字後面）。
+#
+# withinBounds() 刻意寫成不碰 DOM 的純函式：邊界含不含等於（≥/> 之分、≤/< 之分）
+# 是這支互動唯一「錯了會讓讀者誤讀判準」的邏輯，所以要能被獨立抽出來，餵一張
+# 邊界案例表用 node 測（tests/test_value_locator.py 的 BoundarySemantics）。
+#
+# 有命中的組自動展開（2026-09-01 主席裁決：只在有命中時展開，不改
+# CRIT_OPEN_CATEGORIES 這條預設收合規則本身）；輸入清空或換一個不命中的值時，
+# 要能回到 render 當下的原始展開狀態，所以在建立輸入框當下就把每一組的原始
+# open 記下來，不假設「原本收合」。☠️ 這段說明放在 Python 註解而不是 JS
+# 內部註解：JS 原始碼是 tests/test_value_locator.py 的禁詞掃描對象，中文說明
+# 容易不小心帶進禁詞（例如「不是」的「是」）；Python 檔案的 # 註解不出現在
+# render 出來的頁面，不受這條規則約束。
+VALUE_LOCATOR_JS = """
+(function () {
+  var NOTE = '只標出數值落在哪些列，不判斷這代表什麼。';
+  var LABEL = '數值定位';
+  var MARK_PREFIX = '此列包含 ';
+  var NO_HIT_PREFIX = '沒有列包含 ';
+  var SEP = '｜';
+
+  function withinBounds(lower, upper, lowerExclusive, upperExclusive, v) {
+    var ok = true;
+    if (lower !== null) {
+      ok = ok && (lowerExclusive ? v > lower : v >= lower);
+    }
+    if (upper !== null) {
+      ok = ok && (upperExclusive ? v < upper : v <= upper);
+    }
+    return ok;
+  }
+
+  function unitOf(rows) {
+    var counts = {}, best = '', bestN = 0;
+    rows.forEach(function (tr) {
+      var u = tr.dataset.unit;
+      if (!u) return;
+      counts[u] = (counts[u] || 0) + 1;
+      if (counts[u] > bestN) { best = u; bestN = counts[u]; }
+    });
+    return best;
+  }
+
+  function rowMatches(tr, v) {
+    var hasLo = tr.dataset.lower !== undefined;
+    var hasUp = tr.dataset.upper !== undefined;
+    if (!hasLo && !hasUp) return false;
+    var lower = hasLo ? parseFloat(tr.dataset.lower) : null;
+    var upper = hasUp ? parseFloat(tr.dataset.upper) : null;
+    return withinBounds(
+      lower, upper,
+      tr.dataset.lowerInclusive === 'false',
+      tr.dataset.upperInclusive === 'false',
+      v);
+  }
+
+  function matchRows(rows, v) {
+    return rows.filter(function (tr) { return rowMatches(tr, v); });
+  }
+
+  function clearMarks(rows) {
+    rows.forEach(function (tr) {
+      tr.classList.remove('vloc-hit');
+      var b = tr.querySelector('.vloc-badge');
+      if (b) b.remove();
+    });
+  }
+
+  function markRow(tr, raw) {
+    tr.classList.add('vloc-hit');
+    var badge = document.createElement('span');
+    badge.className = 'vloc-badge';
+    badge.textContent = SEP + MARK_PREFIX + raw;
+    var cell = tr.children[1] || tr.lastElementChild;
+    cell.appendChild(badge);
+  }
+
+  function groupsOf(rows) {
+    var els = [], open = [];
+    rows.forEach(function (tr) {
+      var d = tr.closest('details.crit-grp');
+      if (!d || els.indexOf(d) !== -1) return;
+      els.push(d);
+      open.push(d.open);
+    });
+    return { els: els, open: open };
+  }
+
+  function buildWidget(indicator, rows, anchor) {
+    var id = 'vloc-input-' + indicator;
+    var unit = unitOf(rows);
+    var groups = groupsOf(rows);
+
+    var wrap = document.createElement('div');
+    wrap.className = 'vloc';
+    var label = document.createElement('label');
+    label.setAttribute('for', id);
+    label.textContent = LABEL + (unit ? '（' + unit + '）' : '') + '：';
+    var input = document.createElement('input');
+    input.type = 'text';
+    input.inputMode = 'decimal';
+    input.autocomplete = 'off';
+    input.id = id;
+    input.className = 'vloc-input';
+    var note = document.createElement('p');
+    note.className = 'vloc-note';
+    note.textContent = NOTE;
+    var status = document.createElement('p');
+    status.className = 'vloc-status';
+    status.setAttribute('role', 'status');
+    status.setAttribute('aria-live', 'polite');
+    wrap.appendChild(label);
+    wrap.appendChild(input);
+    wrap.appendChild(note);
+    wrap.appendChild(status);
+    anchor.parentNode.insertBefore(wrap, anchor);
+
+    input.addEventListener('input', function () {
+      var raw = input.value.trim();
+      clearMarks(rows);
+      groups.els.forEach(function (d, i) { d.open = groups.open[i]; });
+      if (raw === '' || !/^\\d+(\\.\\d+)?$/.test(raw)) { status.textContent = ''; return; }
+      var v = parseFloat(raw);
+      if (!isFinite(v) || v > 100000) { status.textContent = ''; return; }
+      var hits = matchRows(rows, v);
+      hits.forEach(function (tr) {
+        markRow(tr, raw);
+        var d = tr.closest('details.crit-grp');
+        if (d) d.open = true;
+      });
+      status.textContent = hits.length
+        ? (hits.length + ' 列包含 ' + raw)
+        : (NO_HIT_PREFIX + raw);
+    });
+  }
+
+  var byIndicator = {};
+  document.querySelectorAll('tr[data-indicator]').forEach(function (tr) {
+    var id = tr.dataset.indicator;
+    (byIndicator[id] = byIndicator[id] || []).push(tr);
+  });
+  var seen = {};
+  document.querySelectorAll('details.crit-grp[data-indicator]').forEach(function (det) {
+    var id = det.dataset.indicator;
+    if (seen[id]) return;
+    seen[id] = true;
+    buildWidget(id, byIndicator[id] || [], det);
+  });
+})();
+"""
+
+
 # ---------- ② 判準表（唯一數字來源） ----------
 
 # 一頁進表列數 ≤ 這個數就全部展開：組數本來就少的時候（hba1c 10 列 4 組），
@@ -563,7 +776,7 @@ def render_criteria_table(rows: list, mf: dict, multi: bool = False,
            "點組名可展開或收合。</p>"]
     for iid, cat, grp in groups:
         body = "".join(
-            "<tr>"
+            f"<tr{row_data_attrs(r)}>"
             f"<td>{esc(org_label(r['org']))}</td>"
             f"<td>{esc(criteria_cell(r))}</td>"
             f"<td>{esc(r['population'])}</td>"
@@ -571,8 +784,11 @@ def render_criteria_table(rows: list, mf: dict, multi: bool = False,
             "</tr>" for r in grp)
         name = (f"{esc(labels.get(iid, iid))}｜" if iid else "") + esc(CATEGORY_LABEL[cat])
         op = " open" if (open_all or cat in CRIT_OPEN_CATEGORIES) else ""
+        # data-indicator 上 <details>（每組列同一個 indicator_id，取第一列的就好）
+        # 給 JS 定位「這個指標的表格從哪裡開始」，插入輸入框用；不影響外觀。
+        grp_indicator = esc(grp[0]["indicator_id"])
         out.append(
-            f'<details class="crit-grp"{op}>'
+            f'<details class="crit-grp" data-indicator="{grp_indicator}"{op}>'
             f'<summary>{name}（{len(grp)} 列）</summary>'
             '<div class="tbl-scroll"><table class="std-table">'
             + head + "<tbody>" + body + "</tbody></table></div></details>")
@@ -1032,7 +1248,8 @@ def render_page(meta: dict, h1: str, sections: list, crit: list, hist: list,
     body = ('  <main>\n'
             f'  <h1 class="pg-h1">{esc(h1)}</h1>\n'
             + "\n".join(blocks)
-            + f'\n  <p class="ind-foot">{esc(FOOT_LINE)}</p>\n  </main>')
+            + f'\n  <p class="ind-foot">{esc(FOOT_LINE)}</p>\n  </main>'
+            f'\n<script>{VALUE_LOCATOR_JS}</script>')
 
     page_node = {
         "@type": "MedicalWebPage", "@id": f"{url}#page",
@@ -1056,7 +1273,7 @@ def render_page(meta: dict, h1: str, sections: list, crit: list, hist: list,
                             (title, url)])])
 
     return hl.page_shell(title, desc, url, jsonld, body, "indicators",
-                         extra_css=CHART_CSS + (ERRATA_CSS if errata else ""))
+                         extra_css=CHART_CSS + VALUE_LOCATOR_CSS + (ERRATA_CSS if errata else ""))
 
 
 # ---------- dormant 接線 ----------

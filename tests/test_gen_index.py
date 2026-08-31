@@ -70,7 +70,7 @@ def criteria_table_row_count(page_html: str) -> int:
     for table in re.findall(r'<table class="std-table">.*?</table>', page_html, re.S):
         if "<th>判準值</th>" not in table:
             continue
-        n += len([tr for tr in re.findall(r"<tr>(.*?)</tr>", table, re.S) if "<td>" in tr])
+        n += len([tr for tr in re.findall(r"<tr[^>]*>(.*?)</tr>", table, re.S) if "<td>" in tr])
     return n
 
 
@@ -123,7 +123,7 @@ class CardsMirrorTheSourceCorpus(unittest.TestCase):
         page = (self.out / "indicators" / self.cards[0]["slug"] / "index.html").read_text(
             encoding="utf-8")
         before = criteria_table_row_count(page)
-        one_row = re.search(r"<tr><td>.*?</tr>", page, re.S).group(0)
+        one_row = re.search(r"<tr[^>]*><td>.*?</tr>", page, re.S).group(0)
         self.assertEqual(before - 1, criteria_table_row_count(page.replace(one_row, "", 1)))
 
     def test_org_and_source_counts_come_from_the_same_rows(self):
