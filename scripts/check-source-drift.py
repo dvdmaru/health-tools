@@ -52,7 +52,7 @@ text_sha256)在本檔裡因此**只當資訊,不當 drift 訊號**——drift �
                           不看 sha(理由見上方 CI 實測記錄)。
   never-verified         baseline 當初就沒驗到的引句(或本次新增、baseline 沒有記錄
                           的引句)仍然找不到——不納入 drift,但要單獨列出,不准吞掉。
-  blocked                403／WAF 頁——「無法確認,需瀏覽器」,不是 ok。
+  blocked                403／WAF 頁／人機挑戰頁(reCAPTCHA)——「無法確認,需瀏覽器」,不是 ok。
   unreachable            網路錯誤／逾時;curl exit 60(SSL 憑證鏈驗不過)會先改用
                           -k 不驗證憑證重抓一次,還是失敗才算 unreachable(見
                           curl_with_headers())。
