@@ -280,6 +280,24 @@ def render_llms_txt(articles):
 
 # ---------- main build ----------
 
+
+def write_indexnow_key(pub: pathlib.Path, key_file: pathlib.Path):
+    """把 IndexNow 金鑰檔寫進 pub，回金鑰字串；沒設定金鑰回 None。
+
+    ☠️ 金鑰是**設計上就要公開**的值——引擎會抓 https://<host>/<key>.txt 驗證擁有權，
+    檔案內容就是金鑰本身。它不是密鑰，正本放 repo 是對的；但也因此**不能拿它當任何
+    形式的憑證**。沒設定就回 None，由呼叫端說明，不要靜默產一個空檔或假檔。
+    """
+    if not key_file.exists():
+        return None
+    key = key_file.read_text(encoding="utf-8").strip()
+    if not key:
+        return None
+    pub.mkdir(parents=True, exist_ok=True)
+    (pub / f"{key}.txt").write_text(key + "\n", encoding="utf-8")
+    return key
+
+
 def build():
     draft_excludes = load_draft_excludes()
     articles = []
@@ -334,6 +352,11 @@ def build():
     (PUB / "llms.txt").write_text(render_llms_txt(articles), encoding="utf-8")
     (PUB / "robots.txt").write_text(
         f"User-agent: *\nAllow: /\n\nSitemap: {BASE}/sitemap.xml\n", encoding="utf-8")
+
+    if write_indexnow_key(PUB, ROOT / "data" / "indexnow-key.txt"):
+        print("🔑 IndexNow 金鑰檔已產出")
+    else:
+        print("ℹ️  未設定 IndexNow 金鑰（data/indexnow-key.txt 不存在），未產出金鑰檔")
 
     urls = ([f"{BASE}/", f"{BASE}/articles/"]
             + [f"{BASE}/articles/{a['slug']}/" for a in articles])

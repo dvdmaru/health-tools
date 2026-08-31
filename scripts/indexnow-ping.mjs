@@ -13,8 +13,23 @@
  * 不假裝送出。金鑰是公開值（要放在站根 <KEY>.txt），但仍不寫死在這裡——
  * 產生 key 與落地 key 檔是 SEO 基建里程碑的工作，接線先備好。
  */
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
+
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const HOST = process.env.INDEXNOW_HOST ?? 'health.twtools.cc';
-const KEY = process.env.INDEXNOW_KEY ?? '';
+
+/** 金鑰優先讀環境變數，其次讀 data/indexnow-key.txt（正本，公開值不是密鑰）。 */
+function loadKey() {
+  if (process.env.INDEXNOW_KEY) return process.env.INDEXNOW_KEY;
+  try {
+    return readFileSync(join(ROOT, 'data', 'indexnow-key.txt'), 'utf8').trim();
+  } catch {
+    return '';
+  }
+}
+const KEY = loadKey();
 
 if (!KEY) {
   console.error(
@@ -24,14 +39,23 @@ if (!KEY) {
   process.exit(1);
 }
 
-const urls = [...new Set(process.argv.slice(2))];
+/** --sitemap：從 build 產出的 sitemap.xml 取全部 URL，省得手打。 */
+function urlsFromSitemap() {
+  const xml = readFileSync(join(ROOT, 'public-health', 'sitemap.xml'), 'utf8');
+  return [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1].trim());
+}
+
+const argv = process.argv.slice(2);
+const urls = argv.includes('--sitemap')
+  ? [...new Set(urlsFromSitemap())]
+  : [...new Set(argv)];
 const bad = urls.filter((u) => !u.startsWith(`https://${HOST}/`) && u !== `https://${HOST}`);
 if (bad.length) {
   console.error(`ABORT: URL 不屬於 ${HOST}：\n${bad.join('\n')}`);
   process.exit(1);
 }
 if (!urls.length) {
-  console.error('用法：node scripts/indexnow-ping.mjs <url> [url...]');
+  console.error('用法：node scripts/indexnow-ping.mjs <url> [url...]｜或 --sitemap 推 sitemap 內全部 URL');
   process.exit(1);
 }
 
