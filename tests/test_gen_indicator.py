@@ -87,7 +87,7 @@ def crit_groups(html: str):
                                    html, re.S):
         summary = text(re.search(r"<summary>(.*?)</summary>", block, re.S).group(1))
         cells = []
-        for tr in re.findall(r"<tr>(.*?)</tr>", block, re.S):
+        for tr in re.findall(r"<tr[^>]*>(.*?)</tr>", block, re.S):
             tds = re.findall(r"<td>(.*?)</td>", tr, re.S)
             if tds:
                 cells.append([text(c) for c in tds])
