@@ -169,7 +169,7 @@ python3 scripts/check-source-drift.py --report PATH.md --json PATH.json
 | `changed-quotes-intact` | 引句全在，但 `remote_sha256`／`text_sha256` 跟 baseline 不同——純資訊，不算 drift。sha 類欄位天生不穩（HTML 的 nonce／廣告位、PDF 重新打包時 raw bytes 本身就會變、甚至只是換一台機器跑 `pdftotext` 版本不同就讓 `text_sha256` 跟著變），不能拿來當改版訊號 |
 | `drift` | baseline 裡驗過在的引句現在找不到——HTML／PDF 同一條規則，不看 sha |
 | `never-verified` | baseline 建立當下這份文件的引句本來就沒對齊（通常是 JS 渲染或 PDF 抽字差異）——這些引句不納入 drift 判定，但報告會單獨列出，不准默默吞掉 |
-| `blocked` | 403／WAF 攔截頁（hpa.gov.tw `Detail.aspx`、diabetesjournals.org 這一類）——監測不到，報告寫「無法確認，需瀏覽器」，**不是** `ok` |
+| `blocked` | 403／WAF 攔截頁／人機挑戰頁（hpa.gov.tw `Detail.aspx`、diabetesjournals.org、PMC 對 GitHub runner IP 回的 reCAPTCHA 頁這一類）——監測不到，報告寫「無法確認，需瀏覽器」，**不是** `ok`，也**不是** `drift`（挑戰頁的引句本來就一句都不在，判成改版是假警報） |
 | `unreachable` | 網路錯誤或逾時；curl exit 60（SSL 憑證鏈驗不過）會先改用 `-k` 不驗證憑證重抓一次，成功則正常分類（結果多一個 `tls_verified: false`，報告會單獨列一節），兩次都失敗才算 unreachable |
 | `no-quotes` | manifest 有登記、`data/criteria/` 沒引用到——只比 sha，變了記 `changed-quotes-intact`，不算 drift |
 

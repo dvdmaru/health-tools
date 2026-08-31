@@ -51,8 +51,14 @@ LICENSE_BUCKETS = ("us-federal-pd", "tw-gov", "licensed-cite-only")
 # 攔截頁指紋。標題含防火牆字樣、或 HTTP 403，就是攔截頁而不是文件。
 _WAF_TITLE = re.compile(
     rb"<title[^>]*>[^<]*(Web Application Firewall|Attention Required|Access Denied|"
-    rb"Just a moment)[^<]*</title>", re.I)
+    rb"Just a moment|Checking your browser|reCAPTCHA)[^<]*</title>", re.I)
 _WAF_BODY = re.compile(rb"(cf-error-details|Cloudflare Ray ID|Request blocked)", re.I)
+# 人機挑戰頁（reCAPTCHA／JS 重導）的內文指紋。跟 _WAF_BODY 不同，這條刻意不設
+# 「body < 4096」的門檻：挑戰頁本身帶整套 JS 與樣式，body 可以到兩萬多 bytes，
+# 抽出的文字卻只有一百多字元——用 body 大小當門檻會把它放行成「文件」，接著因為
+# 引句全都找不到而被判成改版。整句夠獨特，醫學指引原文不會出現這串。
+# （2026-08-31 issue #22：PMC 對 GitHub runner IP 回這頁，四份來源每週被判假 drift。）
+_CHALLENGE_BODY = re.compile(rb"Checking your browser before accessing", re.I)
 # 已知會擋 curl 的網域——先提醒，實測仍以回應為準（網域政策會變，寫死判定會過期）。
 KNOWN_BLOCKED_HINT = ("hpa.gov.tw", "diabetesjournals.org")
 
@@ -78,6 +84,8 @@ def blocked_reason(code: str, body: bytes) -> str:
     m = _WAF_TITLE.search(body[:20000])
     if m:
         return f"頁面標題含防火牆字樣（{m.group(1).decode('utf-8', 'replace')}）"
+    if _CHALLENGE_BODY.search(body[:20000]):
+        return "回應內容是人機挑戰頁（Checking your browser）"
     if code == "200" and len(body) < 4096 and _WAF_BODY.search(body):
         return "回應內容是防火牆攔截頁"
     if code not in ("200", "206"):

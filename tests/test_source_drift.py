@@ -405,6 +405,74 @@ class TestClassify(unittest.TestCase):
         self.assertEqual("ok", drift.classify(cur(), None, building=True))
 
 
+class TestChallengePageIsBlockedNotDrift(unittest.TestCase):
+    """人機挑戰頁（reCAPTCHA）＝blocked，不是 drift。
+
+    2026-08-31 issue #22：PMC 對 GitHub runner IP 回一頁 HTTP 200 的
+    「Checking your browser - reCAPTCHA」——body 兩萬多 bytes、可見文字只有一百多
+    字元、四份來源的引句同時全消失，於是四份都被判成 drift＝每週一次假警報。
+    攔截頁本來就該歸 blocked（「無法確認，需瀏覽器」，不是 ok 也不是改版），
+    只是指紋漏收了這一型：標題沒有既有的 WAF 字樣，body 又超過
+    _WAF_BODY 那條 <4096 的門檻。
+    """
+
+    def setUp(self):
+        self._orig_curl = drift.curl_with_headers
+        self.addCleanup(setattr, drift, "curl_with_headers", self._orig_curl)
+
+    @staticmethod
+    def _challenge_body(title):
+        """照 issue #22 的形狀手刻：body 由 JS 撐到兩萬多 bytes，可見文字極短。"""
+        padding = b"<script>" + b"var a=1;" * 2500 + b"</script>"
+        return ((f"<html><head><title>{title}</title></head><body>"
+                 "<p>Checking your browser before accessing pmc.example.org</p>"
+                 "<p>Click here if you are not automatically redirected "
+                 "after 5 seconds.</p></body>").encode("utf-8")
+                + padding + b"</html>")
+
+    def test_recaptcha_title_is_blocked_not_reached(self):
+        url = "https://pmc.example.org/articles/PMC123456/"
+        body = self._challenge_body("Checking your browser - reCAPTCHA")
+        self.assertGreater(len(body), 4096,
+                           "測資必須大於舊的 <4096 門檻，否則測不到這個洞")
+        drift.curl_with_headers = fake_curl({url: {"code": "200", "body": body}})
+        src = {"id": "pmc-doc", "title": "t", "url": url, "doc_type": "html"}
+        result = drift.check_source(
+            src, {"For patients with asymptomatic hyperuricemia"}, timeout=5)
+        self.assertEqual("blocked", result["fetch_status"])
+
+    def test_challenge_body_is_blocked_even_when_title_looks_normal(self):
+        """標題被換掉也要擋得住——指紋不能只靠 <title> 一個訊號。"""
+        url = "https://pmc.example.org/articles/PMC654321/"
+        body = self._challenge_body("PMC Article Viewer")
+        drift.curl_with_headers = fake_curl({url: {"code": "200", "body": body}})
+        src = {"id": "pmc-doc-2", "title": "t", "url": url, "doc_type": "html"}
+        result = drift.check_source(src, {"any quote"}, timeout=5)
+        self.assertEqual("blocked", result["fetch_status"])
+
+    def test_document_mentioning_recaptcha_in_prose_is_not_blocked(self):
+        """陰性對照：指紋錨在 <title> 與挑戰頁那句文案，正文提到 reCAPTCHA 不算攔截。
+        沒有這一條，指紋放寬到哪裡就沒人知道了。"""
+        quote = "Stratified LDL-C goals have been reintroduced"
+        url = "https://example.org/real-doc"
+        body = ("<html><head><title>Management of Blood Cholesterol</title></head>"
+                "<body><p>The publisher previously used a reCAPTCHA gate for "
+                f"downloads.</p><p>{quote} for high-risk patients.</p>"
+                "</body></html>").encode("utf-8")
+        drift.curl_with_headers = fake_curl({url: {"code": "200", "body": body}})
+        src = {"id": "real-doc", "title": "t", "url": url, "doc_type": "html"}
+        result = drift.check_source(src, {quote}, timeout=5)
+        self.assertEqual("reached", result["fetch_status"])
+        self.assertIn(quote, result["_found"])
+
+    def test_blocked_challenge_never_reported_as_drift(self):
+        """分類層的把關：fetch_status=blocked 時，引句全缺也不准變成 drift
+        （blocked 仍會列進報告的 blocked 清單，不是靜默放行）。"""
+        c = cur(fetch_status="blocked", _found=set(), _missing={"Q1"},
+                remote_sha256="sha-challenge", text_sha256="text-challenge")
+        self.assertEqual("blocked", drift.classify(c, baseline(), building=False))
+
+
 # ---------------------------------------------------------------------------
 # 3. main() 整條 pipeline
 # ---------------------------------------------------------------------------

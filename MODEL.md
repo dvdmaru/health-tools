@@ -41,7 +41,7 @@
 | `tw-gov` | 國健署／食藥署／衛福部 | 入版控 |
 | `licensed-cite-only` | ADA／WHO／DAROC 學會指引／NGSP／期刊 | **只引不轉載：快照留本機、`.gitignore`、版控只有 sha256**（public repo，整段重製＝著作權問題）；CI 對這些列印 SKIP，合併前本機跑滿 |
 
-- **`hpa.gov.tw` 對 curl 回 WAF 攔截頁、`diabetesjournals.org` 回 403**：兩者只能用瀏覽器抓文字快照（`retrieval: browser-text`）。`fetch-health-source.py` 偵測到攔截頁會拒絕落地——**拿到 HTTP 200 不等於拿到內容**，落地後先用「該頁必然存在的字串」探針。
+- **`hpa.gov.tw` 對 curl 回 WAF 攔截頁、`diabetesjournals.org` 回 403**：兩者只能用瀏覽器抓文字快照（`retrieval: browser-text`）。`fetch-health-source.py` 偵測到攔截頁會拒絕落地——**拿到 HTTP 200 不等於拿到內容**，落地後先用「該頁必然存在的字串」探針。攔截頁不只一型：除了 WAF 與 403，還有 HTTP 200 的人機挑戰頁（reCAPTCHA／「Checking your browser」，body 可以有兩萬多 bytes 但可見文字只有一百多字元），這一型一律歸 `blocked`，不歸 `drift`。
 - **LLM 網搜或模型記憶產出的事實不得進 `data/`**。事實只從快照來；二手媒體（含維基）是線索不是收據。
 - 舊文件只能引「定義句」不能引判準（例：2003 國健局手冊可引「反映 2–3 個月平均血糖」，不可引它的診斷閾值）。
 
