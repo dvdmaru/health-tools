@@ -311,7 +311,9 @@ class DeterministicOutput(unittest.TestCase):
             live, *_ = build_into(pathlib.Path(b), published=True)
 
             def strip(s):
-                s = re.sub(r'<a href="/(?:indicators|errata)/"[^>]*>.*?</a>', "", s)
+                # /worksheet/ 是 2026-08-31 加的頁尾連結（gen-worksheet.py），
+                # 與 /indicators/、/errata/ 同樣帶 requires:published。
+                s = re.sub(r'<a href="/(?:indicators|errata|worksheet)/"[^>]*>.*?</a>', "", s)
                 return "\n".join(l for l in s.splitlines() if l.strip())
             self.assertEqual(strip(dormant), strip(live))
 

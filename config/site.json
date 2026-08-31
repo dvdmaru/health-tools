@@ -19,7 +19,8 @@
   ],
   "footer_links": [
     { "label": "指標索引", "href": "/indicators/", "requires": "published" },
-    { "label": "勘誤紀錄", "href": "/errata/", "requires": "published" }
+    { "label": "勘誤紀錄", "href": "/errata/", "requires": "published" },
+    { "label": "列印工作表", "href": "/worksheet/", "requires": "published" }
   ],
   "ga_id": "G-X9B1FR65XP"
 }

@@ -23,8 +23,9 @@ hl = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(hl)
 
 # 固定 owner 序＝sitemap.xml 的頁面分組順序。M0 只有 articles（首頁＋文章索引＋各篇）；
-# indicators 由後續里程碑的生成器擁有，part 檔不存在時自然跳過。
-OWNERS = ["articles", "indicators"]
+# indicators／worksheet 由後續里程碑的生成器擁有，part 檔不存在時自然跳過。
+# 2026-08-31 加 worksheet（scripts/gen-worksheet.py 的 /worksheet/ 列印工作表）。
+OWNERS = ["articles", "indicators", "worksheet"]
 # 單一 sitemap.xml 的上限（sitemaps.org 慣例 50,000，取保守值防邊界）。
 MAX_PER_SITEMAP = 45000
 
