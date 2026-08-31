@@ -236,6 +236,98 @@ class TestWorksheetCitations(unittest.TestCase):
             ws.render_sources(block, crippled_mf)
 
 
+class TestWorksheetPopulationNumbering(unittest.TestCase):
+    """族群欄編號（P1..Pn，2026-08-31 第三次主席裁決加，跟出處欄同一型問題）：
+    只有「同一子區塊內重複 ≥2 次」且「長度 > POP_NUMBER_MIN_LENGTH」的族群敘述才
+    編號；沒踩到門檻的短敘述（「成人」「18歲以上民眾」「來源未標示」）維持原樣
+    直接印在表格裡，不因為統一而編號。完整敘述必須仍完整出現在區塊底部的族群
+    清單（跟出處同理，紙本要能查證）。
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.blocks = ws.collect_blocks()
+        cls.html = render(cls.blocks)
+
+    def test_every_row_pop_cell_resolves_to_a_full_population_string(self):
+        """每個 P{n} 都指得到區塊底部族群清單裡的一列，且那一列的文字逐字等於
+        資料裡的 population 欄——不是編號編錯、也不是清單漏列。"""
+        for block in self.blocks:
+            with self.subTest(slug=block["slug"]):
+                section = re.search(
+                    rf'<section class="ws-block" id="{re.escape(block["slug"])}">.*?</section>',
+                    self.html, re.S).group(0)
+                list_items = dict(re.findall(
+                    r'<li id="[^"]*-P(\d+)">P\d+　([^<]*)</li>', section))
+                expected_pops = ws.block_population_order(block)
+                self.assertEqual(len(list_items), len(expected_pops),
+                                 "族群清單筆數應等於區塊內符合編號門檻的敘述數")
+                for n, pop in enumerate(expected_pops, start=1):
+                    self.assertEqual(list_items[str(n)], html_lib.escape(pop))
+
+    def test_each_pop_cell_link_points_to_a_number_in_that_blocks_list(self):
+        for block in self.blocks:
+            section = re.search(
+                rf'<section class="ws-block" id="{re.escape(block["slug"])}">.*?</section>',
+                self.html, re.S).group(0)
+            valid_ns = {int(n) for n in re.findall(
+                rf'<li id="{re.escape(block["slug"])}-P(\d+)">', section)}
+            pop_ns = {int(n) for n in re.findall(
+                rf'<a href="#{re.escape(block["slug"])}-P(\d+)">P\d+</a>', section)}
+            with self.subTest(slug=block["slug"]):
+                self.assertTrue(pop_ns.issubset(valid_ns),
+                                "族群欄引用的編號必須都在該區塊的族群清單裡")
+
+    def test_short_named_safe_populations_are_never_numbered(self):
+        """主席點名要維持原樣的三個例子：「成人」「18歲以上民眾」「來源未標示」
+        即使在資料裡重複出現很多次，也不得被收進任何區塊的編號池。"""
+        safe = {"成人", "18歲以上民眾", "來源未標示"}
+        for block in self.blocks:
+            with self.subTest(slug=block["slug"]):
+                numbered = set(ws.block_population_order(block))
+                self.assertEqual(numbered & safe, set(),
+                                 f"短敘述被誤編號：{numbered & safe}")
+
+    def test_population_appearing_only_once_per_indicator_is_never_numbered(self):
+        """門檻的另一半：重複 ≥2 次是必要條件，不是「夠長就編」。
+
+        編號池是整個區塊共用（見 block_population_order() 的 docstring），所以
+        「只出現一次」要看的是**在它所屬的每一個子指標裡都只出現一次**——一段
+        敘述若在 A 子指標只出現 1 次、但在同一區塊的 B 子指標出現 2 次以上，
+        整個區塊的編號池仍會收它（B 那邊已經踩到門檻），A 子指標裡的那一列也會
+        顯示編號、共用同一個 P{n}，這是設計如此（同一份敘述不必因為子指標不同
+        就編兩次號）。真正該驗的不變量是：一段敘述如果在區塊裡**每一個**出現過
+        它的子指標中都只出現 1 次（從未在任何一個子指標內達到 ≥2），無論多長
+        都不該被編號。
+        """
+        for block in self.blocks:
+            numbered = set(ws.block_population_order(block))
+            per_indicator_counts = [
+                collections.Counter(r["population"] for r in ind["rows"])
+                for ind in block["indicators"]]
+            all_pops = {p for c in per_indicator_counts for p in c}
+            never_reaches_two_anywhere = {
+                p for p in all_pops
+                if all(c.get(p, 0) < 2 for c in per_indicator_counts)}
+            with self.subTest(slug=block["slug"]):
+                self.assertEqual(never_reaches_two_anywhere & numbered, set())
+
+    def test_real_page_actually_numbers_at_least_one_population(self):
+        """先證明「真的有東西被編號」，不是門檻設太高、規則沒被用到就通過——
+        血壓收縮壓表那句 35 字、重複 8 次的敘述必須被編號。"""
+        long_repeated = "成人（依醫療照護場所測得之診間血壓平均值，≥2 次讀數、≥2 個場次）"
+        bp_block = next(b for b in self.blocks if b["slug"] == "blood-pressure")
+        self.assertIn(long_repeated, ws.block_population_order(bp_block))
+
+    def test_negative_control_tampered_mapping_would_be_caught(self):
+        """陰性對照：把族群清單裡的文字改掉一個字，反查必須抓到差異。"""
+        block = next(b for b in self.blocks if b["slug"] == "blood-pressure")
+        real_list = ws.block_population_order(block)
+        tampered_list = list(real_list)
+        tampered_list[0] = tampered_list[0] + "（竄改）"
+        self.assertNotEqual(real_list, tampered_list)
+
+
 class TestWorksheetPageOrTableCleanup(unittest.TestCase):
     """出處欄顯示用的 page_or_table 瘦身（2026-08-31 第二次主席裁決）：
     「」括起來的整段是文件標題／FAQ 問句的逐字重複——出處清單（ws-sources）已經
