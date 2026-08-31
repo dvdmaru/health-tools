@@ -162,8 +162,11 @@ def _idx_card(a):
             f'<p>{html_lib.escape(m.get("subtitle", a["excerpt"]))}</p></a>')
 
 
-_EMPTY_HTML = ('<div class="idx-empty">地基已就緒，尚未發布任何指標頁。'
-               '每個指標頁上線前，判準值必須齊備機構、文件、版本與頁碼四項出處。</div>')
+# ☠️ 這個空狀態代表的是「文章」列表為空，不是指標頁——指標頁 2026-08-28 就上線了。
+# 舊文案寫「尚未發布任何指標頁」，在首頁與指標索引並存時會直接說錯話（2026-08-31 修）。
+_EMPTY_HTML = ('<div class="idx-empty">尚未發布文章。'
+               '指標判準的整理在<a href="/indicators/">指標索引</a>，'
+               '每頁的判準值都標註機構、文件、版本與頁碼。</div>')
 
 
 def render_home(articles):
