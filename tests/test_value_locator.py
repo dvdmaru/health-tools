@@ -748,8 +748,8 @@ class WidgetRuntimeBehavior(unittest.TestCase):
         也就是三方收斂前的「縫進依據欄」），同一個情境重跑，判準值欄應該不再
         出現標記——證明上面的欄位斷言不是配飾。"""
         mutated = gen.VALUE_LOCATOR_JS.replace(
-            "var cell = tr.children[1] || tr.lastElementChild;",
-            "var cell = tr.lastElementChild;")
+            "    var cell = tr.children[1];\n    if (!cell) return;",
+            "    var cell = tr.lastElementChild;")
         self.assertNotEqual(mutated, gen.VALUE_LOCATOR_JS, "替換沒有命中，變異腳本本身壞了")
         script = build_scenario_script(mutated)
         stdout, code, stderr = run_node(script)

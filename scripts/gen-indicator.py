@@ -639,7 +639,13 @@ VALUE_LOCATOR_JS = """
     var badge = document.createElement('span');
     badge.className = 'vloc-badge';
     badge.textContent = SEP + MARK_PREFIX + raw;
-    var cell = tr.children[1] || tr.lastElementChild;
+    // ☠️ 不留 fallback：找不到第二欄（判準值）就不插標記。
+    // 舊版寫 tr.children[1] || tr.lastElementChild，缺欄的列會退回把執行期文字縫進
+    // 最後一欄，而最後一欄承擔出處歸屬，2026-09-01 四方收斂才剛要求把標記移走。
+    // 留 fallback 等於給那個已修掉的問題開一條後路（Terra F2 席指出）。
+    // ⚠️ 這段註解也會被禁詞掃描讀到（掃的範圍含註解），措辭要照同一套規則。
+    var cell = tr.children[1];
+    if (!cell) return;
     cell.appendChild(badge);
   }
 
