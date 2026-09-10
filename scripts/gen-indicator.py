@@ -827,7 +827,7 @@ SUB_DY, SUB_H = 34, 12
 # 固定句寫成常數，同 VALUE_LOCATOR_JS 的 NO_HIT_PREFIX 那種寫法；只陳述「本頁收的文件」的
 # 範圍——☠️ 不加任何會讓讀者對自己數值下判斷的字。
 # 連一列都沒有的 indicator_id（例：id 打錯）不走這條，照舊中止（見 render_page）。
-NO_AXIS_SUFFIX = "：本頁收的文件裡，沒有可以畫成數線的判準。"
+NO_AXIS_SUFFIX = "：本頁收錄的文件沒有給它可以畫成數線的數值判準。"
 
 
 def _axis_cfg(indicator_id: str, rows: list) -> dict:

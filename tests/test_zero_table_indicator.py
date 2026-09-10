@@ -26,7 +26,7 @@ import test_gen_indicator as tgi  # noqa: E402
 ROOT = tgi.ROOT
 gen = tgi.gen
 
-FIXED = '<p class="nl-none">舒張壓：本頁收的文件裡，沒有可以畫成數線的判準。</p>'
+FIXED = '<p class="nl-none">舒張壓：本頁收錄的文件沒有給它可以畫成數線的數值判準。</p>'
 
 # sbp 有一列分級；dbp 只有一列 definition（不在 TABLE_CATEGORIES）。
 ROWS = [

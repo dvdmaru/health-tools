@@ -11,7 +11,8 @@
     "quote_extra": [
       "Clinical laboratories should report an estimate of GFR using a prediction equation,",
       "in addition to reporting the serum creatinine measurement.",
-      "The level of GFR should be estimated from prediction equations"
+      "The level of GFR should be estimated from prediction equations",
+      "The following equations provide useful estimates of GFR:"
     ],
     "status": "已證實",
     "note": "Guideline 4 的兩個清單項，分屬不同清單項、不連續，故拆 quote＋quote_extra（quote_extra 兩段是同一清單項跨行）。清單符號 • 不帶。",
@@ -21,7 +22,7 @@
     "id": "H2",
     "year": 2012,
     "org": "Kidney Disease: Improving Global Outcomes (KDIGO)",
-    "change": "把第 3 期拆成 G3a、G3b 兩級",
+    "change": "2012 年版指引肯認把第 3 期分為 G3a、G3b 兩級的重要性",
     "doc_id": "kdigo-ckd-guideline-2012",
     "version": "2012（Kidney International Supplements volume 3 | issue 1 | JANUARY 2013）",
     "page_or_table": "p. 27（PDF 第 40 頁）右欄",
@@ -31,7 +32,7 @@
       "categories G3a and G3b (Figure 5)."
     ],
     "status": "已證實",
-    "note": "原文連續；快照因 pdftotext -layout 雙欄交錯切開成三段。",
+    "note": "原文連續；快照因 pdftotext -layout 雙欄交錯切開成三段。版本年 2012，刊於 Kidney International Supplements 2013 年 1 月。",
     "fetched_at": "2026-09-10"
   },
   {
@@ -47,7 +48,7 @@
       "1.4.3.4: We recommend that clinical laboratories should (1B):"
     ],
     "status": "已證實",
-    "note": "條首在 p. 6、清單項在 p. 7，跨頁不連續，故拆 quote＋quote_extra。清單項行首的 K 是清單符號被抽錯，不帶。",
+    "note": "條首在 p. 6、清單項在 p. 7，跨頁不連續，故拆 quote＋quote_extra。清單項行首的 K 是清單符號被抽錯，不帶。版本年 2012，刊於 Kidney International Supplements 2013 年 1 月。",
     "fetched_at": "2026-09-10"
   },
   {
@@ -66,14 +67,14 @@
       }
     ],
     "status": "已證實（需補充）",
-    "note": "僅摘要：快照為 NLM E-utilities 取回的 PubMed 摘要，未取得全文（期刊付費牆）。射程為美國成人、美國所有實驗室（原文：For US adults、in all laboratories in the United States）。摘要原文的編號寫作「( 1 )」，括號內有空格。corroboration 為 NIDDK 表態支持 Task Force 建議的句子；原始 HTML 在句中以 <a> 連結切開，只取連續的前段。",
+    "note": "僅摘要：快照為 NLM E-utilities 取回的 PubMed 摘要，未取得全文（期刊付費牆）。射程為美國成人、美國所有實驗室（原文：For US adults、in all laboratories in the United States）。摘要原文的編號寫作「( 1 )」，括號內有空格。corroboration 為 NIDDK 表態支持 Task Force 建議的句子；原始 HTML 在句中以 <a> 連結切開，只取連續的前段。corroboration（NIDDK）只到 using the 為止，是部分佐證。",
     "fetched_at": "2026-09-10"
   },
   {
     "id": "H5",
     "year": 2024,
     "org": "Kidney Disease: Improving Global Outcomes (KDIGO)",
-    "change": "改寫公式建議：用經過驗證的公式、同一地區用同一條、計算時避免使用種族",
+    "change": "改寫公式建議：用經過驗證的公式；同一地區（由當地界定、盡可能大）用同一條，成人與兒童可用不同公式；計算時避免使用種族",
     "doc_id": "kdigo-ckd-guideline-2024",
     "version": "2024（Kidney International 2024; 105(4S): S117–S314，APRIL 2024）",
     "page_or_table": "p. S154 Practice Point 1.2.4.1、1.2.4.2；p. S188 Rationale 左欄",

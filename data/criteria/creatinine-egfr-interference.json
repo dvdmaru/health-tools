@@ -38,7 +38,7 @@
   {
     "id": "L4",
     "direction": "unspecified",
-    "factor": "eGFR（以肌酸酐計算）：飲食、肌肉量改變、第三級肥胖、類固醇等情況，KDIGO 列為準確度下降，原因寫肌酸酐的非 GFR 決定因素（來源未指方向）",
+    "factor": "eGFR（以肌酸酐計算）：飲食、肌肉量改變、第三級肥胖、類固醇（anabolic、hormone）等情況，KDIGO 列為準確度下降，原因寫肌酸酐（SCr）的非 GFR 決定因素，其中第三級肥胖的原因原文寫 SCr and SCys 兩者（來源未指方向）",
     "org": "Kidney Disease: Improving Global Outcomes (KDIGO)",
     "doc_id": "kdigo-ckd-guideline-2024",
     "version": "2024（Kidney International 2024; 105(4S): S117–S314，APRIL 2024）",
@@ -65,7 +65,7 @@
       "SCr, serum creatinine;"
     ],
     "fetched_at": "2026-09-10",
-    "note": "Table 8 的欄名 Cause of decreased accuracy，加上各列的「情況＋原因」兩格；原因欄寫 Non-GFR determinants of SCr，沒有說偏高或偏低，direction=unspecified（SCr 的全稱見同表表下縮寫說明，未收入引句）。左側 Domain 欄黏在同一行的一起帶；情況名後黏著的上標文獻號與表註記號（例：127、a,b）照快照保留；跨行的格拆成下一段。只收補充單指定的各列與這兩格，同表其他欄與其他組不在本列射程。"
+    "note": "Table 8 的欄名 Cause of decreased accuracy，加上各列的「情況＋原因」兩格；原因欄寫 Non-GFR determinants of SCr，沒有說偏高或偏低，direction=unspecified。左側 Domain 欄黏在同一行的一起帶；情況名後黏著的上標文獻號與表註記號（例：127、a,b）照快照保留；跨行的格拆成下一段。只收補充單指定的各列與這兩格，同表其他欄與其他組不在本列射程。"
   },
   {
     "id": "L5",
