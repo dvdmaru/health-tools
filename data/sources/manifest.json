@@ -266,6 +266,20 @@
     "note": "原始頁面擋 curl（hpa.gov.tw 對 curl 回攔截頁）。快照為瀏覽器抽出的純文字，前 3 行是 SOURCE_URL／FETCHED_AT／METHOD 標頭，第 5 行起為正文；引句比對前正規化空白。"
   },
   {
+    "id": "hpa-ckd-stage-criteria",
+    "title": "慢性腎臟病分期標準（政府資料開放平臺資料集 8837）",
+    "org": "衛生福利部國民健康署",
+    "doc_type": "ods",
+    "url": "https://www.hpa.gov.tw/Pages/ashx/GetFile.ashx?lang=c&type=1&sid=c3fa4330f6bb4321b011f36debfbb493",
+    "version_or_date": "文件未標示",
+    "fetched_at": "2026-09-10",
+    "sha256": "c49336d8a9495c5028c31c4e8d48fc6280820f7b1024d37d0d6f91556400a382",
+    "local_path": "data/sources/hpa-ckd-stage-criteria.ods",
+    "license_bucket": "tw-gov",
+    "retrieval": "curl",
+    "note": "ODS 原檔（Content-Type application/vnd.oasis.opendocument.spreadsheet；工作表名「慢性腎臟病分期標準_(1)」），資料集頁 https://data.gov.tw/dataset/8837 。以 fetch-health-source.py 的 curl()＋blocked_reason() 取回後原樣寫檔；因該工具 --doc-type 不收 ods 而手動登記。本次 curl 未被攔截、未加 -k。版本：檔內沒有版本標示；ODS meta.xml 的 creation-date／dc:date 為 2020-05-26T02:31:36Z（檔案建立日，非版本）；FINDINGS-C2 另記平臺上架 2013-02-01、詮釋資料更新 2025-07-29（本輪未核對平臺頁）。抽字規則（BRIEF-E1 §4-3）：依文件順序走每個 table:table-row；列內各 table:table-cell 以 \\t 串接（table:covered-table-cell 當空字串；number-columns-repeated 不展開，所以每列尾端多一個空格）；格內各 text:p 的 itertext 以 \\n 串接；各列以 \\n 串接。content.xml 內沒有 text:s／text:span。欄名：慢性腎臟病階段／腎絲球過濾率值 ml/min/1.73m（原文無²）／類型／腎臟功能／治療方式。☠️「治療方式」欄＝醫療法 §87 紅線，不得進站。第三、四期「腎臟功能」欄共用同一段 15-59% 文字（原文內部不一致）。第一、二期的「類型」欄含「出現蛋白尿、血尿」，原文的第一、二期不是只看 eGFR。"
+  },
+  {
     "id": "hpa-diabetes-handbook-2003",
     "title": "糖尿病防治手冊：糖尿病預防、診斷與控制流程指引",
     "org": "行政院衛生署國民健康局",
@@ -292,6 +306,20 @@
     "license_bucket": "tw-gov",
     "retrieval": "browser-text",
     "note": "原始頁面擋 curl（hpa.gov.tw 對 curl 回攔截頁）。快照為瀏覽器抽出的純文字，前 3 行是 SOURCE_URL／FETCHED_AT／METHOD 標頭，第 5 行起為正文；引句比對前正規化空白。"
+  },
+  {
+    "id": "hpa-egfr-ckd-epi-letter-2026",
+    "title": "115年1月15日國健慢病字第1150660003號函",
+    "org": "衛生福利部國民健康署",
+    "doc_type": "pdf",
+    "url": "https://www.hpa.gov.tw/Pages/ashx/GetFile.ashx?lang=c&type=1&sid=80a59a84234049bf848d01d0897522a5",
+    "version_or_date": "發文日期：中華民國115年1月15日",
+    "fetched_at": "2026-09-10",
+    "sha256": "6e61319918d6424ad809ed577ac40fb89043045bdb944d45da64660c5b7a2b80",
+    "local_path": "data/sources/hpa-egfr-ckd-epi-letter-2026.pdf",
+    "license_bucket": "tw-gov",
+    "retrieval": "curl",
+    "note": "公告頁 https://www.hpa.gov.tw/1115/19766/n （發布日期 2026/01/16，更新日期 2026/01/16；頁標題「配合衛生福利部中央健康保險署（下稱健保署）公告腎絲球過濾率（eGFR）計算公式調整為CKD-EPI公式，惠請成健機構115年1月成人預防保健服務結果檔延至1月16日後上傳。」）的附件「115年1月15日國健慢病字第1150660003號函.pdf」，title 照附件名。PDF 3 頁（抄本；第 3 頁只有頁碼），發文字號 國健慢病字第1150660003號。本次 curl 未被攔截（HTTP 200、application/pdf），未加 -k。☠️ 抽字雷：DFKaiShu 字型有 19 種字被抽成 CJK 相容表意字（共 68 處；例：年→U+F98E、行→U+FA08、福→U+FA1B、利→U+F9DD、濾→U+F984、率→U+F9DB），「採2021年版CKD-EPI計算公式取代既行之MDRD」「新舊公式雙軌併行」以標準字形對快照 grep 皆 0 命中、NFKC 正規化後各命中 1 次；「腎絲球過濾率」的濾、率也是相容字。含這些字的引句要照抽字實際字元寫，或 gate 先做 NFKC。"
   },
   {
     "id": "hpa-home-bp-722-press-release-2025",
@@ -462,6 +490,48 @@
     "note": "J-STAGE 全文 PDF，只引不轉載。引句以 pdftotext -layout 輸出比對。⚠️ Figure 1 流程圖內的文字抽出後字間空白錯亂（`Serumuric acidlevel`、`SUA≧8.0mg / dL`），引句照抄該狀態，比對前正規化空白。8.0／9.0 只出現在 Figure 1，正文散文段落沒有重述。"
   },
   {
+    "id": "kdigo-ckd-guideline-2012",
+    "title": "KDIGO 2012 Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease",
+    "org": "Kidney Disease: Improving Global Outcomes (KDIGO)",
+    "doc_type": "pdf",
+    "url": "https://kdigo.org/wp-content/uploads/2017/02/KDIGO_2012_CKD_GL.pdf",
+    "version_or_date": "2012（Kidney International Supplements volume 3 | issue 1 | JANUARY 2013）",
+    "fetched_at": "2026-09-10",
+    "sha256": "f60d5d219b35a6e5205236e6e2847bdb45cca606f1394b642e1cfcefd3c1835e",
+    "local_path": "data/sources/kdigo-ckd-guideline-2012.pdf",
+    "license_bucket": "licensed-cite-only",
+    "retrieval": "curl",
+    "note": "kdigo.org 託管 PDF（163 頁，4,548,193 bytes）。版權列 “Copyright © 2012 by KDIGO. All rights reserved.”（pdftotext 把 © 抽成 “&”）。快照只留本機（.gitignore）。頁碼對照：p. 6＝PDF 第 19 頁、p. 7＝第 20 頁、p. 27＝第 40 頁。☠️ 符號字型抽字雷：p. 27 Table 5 的 ≥ 抽成 “Z”（G1 “Z90”）、< 抽成 “o”（G5 “o15”；同頁 “o2 years”）；Rec 1.4.3.x 清單符號抽成 “K”；FINDINGS-C1 另記 > 抽成 “4”。含比較符號的引句要照抽字實際字元寫。"
+  },
+  {
+    "id": "kdigo-ckd-guideline-2024",
+    "title": "KDIGO 2024 Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease",
+    "org": "Kidney Disease: Improving Global Outcomes (KDIGO)",
+    "doc_type": "pdf",
+    "url": "https://kdigo.org/wp-content/uploads/2024/03/KDIGO-2024-CKD-Guideline.pdf",
+    "version_or_date": "2024（Kidney International 2024; 105(4S): S117–S314，APRIL 2024）",
+    "fetched_at": "2026-09-10",
+    "sha256": "b18db280f7dc889a1a99447b779c0312cd536f939a5180b38894a5d68e4410c0",
+    "local_path": "data/sources/kdigo-ckd-guideline-2024.pdf",
+    "license_bucket": "licensed-cite-only",
+    "retrieval": "curl",
+    "note": "kdigo.org 自家託管 PDF（199 頁，5,966,902 bytes，超過 5MB）。版權頁：“Copyright © 2023, Kidney Disease: Improving Global Outcomes (KDIGO). Published by Elsevier Inc. on behalf of the International Society of Nephrology.”，CC BY-NC-ND 4.0；同頁另有 “No part of this publication may be reproduced…” 字樣。不論怎麼讀都不是公有領域，登 licensed-cite-only，快照只留本機（.gitignore）。頁碼對照：PDF 第 N 頁＝S(N+115)（S137＝PDF 第 22 頁、S154＝第 39 頁、S188＝第 73 頁）。☠️ pdftotext -layout 抽字雷：S137 Table 2／Table 1 的 ≥ 被抽成 “$”（G1 列 “$90”、“ACR $30 mg/g”）；S154 Practice Point 1.3.1.2 的 ≥ 被抽成 “‡”；連字 ﬁ／ﬂ 抽成 U+FB01／U+FB02（全文 1,546／188 處），含 fi／fl 的引句（defined、modifications、filtration…）以一般字母對快照 grep 不到；雙欄排版左右欄逐行交錯，跨行引句會被另一欄文字切斷——S188 “There have been several modifications to the CKD-EPI equations” 因連字＋跨欄 0 命中（“There have been several modiﬁcations to the CKD-EPI” 片段命中 1 次）。"
+  },
+  {
+    "id": "kdoqi-ckd-guideline-2002",
+    "title": "K/DOQI Clinical Practice Guidelines for Chronic Kidney Disease: Evaluation, Classification and Stratification",
+    "org": "National Kidney Foundation",
+    "doc_type": "pdf",
+    "url": "https://www.kidney.org/sites/default/files/2024-08/ckd_evaluation_classification_stratification.pdf",
+    "version_or_date": "2002（Am J Kidney Dis 39:S1-S266, 2002 (suppl 1)）",
+    "fetched_at": "2026-09-10",
+    "sha256": "05d902fd233554ad127b1e36272c18456a32260f314d4a85d1fd29ef7af4a698",
+    "local_path": "data/sources/kdoqi-ckd-guideline-2002.pdf",
+    "license_bucket": "licensed-cite-only",
+    "retrieval": "curl",
+    "note": "kidney.org 託管 PDF（356 頁，7,396,175 bytes，超過 5MB）。title、org、version 照 PDF 自己的引用格式（“In citing this document, please refer to the original source as follows: National Kidney Foundation. K/DOQI Clinical Practice Guidelines for Chronic Kidney Disease: Evaluation, Classification and Stratification. Am J Kidney Dis 39:S1-S266, 2002 (suppl 1)”）；派工單表列標題多一個 Oxford 逗號（“Classification, and”），PDF 沒有。版權列 “© 2002 National Kidney Foundation, Inc. … All Rights Reserved.”（© 被抽成 “䉷” U+4277）；K/DOQI 是 National Kidney Foundation, Inc. 的商標。pdfinfo CreationDate 2009-03-11（檔案建立日，非版本）。快照只留本機（.gitignore）。Guideline 4 在 p. 81（PDF 第 108 頁）有文字層；指引摘要段（PDF 第 41 頁）另有同文字，故兩條探針各命中 2 次。⚠️ Table 10、11（p. 44）是掃描圖、沒有文字層，不從那兩張表取任何東西。"
+  },
+  {
     "id": "liverorg-journal-72-2015",
     "title": "好心肝會刊 第72期〈肝指數GOT、GPT正常，肝不一定好！〉",
     "org": "財團法人肝病防治學術基金會",
@@ -545,6 +615,34 @@
     "note": "curl 抓得到 HTML，但數值分散在 <td> 儲存格，整列引句（例：Total Cholesterol Less than 200 mg/dL）在原始 HTML 被標籤切斷而無法連續 grep，故落地的是去標籤後的純文字快照（doc_type=html-text）。"
   },
   {
+    "id": "medlineplus-creatinine-test",
+    "title": "Creatinine Test",
+    "org": "MedlinePlus（U.S. National Library of Medicine）",
+    "doc_type": "html",
+    "url": "https://medlineplus.gov/lab-tests/creatinine-test/",
+    "version_or_date": "Last updated December 5, 2023",
+    "fetched_at": "2026-09-10",
+    "sha256": "937a810d1b70c78d217a408f327a419ff735b94a7cac79b330fa284931fdc884",
+    "local_path": "data/sources/medlineplus-creatinine-test.html",
+    "license_bucket": "us-federal-pd",
+    "retrieval": "curl",
+    "note": "NLM 自製的 /lab-tests/ 頁（聯邦公有領域）。同網域 /ency/ 為 A.D.A.M. 商業內容，授權不同，不抓。頁面沒有肌酸酐數值範圍（說明正常值因肌肉量、飲食、年齡、活動量而異）。"
+  },
+  {
+    "id": "medlineplus-gfr-test",
+    "title": "Glomerular Filtration Rate (GFR) Test",
+    "org": "MedlinePlus（U.S. National Library of Medicine）",
+    "doc_type": "html",
+    "url": "https://medlineplus.gov/lab-tests/glomerular-filtration-rate-gfr-test/",
+    "version_or_date": "Last updated July 6, 2023",
+    "fetched_at": "2026-09-10",
+    "sha256": "3cd9531c24dc18bc84d7fafcec87877ceaa24b117b7a730d0006040eb08cac9f",
+    "local_path": "data/sources/medlineplus-gfr-test.html",
+    "license_bucket": "us-federal-pd",
+    "retrieval": "curl",
+    "note": "NLM 自製的 /lab-tests/ 頁（聯邦公有領域）。☠️ 原始 HTML 把 “A normal eGFR” 包在 <strong> 內、句子其餘部分在標籤外（<strong>A normal eGFR</strong> means that you probably …），收據 gate 對 doc_type=html 讀原始檔只去空白，這句整句 grep 不到（可見文字命中 1 次）；同型先例 medlineplus-ast-test（待裁）、medlineplus-cholesterol-levels（改落 html-text）。頁面沒有 eGFR 數值、沒有點名公式。"
+  },
+  {
     "id": "medlineplus-high-blood-pressure",
     "title": "High Blood Pressure",
     "org": "MedlinePlus（U.S. National Library of Medicine）",
@@ -571,6 +669,20 @@
     "license_bucket": "us-federal-pd",
     "retrieval": "curl",
     "note": "全頁沒有任何數值切點（`mg/dL`／`mg/dl` 零命中，`uric acid` 33 次命中為正向對照），也沒有 fasting 字樣。"
+  },
+  {
+    "id": "mohw-ckd-press-release-2015",
+    "title": "超過半數不測量三高 慢性腎臟病人不謹「腎」",
+    "org": "衛生福利部國民健康署",
+    "doc_type": "html",
+    "url": "https://www.mohw.gov.tw/fp-16-20961-1.html",
+    "version_or_date": "建檔日期：104-03-06；更新時間：104-03-06",
+    "fetched_at": "2026-09-10",
+    "sha256": "8a3f6c51f5c9b0ab9aafa085637b10c446d0506e3e1d685ebfc43ce6082fefa1",
+    "local_path": "data/sources/mohw-ckd-press-release-2015.html",
+    "license_bucket": "tw-gov",
+    "retrieval": "curl",
+    "note": "刊於衛生福利部網站（www.mohw.gov.tw，<title> 尾綴「衛生福利部」）；頁面「資料來源：國民健康署」，DC.Creator／DC.Publisher 皆為「國民健康署」，故 org 寫國健署全銜（先例 mohw-hypertension-722-press-release-2023 寫衛生福利部）。og:url 為 cp-16-20961-1.html，本列以派工單的 fp- 網址抓取。內文「一共分為五期(…，表3)」的表 3 數值不在 HTML 內（無圖檔連結）。本次 curl 未被攔截。⚠️ 動態頁：同一 URL 三次 curl 得三個不同 raw sha256，diff 只差 Google Tag Manager <script> 的 nonce 值（每次請求重產），內文與探針不變；sha 只當資訊，drift 監測要靠引句。"
   },
   {
     "id": "mohw-hypertension-722-press-release-2023",
@@ -681,6 +793,34 @@
     "license_bucket": "us-federal-pd",
     "retrieval": "curl",
     "note": "共同發布者尚有 National Institute of Diabetes and Digestive and Kidney Diseases 與 North American Association for the Study of Obesity（封面標示）。☠️ 原始文件是上列 URL 的 PDF，但它是**三欄排版**：`pdftotext -layout` 的每一行會同時橫跨三欄，任何跨行的句子在全頁文字裡都不連續，直接對 PDF grep 引句必得 0 命中＝假陰性。因此本列登記的快照是**逐頁分欄抽取後串接的純文字檔**（`pdftotext -layout -x/-y/-W/-H` 掃過每頁的三個欄視窗，檔內以 `===== PAGE n <window> =====` 分段），doc_type 標 html-text 以誠實標示「這不是原 PDF 的直出文字」。sha256 是這個 .txt 的雜湊，不是原 PDF 的。引句比對前須正規化空白（原文另有 `measur-`／`abdo-` 這類連字斷行，已在抽取後併行）。"
+  },
+  {
+    "id": "niddk-gfr-equations",
+    "title": "Glomerular Filtration Rate Equations",
+    "org": "National Institute of Diabetes and Digestive and Kidney Diseases",
+    "doc_type": "html",
+    "url": "https://www.niddk.nih.gov/research-funding/research-programs/kidney-clinical-research-epidemiology/laboratory/glomerular-filtration-rate-equations",
+    "version_or_date": "Last Reviewed May 2025",
+    "fetched_at": "2026-09-10",
+    "sha256": "f811647c31846a828d7f66322b5b11221522be288c3cc33a51c7fd41ce54d5e9",
+    "local_path": "data/sources/niddk-gfr-equations.html",
+    "license_bucket": "us-federal-pd",
+    "retrieval": "curl",
+    "note": "NIDDK Kidney Clinical Research & Epidemiology › Laboratory Working Group 的公式頁（聯邦公有領域）；org 照頁面 meta 的機構全名。“Report all eGFR values as an exact number…” 是給實驗室的報告建議，不是判讀判準。原始 HTML 與可見文字兩個視角探針都命中。"
+  },
+  {
+    "id": "nkf-asn-egfr-task-force-2021",
+    "title": "A Unifying Approach for GFR Estimation: Recommendations of the NKF-ASN Task Force on Reassessing the Inclusion of Race in Diagnosing Kidney Disease.",
+    "org": "National Kidney Foundation and American Society of Nephrology Task Force on Reassessing the Inclusion of Race in Diagnosing Kidney Disease",
+    "doc_type": "html-text",
+    "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=34556489&rettype=abstract&retmode=text",
+    "version_or_date": "J Am Soc Nephrol. 2021 Dec 1;32(12):2994-3015（Epub 2021 Dec 1；PMID 34556489）",
+    "fetched_at": "2026-09-10",
+    "sha256": "536892b0c58fb25ce3d1ea1f317c27e8167a9079635e09fb39674145691c3d5e",
+    "local_path": "data/sources/nkf-asn-egfr-task-force-2021.txt",
+    "license_bucket": "licensed-cite-only",
+    "retrieval": "curl",
+    "note": "僅 PubMed 摘要，未取得全文（期刊付費牆）。快照是 NLM E-utilities efetch 的 text/plain 回應，以 fetch-health-source.py 的 curl()（同 UA）與 blocked_reason()（同攔截判定）取回後原樣寫檔、未改動任何位元組；因該工具 --doc-type 只收 pdf／html 而手動登記，比照 ifcc-aminotransferase-ri-2010 登 html-text、retrieval 照實寫 curl（不是瀏覽器抽字）。org：摘要書目列只有個人作者（Delgado C … Powe NR），沒有團體作者，依派工單照標題抄；縮寫展開見摘要 BACKGROUND 句“the National Kidney Foundation (NKF) and the American Society of Nephrology (ASN) established a Task Force”，版權列“Copyright © 2021 by the American Society of Nephrology and National Kidney Foundation, Inc. All rights reserved.”。摘要的括號編號內有空格（“( 1 )”）。另刊 Am J Kidney Dis 2022;79(2):268–288.e1（未取得）。PubMed 只是索引，著作權屬 ASN／NKF，不是聯邦公有領域；快照只留本機（.gitignore）。"
   },
   {
     "id": "tas-taiwan-lipid-focused-update-2022",

@@ -187,6 +187,7 @@ AXIS = {
     "waist": {"min": 70, "max": 110, "ticks": [70, 80, 88, 90, 94, 102, 110], "label": "腰圍（cm）"},
     "ast": {"min": 0, "max": 50, "ticks": [0, 10, 20, 30, 40, 50], "label": "GOT／AST（U/L）"},
     "alt": {"min": 0, "max": 70, "ticks": [0, 10, 20, 30, 40, 50, 60, 70], "label": "GPT／ALT（U/L）"},
+    "egfr": {"min": 0, "max": 120, "ticks": [0, 15, 30, 45, 60, 90, 120], "label": "eGFR（mL/min/1.73 m²）"},
 }
 
 
@@ -821,6 +822,13 @@ X0, X1, TOP = 118, 704, 32
 ROW_H, ROW_PITCH, FIRST_ROW_Y = 26, 58, 42
 SUB_DY, SUB_H = 34, 12
 
+# 某個 indicator_id 在這頁收的文件裡只有 TABLE_CATEGORIES 以外的列（例：檢查單上有這一行
+# test_panel_item、這個數字量什麼 definition）時，數線的位置改放這一句（短標籤＋本句）。
+# 固定句寫成常數，同 VALUE_LOCATOR_JS 的 NO_HIT_PREFIX 那種寫法；只陳述「本頁收的文件」的
+# 範圍——☠️ 不加任何會讓讀者對自己數值下判斷的字。
+# 連一列都沒有的 indicator_id（例：id 打錯）不走這條，照舊中止（見 render_page）。
+NO_AXIS_SUFFIX = "：本頁收的文件裡，沒有可以畫成數線的判準。"
+
 
 def _axis_cfg(indicator_id: str, rows: list) -> dict:
     if indicator_id in AXIS:
@@ -1252,7 +1260,10 @@ FOOT_LINE = "本站不提供診斷或治療建議。頁面整理的是各機構�
 
 def render_page(meta: dict, h1: str, sections: list, crit: list, hist: list,
                 intf: list, errata: list, mf: dict, ids: list, labels: dict,
-                slug: str, published: bool) -> str:
+                slug: str, published: bool, any_row_ids: set = None) -> str:
+    # any_row_ids＝這頁 criteria 檔裡「任何 category」出現過的 indicator_id（crit 只收
+    # TABLE_CATEGORIES 列，看不出某指標是完全沒列、還是只有定義類的列）。沒傳＝空集合，
+    # 行為同舊版：TABLE 列為零的指標一律中止。
     url = f"{hl.BASE}/indicators/{slug}/"
     title = meta.get("title", h1)
     desc = (sections[0][1][0] if sections[0][1] else "")[:120]
@@ -1272,9 +1283,18 @@ def render_page(meta: dict, h1: str, sections: list, crit: list, hist: list,
             for iid in ids:
                 rows = [r for r in crit if r["indicator_id"] == iid]
                 if not rows:
-                    raise SystemExit(
-                        f"❌ {slug}：indicator_ids 列了 {iid}，但 data/criteria/{slug}.json "
-                        "沒有它可渲染的判準列（頁面不得宣稱一個沒有資料的指標）。")
+                    # 這頁的 criteria 檔裡連任何 category 的列都沒有＝頁面在宣稱一個
+                    # 沒有資料的指標（例：id 打錯），照舊中止。
+                    if iid not in (any_row_ids or set()):
+                        raise SystemExit(
+                            f"❌ {slug}：indicator_ids 列了 {iid}，但 data/criteria/{slug}.json "
+                            "沒有它可渲染的判準列（頁面不得宣稱一個沒有資料的指標）。")
+                    # 有列、但全在 TABLE_CATEGORIES 以外：不畫數線、不呼叫 _axis_cfg（沒有
+                    # 可上圖的數值），改放固定句。判準表本來就只收 TABLE 列，這個指標在表上
+                    # 不會出現任何組，也不另加空列或「無資料」列。
+                    label = labels[iid] if multi else meta.get("title", h1)
+                    blocks.append(f'<p class="nl-none">{esc(label)}{esc(NO_AXIS_SUFFIX)}</p>')
+                    continue
                 caption = line_title(iid, rows, labels) if multi else meta.get(
                     "criteria_chart_caption", "")
                 if not caption:
@@ -1450,7 +1470,8 @@ def build(slugs=None, out_root=None, parts_dir=None, llms_path=None, published=N
 
         errata = [e for e in errata_all if e["slug"] == slug]
         html_out = render_page(meta, h1, sections, crit, hist, intf, errata, mf,
-                               ids, labels, slug, published)
+                               ids, labels, slug, published,
+                               any_row_ids={r["indicator_id"] for r in crit_raw})
         out_dir = out_root / "indicators" / slug
         out_dir.mkdir(parents=True, exist_ok=True)
         (out_dir / "index.html").write_text(html_out, encoding="utf-8")

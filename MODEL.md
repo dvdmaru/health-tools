@@ -21,6 +21,7 @@
 - 「正常／偏高」是對明細列 filter 出來的結果，**永遠不是一個存起來的欄位**。
 - 同一指標多機構判準不一致時**並列、各綁版本，不選邊**；WHO 沒訂前期＝`no_criterion_stated`，不是空白也不是套 ADA 的值。
 - **三個資料檔以「頁面 slug」定位，不是 indicator_id**；「這頁收哪些 `indicator_id`」是 `articles/indicators/<slug>.md` frontmatter 的 `indicator_ids` 決定的（單數 `indicator_id` 仍支援）。多指標頁的中文短標籤只能來自 frontmatter 的 `indicator_labels`，**缺一個就中止**——生成器不從 id 造中文，也不從單位猜。
+- **頁面列了某個指標、但它在這頁只有 `TABLE_CATEGORIES` 以外的列**（例：肌酸酐只有檢查單項目與定義，本頁收的文件沒有給它判準）：判準表不出現它，數線的位置改印固定句 `NO_AXIS_SUFFIX`；**連一列都沒有**的 indicator_id 照舊中止（id 打錯的保護不能拿掉）。⛔ 不為了讓它上圖而造 `no_criterion_stated` 列——那個類別的意思是「來源明文說不作建議」（2026-09-10 腎功能頁）。
 - **`classification` 與 `risk_threshold` 都不是 `diagnosis`**：前者＝來源把連續數值切成具名等級（高血壓第一期、BMI 過重），後者＝來源說超過此值風險升高但沒說它構成診斷（腰圍 ≥90 cm）。`risk_threshold` 也不是 `screening_triage`（那是指向下一項檢查的流程門檻）。☠️ 標錯就會在頁面上把「腰圍超標」講成一個診斷。
 - **`reference_interval`（參考區間）也不是 `classification`**：來源用健康參考族群統計出的區間（例：IFCC 的 RI），來源沒有把數值切成具名等級，區間外也不等於符合某病。與 `definition` 的分界：只描述某研究族群裡的健康值、特定用途才用的上限、預設值、回述他人的數字，仍歸 `definition`（§1-1）。原文寫「a-b」沒寫端點含不含等號時，旗標採預設、頁面照原文區間寫法呈現（2026-09-10 肝功能頁加；IFCC 的 RI 標成 classification 被查核桌兩席判 BLOCKER）。
 
@@ -43,6 +44,7 @@
 | `licensed-cite-only` | ADA／WHO／DAROC 學會指引／NGSP／期刊 | **只引不轉載：快照留本機、`.gitignore`、版控只有 sha256**（public repo，整段重製＝著作權問題）；CI 對這些列印 SKIP，合併前本機跑滿 |
 
 - **`hpa.gov.tw` 對 curl 回 WAF 攔截頁、`diabetesjournals.org` 回 403**：兩者只能用瀏覽器抓文字快照（`retrieval: browser-text`）。`fetch-health-source.py` 偵測到攔截頁會拒絕落地——**拿到 HTTP 200 不等於拿到內容**，落地後先用「該頁必然存在的字串」探針。攔截頁不只一型：除了 WAF 與 403，還有 HTTP 200 的人機挑戰頁（reCAPTCHA／「Checking your browser」，body 可以有兩萬多 bytes 但可見文字只有一百多字元），這一型一律歸 `blocked`，不歸 `drift`。
+- **只以試算表發布的來源（例：國健署「慢性腎臟病分期標準」，data.gov.tw 資料集 8837 只有 ODS）登 `doc_type: ods`**：快照存原檔，收據 gate／drift 監測用固定規則抽儲存格文字（`check-receipts.py` 的 `ods_text()`：逐列、格間 tab、列間換行，只用標準函式庫）。⛔ 不另存 CSV／文字版當快照、不登成 `html-text`（那個值的意思是「原頁是 HTML、瀏覽器抽純文字」）。PDF 文字層的連字（ﬁ）、CJK 相容表意字（年 U+F98E 這一類）照抽字結果寫進引句，gate 不做 NFKC——正規化會連帶抹掉本站刻意保留的 ≧／≥、全形／半形差別（2026-09-10 腎功能頁）。
 - **LLM 網搜或模型記憶產出的事實不得進 `data/`**。事實只從快照來；二手媒體（含維基）是線索不是收據。
 - 舊文件只能引「定義句」不能引判準（例：2003 國健局手冊可引「反映 2–3 個月平均血糖」，不可引它的診斷閾值）。
 
