@@ -1,0 +1,115 @@
+[
+  {
+    "id": "H1",
+    "year": 2002,
+    "org": "National Kidney Foundation",
+    "change": "指引寫：GFR 應以預測公式估算，成人可用 MDRD Study 與 Cockcroft-Gault 公式；臨床檢驗室應在肌酸酐之外，另報告以公式估算的 GFR",
+    "doc_id": "kdoqi-ckd-guideline-2002",
+    "version": "2002（Am J Kidney Dis 39:S1-S266, 2002 (suppl 1)）",
+    "page_or_table": "p. 81，Guideline 4. Estimation of GFR",
+    "quote": "In adults, the MDRD Study and Cockcroft-Gault equations",
+    "quote_extra": [
+      "Clinical laboratories should report an estimate of GFR using a prediction equation,",
+      "in addition to reporting the serum creatinine measurement.",
+      "The level of GFR should be estimated from prediction equations",
+      "The following equations provide useful estimates of GFR:"
+    ],
+    "status": "已證實",
+    "note": "Guideline 4 的兩個清單項，分屬不同清單項、不連續，故拆 quote＋quote_extra（quote_extra 兩段是同一清單項跨行）。清單符號 • 不帶。",
+    "fetched_at": "2026-09-10"
+  },
+  {
+    "id": "H2",
+    "year": 2012,
+    "org": "Kidney Disease: Improving Global Outcomes (KDIGO)",
+    "change": "2012 年版指引肯認把第 3 期分為 G3a、G3b 兩級的重要性",
+    "doc_id": "kdigo-ckd-guideline-2012",
+    "version": "2012（Kidney International Supplements volume 3 | issue 1 | JANUARY 2013）",
+    "page_or_table": "p. 27（PDF 第 40 頁）右欄",
+    "quote": "further acknowledges the importance of dividing Stage 3 based",
+    "quote_extra": [
+      "on data supporting different outcomes and risk profiles into",
+      "categories G3a and G3b (Figure 5)."
+    ],
+    "status": "已證實",
+    "note": "原文連續；快照因 pdftotext -layout 雙欄交錯切開成三段。版本年 2012，刊於 Kidney International Supplements 2013 年 1 月。",
+    "fetched_at": "2026-09-10"
+  },
+  {
+    "id": "H3",
+    "year": 2012,
+    "org": "Kidney Disease: Improving Global Outcomes (KDIGO)",
+    "change": "建議臨床檢驗室以 2009 CKD-EPI 肌酸酐公式報告成人的 eGFR",
+    "doc_id": "kdigo-ckd-guideline-2012",
+    "version": "2012（Kidney International Supplements volume 3 | issue 1 | JANUARY 2013）",
+    "page_or_table": "Recommendation 1.4.3.4，p. 6（條首）與 p. 7（清單項）",
+    "quote": "report eGFRcreat in adults using the 2009 CKD-EPI creatinine equation.",
+    "quote_extra": [
+      "1.4.3.4: We recommend that clinical laboratories should (1B):"
+    ],
+    "status": "已證實",
+    "note": "條首在 p. 6、清單項在 p. 7，跨頁不連續，故拆 quote＋quote_extra。清單項行首的 K 是清單符號被抽錯，不帶。版本年 2012，刊於 Kidney International Supplements 2013 年 1 月。",
+    "fetched_at": "2026-09-10"
+  },
+  {
+    "id": "H4",
+    "year": 2021,
+    "org": "National Kidney Foundation and American Society of Nephrology Task Force on Reassessing the Inclusion of Race in Diagnosing Kidney Disease",
+    "change": "建議美國所有實驗室立即改用不含種族變數的 CKD-EPI 肌酸酐公式（對象為美國成人）",
+    "doc_id": "nkf-asn-egfr-task-force-2021",
+    "version": "J Am Soc Nephrol. 2021 Dec 1;32(12):2994-3015（Epub 2021 Dec 1；PMID 34556489）",
+    "page_or_table": "摘要 RECOMMENDATIONS (1)",
+    "quote": "For US adults (>85% of whom have normal kidney function), we recommend immediate implementation of the CKD-EPI creatinine equation refit without the race variable in all laboratories in the United States",
+    "corroboration": [
+      {
+        "doc_id": "niddk-gfr-equations",
+        "quote": "NIDDK supports the National Kidney Foundation–American Society of Nephrology Task Force’s recommendation to calculate eGFR using the"
+      }
+    ],
+    "status": "已證實（需補充）",
+    "note": "僅摘要：快照為 NLM E-utilities 取回的 PubMed 摘要，未取得全文（期刊付費牆）。射程為美國成人、美國所有實驗室（原文：For US adults、in all laboratories in the United States）。摘要原文的編號寫作「( 1 )」，括號內有空格。corroboration 為 NIDDK 表態支持 Task Force 建議的句子；原始 HTML 在句中以 <a> 連結切開，只取連續的前段。corroboration（NIDDK）只到 using the 為止，是部分佐證。",
+    "fetched_at": "2026-09-10"
+  },
+  {
+    "id": "H5",
+    "year": 2024,
+    "org": "Kidney Disease: Improving Global Outcomes (KDIGO)",
+    "change": "改寫公式建議：用經過驗證的公式；同一地區（由當地界定、盡可能大）用同一條，成人與兒童可用不同公式；計算時避免使用種族",
+    "doc_id": "kdigo-ckd-guideline-2024",
+    "version": "2024（Kidney International 2024; 105(4S): S117–S314，APRIL 2024）",
+    "page_or_table": "p. S154 Practice Point 1.2.4.1、1.2.4.2；p. S188 Rationale 左欄",
+    "quote": "Practice Point 1.2.4.1: Use the same equation within geographical regions (as deﬁned locally [e.g., continent, country, region] and as large as possible). Within such regions, equations may differ for adults and children.",
+    "quote_extra": [
+      "Practice Point 1.2.4.2: Use of race in the computation of eGFR should be avoided.",
+      "We are updating this recom-",
+      "mendation to accommodate the availability of alternative",
+      "equations that also have high levels of accuracy.",
+      "Recommendation 1.2.4.1: We recommend using a validated GFR estimating equation to derive GFR from serum ﬁltration markers (eGFR) rather than relying on the serum ﬁltration markers alone (1D)."
+    ],
+    "status": "已證實",
+    "note": "Practice Point 1.2.4.1、1.2.4.2 在 S154 單欄連續。S188 那句原文連續，快照因 pdftotext -layout 雙欄交錯切開成三段，斷字符號 recom- 照快照保留。引句中的 ﬁ 為 PDF 文字層的連字字元，照抽字結果抄。",
+    "fetched_at": "2026-09-10"
+  },
+  {
+    "id": "H6",
+    "year": 2026,
+    "org": "衛生福利部國民健康署",
+    "change": "成人預防保健的 eGFR 自 115 年 1 月 1 日起改採 2021 年版 CKD-EPI 公式，取代 MDRD 4 variable 公式",
+    "doc_id": "hpa-egfr-ckd-epi-letter-2026",
+    "version": "發文日期：中華民國115年1月15日",
+    "page_or_table": "第 1 頁，說明一",
+    "quote": "本署於成人預防保健服務（下稱成健）實驗室檢查項目eGFR亦於同日起，採2021年版CKD-EPI計算公式取代既行之MDRD 4 variable公式",
+    "corroboration": [
+      {
+        "doc_id": "hpa-adult-preventive-form-2026",
+        "quote": "◎計算方式：自 115 年採用 2021 CKD-EPI 公式＝"
+      }
+    ],
+    "status": "已證實",
+    "note": "引句中部分漢字為 PDF 文字層的 CJK 相容表意字，外觀同標準字，照抽字結果抄（以程式從 pdftotext -layout 輸出切片取字串，未手打）。原文跨三行，換行由收據 gate 的去空白比對吸收。corroboration 為現行檢查單（附表六之四，PDF 第 7 頁）的計算方式句。",
+    "fetched_at": "2026-09-10",
+    "quote_extra": [
+      "健保署業自本（115）年 1 月 1 日修訂所轄相關資料上傳系統，"
+    ]
+  }
+]

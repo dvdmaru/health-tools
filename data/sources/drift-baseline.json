@@ -376,6 +376,28 @@
     "quotes_never_verified": []
   },
   {
+    "id": "hpa-ckd-stage-criteria",
+    "url": "https://www.hpa.gov.tw/Pages/ashx/GetFile.ashx?lang=c&type=1&sid=c3fa4330f6bb4321b011f36debfbb493",
+    "doc_type": "ods",
+    "checked_at": "2026-09-10T16:11:15Z",
+    "http_code": "200",
+    "status": "ok",
+    "etag": null,
+    "last_modified": null,
+    "remote_sha256": "c49336d8a9495c5028c31c4e8d48fc6280820f7b1024d37d0d6f91556400a382",
+    "text_sha256": "bb028a90fce00674f5e3be88531e7e4f151fa107381e499ab124b19b0f682d01",
+    "quotes_total": 6,
+    "quotes_verified": [
+      "第一期 ≧ 90 腎功能正常，但出現蛋白尿、血尿",
+      "第三期 3a:45~59 中度腎衰竭",
+      "第三期 3b:30~44 中度腎衰竭",
+      "第二期 60~89 輕度腎衰竭且出現蛋白尿、血尿",
+      "第五期 ＜15 末期腎臟病變",
+      "第四期 15~29 重度腎衰竭"
+    ],
+    "quotes_never_verified": []
+  },
+  {
     "id": "hpa-diabetes-handbook-2003",
     "url": "https://health.hpa.gov.tw/common/Download.ashx?f=39dbdfef-1050-4a13-94ee-8fb5a8cab430.pdf&o=2.%E7%B3%96%E5%B0%BF%E7%97%85%E9%98%B2%E6%B2%BB%E6%89%8B%E5%86%8A%EF%BC%88%E7%B3%96%E5%B0%BF%E7%97%85%E9%A0%90%E9%98%B2%E3%80%81%E8%A8%BA%E6%96%B7%E8%88%87%E6%8E%A7%E5%88%B6%E6%B5%81%E7%A8%8B%E6%8C%87%E5%BC%95%EF%BC%89.pdf",
     "doc_type": "pdf",
@@ -410,6 +432,24 @@
       "(二)  空腹血漿血糖≧126 mg/dL",
       "(四)  典型的高血糖症狀(多吃、多喝、多尿與體重減輕)且隨機血漿血糖≧200 mg/dL",
       "只要符合其中1項即可診斷為糖尿病(前三項需重複驗證2次以上)"
+    ],
+    "quotes_never_verified": []
+  },
+  {
+    "id": "hpa-egfr-ckd-epi-letter-2026",
+    "url": "https://www.hpa.gov.tw/Pages/ashx/GetFile.ashx?lang=c&type=1&sid=80a59a84234049bf848d01d0897522a5",
+    "doc_type": "pdf",
+    "checked_at": "2026-09-10T16:11:21Z",
+    "http_code": "200",
+    "status": "ok",
+    "etag": null,
+    "last_modified": null,
+    "remote_sha256": "6e61319918d6424ad809ed577ac40fb89043045bdb944d45da64660c5b7a2b80",
+    "text_sha256": "6e5eca92d57aa2b03d12b57fa92c7437ab1eca3f8edc2745be1347dbad396f02",
+    "quotes_total": 2,
+    "quotes_verified": [
+      "健保署業自本（115）年 1 月 1 日修訂所轄相關資料上傳系統，",
+      "本署於成人預防保健服務（下稱成健）實驗室檢查項目eGFR亦於同日起，採2021年版CKD-EPI計算公式取代既行之MDRD 4 variable公式"
     ],
     "quotes_never_verified": []
   },
@@ -659,6 +699,113 @@
     "quotes_never_verified": []
   },
   {
+    "id": "kdigo-ckd-guideline-2012",
+    "url": "https://kdigo.org/wp-content/uploads/2017/02/KDIGO_2012_CKD_GL.pdf",
+    "doc_type": "pdf",
+    "checked_at": "2026-09-10T16:11:11Z",
+    "http_code": "200",
+    "status": "ok",
+    "etag": null,
+    "last_modified": "Wed, 20 Sep 2023 02:32:42 GMT",
+    "remote_sha256": "f60d5d219b35a6e5205236e6e2847bdb45cca606f1394b642e1cfcefd3c1835e",
+    "text_sha256": "9efed5e1124adbc8d3f9295849efd9c9086d01e4caeb7e0c158a47b620ce1fde",
+    "quotes_total": 5,
+    "quotes_verified": [
+      "1.4.3.4: We recommend that clinical laboratories should (1B):",
+      "categories G3a and G3b (Figure 5).",
+      "further acknowledges the importance of dividing Stage 3 based",
+      "on data supporting different outcomes and risk profiles into",
+      "report eGFRcreat in adults using the 2009 CKD-EPI creatinine equation."
+    ],
+    "quotes_never_verified": []
+  },
+  {
+    "id": "kdigo-ckd-guideline-2024",
+    "url": "https://kdigo.org/wp-content/uploads/2024/03/KDIGO-2024-CKD-Guideline.pdf",
+    "doc_type": "pdf",
+    "checked_at": "2026-09-10T16:11:09Z",
+    "http_code": "200",
+    "status": "ok",
+    "etag": null,
+    "last_modified": "Wed, 13 Mar 2024 07:57:00 GMT",
+    "remote_sha256": "b18db280f7dc889a1a99447b779c0312cd536f939a5180b38894a5d68e4410c0",
+    "text_sha256": "6158e4293f03660c99721f510d2ebe7fec963e5b370dcb10a1385621ead34e9d",
+    "quotes_total": 50,
+    "quotes_verified": [
+      "(GFR categories G3a–G5)",
+      "3 mg/mmol])",
+      "30 mg/g [",
+      "90 Normal or high",
+      "Above-knee amputation128 Non-GFR determinants of SCr",
+      "Albuminuria (ACR",
+      "As a consequence of not",
+      "Body habitus and changes Eating disorders127 Non-GFR determinants of SCr",
+      "CKD is deﬁned as abnormalities of kidney",
+      "Cause of decreased accuracy",
+      "Class III obesitya,b Non-GFR determinants of SCr",
+      "Criteria for chronic kidney disease (either of the following present for a minimum of 3 months)",
+      "Decreased GFR GFR <60 ml/min per 1.73 m2",
+      "Diet Low-protein diet Non-GFR determinants of SCr",
+      "Effect on SCys not known",
+      "Extreme sport/exercise/ Non-GFR determinants of SCr",
+      "G1",
+      "G2 60–89 Mildly decreased",
+      "G3a 45–59 Mildly to moderately decreased",
+      "G3b 30–44 Moderately to severely decreased",
+      "G4 15–29 Severely decreased",
+      "G5 <15 Kidney failure",
+      "High-protein diets Non-GFR determinants of SCr",
+      "In the absence of evidence of kidney damage,",
+      "Keto diets Non-GFR determinants of SCr",
+      "Markers of kidney",
+      "Medication effects Steroids (anabolic, hormone) Non-GFR determinants of SCr.",
+      "Practice Point 1.2.4.1: Use the same equation within geographical regions (as deﬁned locally [e.g., continent, country, region] and as large as possible). Within such regions, equations may differ for adults and children.",
+      "Practice Point 1.2.4.2: Use of race in the computation of eGFR should be avoided.",
+      "Recommendation 1.2.4.1: We recommend using a validated GFR estimating equation to derive GFR from serum ﬁltration markers (eGFR) rather than relying on the serum ﬁltration markers alone (1D).",
+      "SCr, serum creatinine;",
+      "Spinal cord injury with Non-GFR determinants of SCr",
+      "Vegetarian Non-GFR determinants of SCr",
+      "We are updating this recom-",
+      "and SCys",
+      "and creatine supplements",
+      "body builder",
+      "creatinine equation leads to a small overestimate of GFR in",
+      "damage (1 or more)",
+      "equations that also have high levels of accuracy.",
+      "in muscle mass",
+      "including the Black race coefﬁcient, the 2021 CKD-EPI",
+      "individuals.",
+      "mendation to accommodate the availability of alternative",
+      "neither G1 nor G2 fulﬁlls the criteria for CKD.",
+      "non-Black individuals and a small underestimate in Black",
+      "paraplegia/paraparesis or",
+      "quadriplegia/quadriparesis",
+      "structure or function, present for a minimum of 3 months,",
+      "with implications for health (Table 1)."
+    ],
+    "quotes_never_verified": []
+  },
+  {
+    "id": "kdoqi-ckd-guideline-2002",
+    "url": "https://www.kidney.org/sites/default/files/2024-08/ckd_evaluation_classification_stratification.pdf",
+    "doc_type": "pdf",
+    "checked_at": "2026-09-10T16:11:12Z",
+    "http_code": "200",
+    "status": "ok",
+    "etag": "\"66be00cf-70db4f\"",
+    "last_modified": "Thu, 15 Aug 2024 13:21:19 GMT",
+    "remote_sha256": "05d902fd233554ad127b1e36272c18456a32260f314d4a85d1fd29ef7af4a698",
+    "text_sha256": "a4786288f646144678f5dffba5fdd970f5778309d80c1d5e038c88455c860675",
+    "quotes_total": 4,
+    "quotes_verified": [
+      "Clinical laboratories should report an estimate of GFR using a prediction equation,",
+      "In adults, the MDRD Study and Cockcroft-Gault equations",
+      "The level of GFR should be estimated from prediction equations",
+      "in addition to reporting the serum creatinine measurement."
+    ],
+    "quotes_never_verified": []
+  },
+  {
     "id": "liverorg-journal-72-2015",
     "url": "https://www.liver.org.tw/journalView.php?cat=10&sid=148",
     "doc_type": "html",
@@ -778,6 +925,45 @@
     "quotes_never_verified": []
   },
   {
+    "id": "medlineplus-creatinine-test",
+    "url": "https://medlineplus.gov/lab-tests/creatinine-test/",
+    "doc_type": "html",
+    "checked_at": "2026-09-10T16:11:16Z",
+    "http_code": "200",
+    "status": "ok",
+    "etag": "\"b752a2075e301e327a8ce2e239f6fd72\"",
+    "last_modified": "Thu, 10 Sep 2026 04:15:50 GMT",
+    "remote_sha256": "937a810d1b70c78d217a408f327a419ff735b94a7cac79b330fa284931fdc884",
+    "text_sha256": "8376959c1985961fd866dbfe547fa01b442d45546426f41264606e75b0f5f52f",
+    "quotes_total": 4,
+    "quotes_verified": [
+      "Certain medicines and supplements can affect your test results.",
+      "Creatinine is a normal waste product in your body.",
+      "Creatinine levels that are considered normal for you will depend on how much muscle you have, what you eat, your age, and how active you are.",
+      "It's made when you use your muscles and some of the muscle tissue breaks down."
+    ],
+    "quotes_never_verified": []
+  },
+  {
+    "id": "medlineplus-gfr-test",
+    "url": "https://medlineplus.gov/lab-tests/glomerular-filtration-rate-gfr-test/",
+    "doc_type": "html",
+    "checked_at": "2026-09-10T16:11:18Z",
+    "http_code": "200",
+    "status": "ok",
+    "etag": "\"1580f723ea7cd4c1f8d2e4c9bb3d33e8\"",
+    "last_modified": "Thu, 10 Sep 2026 04:15:26 GMT",
+    "remote_sha256": "3cd9531c24dc18bc84d7fafcec87877ceaa24b117b7a730d0006040eb08cac9f",
+    "text_sha256": "4843413771e40a45c8a373fcc7f46a17f257d6badee0d5ed54ca6fdb98308ef7",
+    "quotes_total": 3,
+    "quotes_verified": [
+      "A glomerular filtration rate (GFR) test is a blood test that checks how well your kidneys are working.",
+      "An estimated GFR is called an eGFR.",
+      "Certain medicines can affect your results."
+    ],
+    "quotes_never_verified": []
+  },
+  {
     "id": "medlineplus-high-blood-pressure",
     "url": "https://medlineplus.gov/highbloodpressure.html",
     "doc_type": "html-text",
@@ -815,6 +1001,23 @@
       "When treatment kills cancer cells quickly, they release large amounts of purines into the blood.",
       "are uncommon and usually don’t cause health problems",
       "it doesn't always mean you have a condition that needs treatment"
+    ],
+    "quotes_never_verified": []
+  },
+  {
+    "id": "mohw-ckd-press-release-2015",
+    "url": "https://www.mohw.gov.tw/fp-16-20961-1.html",
+    "doc_type": "html",
+    "checked_at": "2026-09-10T16:11:16Z",
+    "http_code": "200",
+    "status": "ok",
+    "etag": null,
+    "last_modified": null,
+    "remote_sha256": "aa70320831743abd40ce3fb9b115ba9ebe2b99fcb91691e1e24ee6225a9a76a6",
+    "text_sha256": "ea3ed4ab31fcd2bb8b6fd327fe515b835f57673640e427be9c1f98b9a4f64c35",
+    "quotes_total": 1,
+    "quotes_verified": [
+      "腎絲球過濾率（eGFR）代表腎臟的功能，是以血中肌酸酐以及考量年齡、性別後，換算估計之腎絲球過濾率(estimated GFR, eGFR)。"
     ],
     "quotes_never_verified": []
   },
@@ -1023,6 +1226,44 @@
       "ensure that the tape is snug, but does not compress the skin, and is parallel to the floor. The measurement is made at the end of a normal expiration.",
       "older persons often have lost muscle mass; thus, they have more fat for a given BMI than younger persons. Women may have more body fat for a given BMI than men, whereas patients with clinical edema may have less fat for a given BMI"
     ]
+  },
+  {
+    "id": "niddk-gfr-equations",
+    "url": "https://www.niddk.nih.gov/research-funding/research-programs/kidney-clinical-research-epidemiology/laboratory/glomerular-filtration-rate-equations",
+    "doc_type": "html",
+    "checked_at": "2026-09-10T16:11:19Z",
+    "http_code": "200",
+    "status": "ok",
+    "etag": null,
+    "last_modified": null,
+    "remote_sha256": "f811647c31846a828d7f66322b5b11221522be288c3cc33a51c7fd41ce54d5e9",
+    "text_sha256": "5c4fe525f5b733752eb61667c182ec7f26385710a75c24fbe138d3bcacca7dff",
+    "quotes_total": 5,
+    "quotes_verified": [
+      "Despite various",
+      "Imprecision is inherent in all estimating equations.",
+      "NIDDK supports the National Kidney Foundation–American Society of Nephrology Task Force’s recommendation to calculate eGFR using the",
+      "estimating equations are still the preferred method for assessing kidney function.",
+      "factors that can affect the performance of eGFR equations"
+    ],
+    "quotes_never_verified": []
+  },
+  {
+    "id": "nkf-asn-egfr-task-force-2021",
+    "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=34556489&rettype=abstract&retmode=text",
+    "doc_type": "html-text",
+    "checked_at": "2026-09-10T16:11:15Z",
+    "http_code": "200",
+    "status": "ok",
+    "etag": null,
+    "last_modified": null,
+    "remote_sha256": "536892b0c58fb25ce3d1ea1f317c27e8167a9079635e09fb39674145691c3d5e",
+    "text_sha256": "deddfa09bd74d756cbfb7ed0ba01c78c4f6e99413a3c12f61223177a3fb32a39",
+    "quotes_total": 1,
+    "quotes_verified": [
+      "For US adults (>85% of whom have normal kidney function), we recommend immediate implementation of the CKD-EPI creatinine equation refit without the race variable in all laboratories in the United States"
+    ],
+    "quotes_never_verified": []
   },
   {
     "id": "tas-taiwan-lipid-focused-update-2022",

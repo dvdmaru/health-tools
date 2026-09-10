@@ -8,7 +8,8 @@
   ① doc_id 必須存在於 data/sources/manifest.json——指不到來源的列不得渲染。
   ② quote（含 quote_extra、corroboration）非空。
   ③ 該來源的快照檔在磁碟上存在時，每一句引句都必須在快照裡找得到。
-     PDF 走 `pdftotext -layout`；比對前雙方都做 re.sub(r"\\s+", "", …) 正規化
+     PDF 走 `pdftotext -layout`；ODS 讀 content.xml 以固定規則抽儲存格文字（見 ods_text()）；
+     比對前雙方都做 re.sub(r"\\s+", "", …) 正規化
      （PDF 轉檔會在中文與數字之間插入或吃掉空白，原樣 grep 必假陰性）。
      **全形／半形不轉換**——來源自己的 ≧／≥、mg/dl／mg/dL 不一致就是回查的指紋，
      把它們正規化掉等於把「引句照抄」這條紅線拆了。
@@ -28,11 +29,14 @@
     python3 scripts/check-receipts.py --verbose  # 連 PASS 的列一起列出
 """
 import argparse
+import io
 import json
 import pathlib
 import re
 import subprocess
 import sys
+import xml.etree.ElementTree as ET
+import zipfile
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SOURCES = ROOT / "data" / "sources" / "manifest.json"
@@ -70,6 +74,42 @@ def norm(s: str) -> str:
     return re.sub(r"\s+", "", s)
 
 
+# ---------- ODS（OpenDocument 試算表）抽字 ----------
+# 部分國健署資料集只以 ODS 發布。快照存原檔（同 PDF 存原檔、gate 端才 pdftotext），
+# 抽字在這裡做，規則固定（2026-09-10 與來源席 E1 的探針對齊，兩邊必須一致）：
+#   依文件順序走每個 table:table-row；一列＝該列每個 table:table-cell 的文字用 \t 串接，
+#   table:covered-table-cell（被合併儲存格蓋住的格）當空字串；一格＝該格底下每個 text:p
+#   的 ''.join(p.itertext())，多個 text:p 用 \n 串接；各列用 \n 串接。
+# ☠️ number-columns-repeated／number-rows-repeated 不展開也不刪，照元素原樣走：比對前
+#    norm() 會吃掉空白，多出的 \t 不影響；為了省空間改規則，就和 E1 的探針不一致了。
+# 只用標準函式庫（CI runner 沒有第三方 ODS 套件）。check-source-drift.py 與
+# fetch-health-source.py 都借用這一支，不各寫一份。
+_ODS_TABLE = "{urn:oasis:names:tc:opendocument:xmlns:table:1.0}"
+_ODS_TEXT = "{urn:oasis:names:tc:opendocument:xmlns:text:1.0}"
+
+
+def ods_text(data: bytes) -> str:
+    """ODS 原檔 bytes → 抽出的儲存格文字。讀不出來（不是 ZIP、沒有 content.xml、XML 壞掉）
+    丟 ValueError——那是 FAIL（收據 gate）還是攔截頁（抓取／drift），由呼叫端決定。"""
+    try:
+        with zipfile.ZipFile(io.BytesIO(data)) as z:
+            content = z.read("content.xml")
+        root = ET.fromstring(content)
+    except (zipfile.BadZipFile, KeyError, ET.ParseError) as e:
+        raise ValueError(f"讀不出 ODS 的 content.xml（{type(e).__name__}）") from e
+    lines = []
+    for row in root.iter(f"{_ODS_TABLE}table-row"):
+        cells = []
+        for cell in row:
+            if cell.tag == f"{_ODS_TABLE}table-cell":
+                cells.append("\n".join("".join(p.itertext())
+                                       for p in cell.iter(f"{_ODS_TEXT}p")))
+            elif cell.tag == f"{_ODS_TABLE}covered-table-cell":
+                cells.append("")
+        lines.append("\t".join(cells))
+    return "\n".join(lines)
+
+
 def snapshot_text(path: pathlib.Path, doc_type: str) -> str:
     key = str(path)
     if key in _text_cache:
@@ -81,6 +121,11 @@ def snapshot_text(path: pathlib.Path, doc_type: str) -> str:
             raise OSError(f"pdftotext 失敗（{path.name}）："
                           f"{r.stderr.decode('utf-8', 'replace').strip()}")
         text = r.stdout.decode("utf-8", "replace")
+    elif doc_type == "ods":
+        try:
+            text = ods_text(path.read_bytes())
+        except ValueError as e:
+            raise OSError(f"ODS 抽字失敗（{path.name}）：{e}") from e
     else:
         text = path.read_text(encoding="utf-8", errors="replace")
     _text_cache[key] = norm(text)

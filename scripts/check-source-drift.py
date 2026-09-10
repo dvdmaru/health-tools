@@ -27,7 +27,8 @@ text_sha256)在本檔裡因此**只當資訊,不當 drift 訊號**——drift �
      _datasets()／quotes_of()／norm() 邏輯(import,正規化規則保證一致)。
   2. 對每列 url 用 curl 重抓(UA 與攔截判定沿用 fetch-health-source.py 的
      curl()／blocked_reason() 同一套指紋),另外抓 ETag／Last-Modified。
-  3. 抽文字:doc_type=pdf 用 pdftotext -layout;html／html-text 去
+  3. 抽文字:doc_type=pdf 用 pdftotext -layout;ods 用 check-receipts.py 的 ods_text()
+     (讀不出 ODS＝blocked,不是 drift);html／html-text 去
      <script>/<style>、去 tag、entity unescape,再正規化空白比對。
   4. 每份文件算出 remote_sha256／text_sha256／quotes_total／quotes_found／
      quotes_missing(前 3 句、截 60 字)／http_code／etag／last_modified／checked_at／
@@ -172,7 +173,19 @@ def curl_with_headers(url: str, timeout: int) -> tuple:
 def extract_text(doc_type: str, body: bytes) -> str:
     if doc_type == "pdf":
         return _pdf_text(body)
+    if doc_type == "ods":
+        return _ods_text(body)
     return _html_text(body)
+
+
+def _ods_text(body: bytes) -> str:
+    """ODS 抽字借用 check-receipts.py 的 ods_text()——收據 gate 與 drift 同一支、同一套規則。
+    讀不出來回空字串，同 _pdf_text() 在 pdftotext 失敗時的處理（攔截頁在 check_source()
+    抽字之前就已判 blocked，走不到這裡）。"""
+    try:
+        return _receipts.ods_text(body)
+    except ValueError:
+        return ""
 
 
 def _pdf_text(body: bytes) -> str:
@@ -196,9 +209,9 @@ def _html_text(body: bytes) -> str:
 def extract_page_title(doc_type: str, body: bytes) -> str:
     """抽原始 <title> 內容(未去 tag 前那份 body,不是 extract_text() 的輸出)——
     診斷用:同一個 URL 回應 200 但引句全消失時,<title> 常常是第一個線索
-    (攔截頁／替代頁面的 title 通常跟文件標題對不上)。doc_type=pdf 沒有 <title>,
+    (攔截頁／替代頁面的 title 通常跟文件標題對不上)。doc_type=pdf／ods 沒有 <title>,
     回空字串。找不到就回空字串,不回 None,呼叫端一律用 truthy 判斷就好。"""
-    if doc_type == "pdf":
+    if doc_type in ("pdf", "ods"):
         return ""
     text = body.decode("utf-8", "replace")
     m = TITLE_RE.search(text)
@@ -269,6 +282,15 @@ def check_source(src: dict, required: set, timeout: int) -> dict:
         result["fetch_status"] = "unreachable"
         result["error"] = "回應是空的"
         return result
+
+    # doc_type=ods：回應讀不出 ODS（不是 ZIP）＝攔截頁或替代頁，歸 blocked 不歸 drift
+    # （MODEL.md §2：拿到 HTTP 200 不等於拿到內容）。其餘 doc_type 不經過這裡。
+    if doc_type == "ods":
+        reason = _fetch.ods_blocked_reason(body)
+        if reason:
+            result["fetch_status"] = "blocked"
+            result["error"] = reason
+            return result
 
     result["remote_sha256"] = hashlib.sha256(body).hexdigest()
     text = extract_text(doc_type, body)

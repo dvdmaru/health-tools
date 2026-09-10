@@ -118,6 +118,9 @@ python3 scripts/fetch-health-source.py --id <id> --url <url> \
   用原樣 grep 判定「引句不存在」是假陰性，踩過就知道。
 - **全形半形不轉換**：來源自己的 `≧`／`≥`、`mg/dl`／`mg/dL` 不一致是回查原文的指紋。
   gate 只吃空白，不折疊字形——把 `≥` 寫成 `≧` 就該紅（`tests/test_receipts.py` 有這條）。
+- **ODS（`doc_type: ods`）與 PDF 的怪字元**：只以試算表發布的來源存 ODS 原檔，gate 用 `ods_text()`
+  逐列抽儲存格文字（格間 tab、列間換行）再比對。PDF 文字層的連字（`ﬁ`）、CJK 相容表意字
+  （`年` U+F98E 這一類）照抽字結果寫進引句——**不加 NFKC**，因為它會連 `≧`／`≥`、全形半形一起折疊。
 - **不要用 curl 重驗 diabetesjournals.org 與 hpa.gov.tw**：兩者對 curl 回 403／攔截頁，
   會把「引句存在」誤判成「不存在」。這兩批快照是瀏覽器抽出的純文字
   （`doc_type: html-text`、`retrieval: browser-text`）。

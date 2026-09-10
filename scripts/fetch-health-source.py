@@ -3,7 +3,7 @@
 """fetch-health-source.py — 把一份官方文件抓成快照，登記進 data/sources/manifest.json。
 
 做的事只有三件（刻意做窄）：
-  1. 給一個 URL，落地成 data/sources/<id>.pdf 或 .html
+  1. 給一個 URL，落地成 data/sources/<id>.pdf、.html 或 .ods（ods 讀不出來＝攔截頁，不落地）
   2. 算 SHA-256
   3. 在 data/sources/manifest.json 補上或更新一列（schema 見同目錄 schema.json）
 
@@ -35,6 +35,7 @@ CERTIFICATE_VERIFY_FAILED 掛掉；curl 在 macOS 與 GH Actions 都在，行為
 import argparse
 import datetime
 import hashlib
+import importlib.util
 import json
 import pathlib
 import re
@@ -93,6 +94,33 @@ def blocked_reason(code: str, body: bytes) -> str:
     return ""
 
 
+_receipts_mod = None
+
+
+def _receipts():
+    """借用 check-receipts.py 的 ods_text()（檔名有連字號，不能一般 import）。
+    用到才載入：pdf／html 的抓取完全不經過這裡。"""
+    global _receipts_mod
+    if _receipts_mod is None:
+        spec = importlib.util.spec_from_file_location(
+            "_check_receipts_for_fetch",
+            pathlib.Path(__file__).resolve().parent / "check-receipts.py")
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        _receipts_mod = mod
+    return _receipts_mod
+
+
+def ods_blocked_reason(body: bytes) -> str:
+    """doc_type=ods 的攔截判定：回應讀不出 ODS（不是 ZIP、沒有 content.xml）＝攔截頁
+    或替代頁，不是文件；是 ODS 就回空字串。判定用的抽字與收據 gate 同一支。"""
+    try:
+        _receipts().ods_text(body)
+    except ValueError as e:
+        return f"回應不是 ODS 試算表（{e}）"
+    return ""
+
+
 def load_manifest() -> list:
     if not MANIFEST.exists():
         return []
@@ -122,7 +150,7 @@ def main() -> int:
     ap.add_argument("--url", required=True)
     ap.add_argument("--title", required=True, help="文件標題，照原文抄")
     ap.add_argument("--org", required=True, help="發布機構全名，不用縮寫")
-    ap.add_argument("--doc-type", required=True, choices=["pdf", "html"])
+    ap.add_argument("--doc-type", required=True, choices=["pdf", "html", "ods"])
     ap.add_argument("--version", required=True, dest="version_or_date",
                     help="文件自己標示的版本或日期；沒標示就寫「文件未標示」")
     ap.add_argument("--license-bucket", required=True, choices=list(LICENSE_BUCKETS))
@@ -147,6 +175,10 @@ def main() -> int:
         return 1
 
     reason = blocked_reason(code, body)
+    # doc_type=ods：HTTP 200 但讀不出 ODS（不是 ZIP）＝攔截頁或替代頁，同樣中止不落地。
+    # 空回應不在這裡判，留給下面「回應是空的」那一條。
+    if not reason and args.doc_type == "ods" and body:
+        reason = ods_blocked_reason(body)
     if reason:
         print(f"🔴 需瀏覽器抓取：{args.url}\n"
               f"   偵測到攔截（{reason}），這不是文件本身。\n"

@@ -43,9 +43,10 @@
           "enum": [
             "pdf",
             "html",
-            "html-text"
+            "html-text",
+            "ods"
           ],
-          "description": "落地快照的檔案型態。html-text＝原始頁面是 HTML，但因來源擋 curl，快照是用瀏覽器抽出的純文字（.txt）——標成 html 會讓下次自動化以為可以直接重抓 HTML。"
+          "description": "落地快照的檔案型態。html-text＝原始頁面是 HTML，但因來源擋 curl，快照是用瀏覽器抽出的純文字（.txt）——標成 html 會讓下次自動化以為可以直接重抓 HTML。ods＝來源只以 OpenDocument 試算表發布；快照存原檔，gate 以固定規則抽出儲存格文字比對。"
         },
         "url": {
           "type": "string",

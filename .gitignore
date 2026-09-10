@@ -64,6 +64,11 @@ data/sources/aasld-hbv-guidance-2018.html
 data/sources/easl-hbv-cpg-2017.pdf
 data/sources/ifcc-aminotransferase-ri-2010.txt
 data/sources/liverorg-journal-72-2015.html
+# M8 renal（licensed-cite-only）
+data/sources/kdigo-ckd-guideline-2024.pdf
+data/sources/kdigo-ckd-guideline-2012.pdf
+data/sources/kdoqi-ckd-guideline-2002.pdf
+data/sources/nkf-asn-egfr-task-force-2021.txt
 
 # 二審用 dump（scripts/audit-rowctx.py 產物）
 .audit/
