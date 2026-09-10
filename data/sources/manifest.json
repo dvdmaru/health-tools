@@ -1,5 +1,19 @@
 [
   {
+    "id": "aasld-hbv-guidance-2018",
+    "title": "Update on Prevention, Diagnosis, and Treatment and of Chronic Hepatitis B: AASLD 2018 Hepatitis B Guidance",
+    "org": "American Association for the Study of Liver Diseases",
+    "doc_type": "html",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5975958/",
+    "version_or_date": "Hepatology 2018 Apr;67(4):1560–1599",
+    "fetched_at": "2026-09-10",
+    "sha256": "b40d2277c076b1d5d7cb2af144cf1a48c1606e1bbe21737297ca9d359b65f6af",
+    "local_path": "data/sources/aasld-hbv-guidance-2018.html",
+    "license_bucket": "licensed-cite-only",
+    "retrieval": "curl",
+    "note": "PMC 全文 HTML。標題照 PMC 原文（含 “Treatment and of”）。org 全名取自文件 FUNDING 段。探針在 HTML 可見文字、原始 HTML、NLM E-utilities PMC 全文 XML（efetch.fcgi?db=pmc&id=5975958&rettype=xml）三種版本都命中，依工具可收格式選 HTML。PMC 託管的期刊文章著作權屬出版者，不是聯邦公有領域（PMC XML 的授權聲明為 text mining／fair use），故 licensed-cite-only、快照只留本機。同一 URL 相隔數分鐘兩次 curl 的 raw sha256 不同（動態頁），sha 只當資訊。"
+  },
+  {
     "id": "acc-aha-blood-cholesterol-guideline-2018",
     "title": "2018 AHA/ACC/AACVPR/AAPA/ABC/ACPM/ADA/AGS/APhA/ASPC/NLA/PCNA Guideline on the Management of Blood Cholesterol: Executive Summary: A Report of the American College of Cardiology/American Heart Association Task Force on Clinical Practice Guidelines",
     "org": "American Heart Association／American College of Cardiology 等多學會聯合（AHA/ACC/AACVPR/AAPA/ABC/ACPM/ADA/AGS/APhA/ASPC/NLA/PCNA）",
@@ -26,6 +40,20 @@
     "license_bucket": "licensed-cite-only",
     "retrieval": "browser-text",
     "note": "快照為 Chrome get_page_text 抽取之頁面前 50,000 字元（含 §3.1 Definition of High BP 本文與 Table 6 分級表）；本文其餘部分未收錄。"
+  },
+  {
+    "id": "acg-abnormal-liver-chemistries-2017",
+    "title": "ACG Clinical Guideline: Evaluation of Abnormal Liver Chemistries",
+    "org": "American College of Gastroenterology",
+    "doc_type": "pdf",
+    "url": "https://acgcdn.gi.org/wp-content/uploads/2018/04/ACG-Abnormal-Liver-Chemistries-Guideline-Summary.pdf",
+    "version_or_date": "Am J Gastroenterol 2017; 112:18–35; published online 20 December 2016",
+    "fetched_at": "2026-09-10",
+    "sha256": "cb033dfc384234383410b221977155dbd0c3ff54d04be8336f5ade3835c6fcdf",
+    "local_path": "data/sources/acg-abnormal-liver-chemistries-2017.pdf",
+    "license_bucket": "licensed-cite-only",
+    "retrieval": "curl",
+    "note": "ACG 自家 CDN 的 Guideline Summary PDF（Abstract、Summary statements、Tables、Figures），不是期刊完整正文；期刊正本 doi:10.1038/ajg.2016.517（LWW 正文頁 HTTP 402）。著作權屬出版者，快照只留本機（.gitignore）。"
   },
   {
     "id": "acr-gout-guideline-2020",
@@ -140,6 +168,20 @@
     "note": "內文 PDF。引句以 pdftotext -layout 輸出比對，PDF 轉檔會在中文與數字間插入或吃掉空白，比對前須正規化空白。"
   },
   {
+    "id": "easl-hbv-cpg-2017",
+    "title": "EASL 2017 Clinical Practice Guidelines on the management of hepatitis B virus infection",
+    "org": "European Association for the Study of the Liver",
+    "doc_type": "pdf",
+    "url": "https://easl.eu/wp-content/uploads/2018/10/HepB-English-report.pdf",
+    "version_or_date": "2017（Journal of Hepatology 2017 vol. 67, 370–398）",
+    "fetched_at": "2026-09-10",
+    "sha256": "5d571b6248e21409145cc36c485a5627b5a8011d773242400b307bebd001fac3",
+    "local_path": "data/sources/easl-hbv-cpg-2017.pdf",
+    "license_bucket": "licensed-cite-only",
+    "retrieval": "curl",
+    "note": "easl.eu 自家託管的期刊排版 PDF（© 2017 European Association for the Study of the Liver，Elsevier 出版）。☠️ pdftotext -layout 抽字雷：雙欄交錯；Phase 3 段的 “~” 被抽成控制字元 U+0003（實際為 “(ULN ” + U+0003 + “40 IU/L)”），所以 “ULN ~40 IU/L” 對快照 0 命中；Phase 1 段為 “[upper limit of normal (ULN) approximately 40 IU/L].1”（上標文獻號黏在句點後）；Phase 3 的 “traditional” 被斷行成 “tra-”／“ditional”。比較符號也有異常字元（輸出中出現 “[2,000”、“\\20,000” 這類字串），含 <、>、~ 的引句要先看實際輸出。"
+  },
+  {
     "id": "eular-gout-recommendations-2016",
     "title": "2016 updated EULAR evidence-based recommendations for the management of gout",
     "org": "European League Against Rheumatism",
@@ -194,6 +236,20 @@
     "license_bucket": "tw-gov",
     "retrieval": "browser-text",
     "note": "原始頁面擋 curl（hpa.gov.tw 對 curl 回攔截頁）。快照為瀏覽器抽出的純文字，前 3 行是 SOURCE_URL／FETCHED_AT／METHOD 標頭，第 5 行起為正文；引句比對前正規化空白。"
+  },
+  {
+    "id": "hpa-adult-preventive-form-2026",
+    "title": "附表六之四 健康署成人預防保健服務檢查紀錄結果表單（「醫事服務機構辦理預防保健服務注意事項」附表2.4、3.3、4.3、5.3、6.3、6.4、7.3、8.4、8.5 修正規定）",
+    "org": "衛生福利部國民健康署",
+    "doc_type": "pdf",
+    "url": "https://www.hpa.gov.tw/Pages/ashx/GetFile.ashx?lang=c&type=1&sid=44a2f553a9dc43b6aeea1057b83c1e13",
+    "version_or_date": "衛生福利部115年5月27日修正發布（衛授國字第1151460487號令），自中華民國一百十五年一月一日生效",
+    "fetched_at": "2026-09-10",
+    "sha256": "59af3bd0406a7220584d7828b1123ba9bb50261956098f7274252d93b3fbb767",
+    "local_path": "data/sources/hpa-adult-preventive-form-2026.pdf",
+    "license_bucket": "tw-gov",
+    "retrieval": "curl",
+    "note": "公告頁 https://www.hpa.gov.tw/838/20102/n （發布日期 2026/05/27，更新日期 2026/05/28）的附件「附表2.4、3.3、4.3、5.3、6.3、6.4、7.3、8.4、8.5.pdf」。整份 PDF 共 11 頁、含 9 張附表；附表六之四在第 6–7 頁（第 6 頁起頭，AST／ALT、肌酸酐、eGFR 等實驗室檢查列在第 7 頁）。第 7 頁 AST（GOT）與 ALT（GPT）兩行印為「IU/L（參考值:　）」，括號內空白、沒有數字（pdftotext 輸出與第 7 頁 render 目視一致）；同頁飯前血糖、血脂、肌酸酐各行的參考值括號同樣空白。修正發布機關為衛生福利部，org 依本站 hpa-* 各列慣例寫國健署（託管與表單名稱「健康署」）。本次 curl 未被攔截（HTTP 200、application/pdf），未加 -k。"
   },
   {
     "id": "hpa-blood-sugar-4-tips-2025",
@@ -350,6 +406,20 @@
     "note": "PMC 全文 HTML。"
   },
   {
+    "id": "ifcc-aminotransferase-ri-2010",
+    "title": "Common reference intervals for aspartate aminotransferase (AST), alanine aminotransferase (ALT) and γ-glutamyl transferase (GGT) in serum: results from an IFCC multicenter study.",
+    "org": "International Federation of Clinical Chemistry and Laboratory Medicine (IFCC) Committee on Reference Intervals and Decision Limits (C-RIDL); Committee on Reference Systems for Enzymes (C-RSE)",
+    "doc_type": "html-text",
+    "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=21034260&rettype=abstract&retmode=text",
+    "version_or_date": "Clin Chem Lab Med. 2010 Nov;48(11):1593-601（Epub 2010 Oct 29；PMID 21034260）",
+    "fetched_at": "2026-09-10",
+    "sha256": "e125b6686e1f22f28983695a5015fb1e45294265815ebc443ded1fff7f996943",
+    "local_path": "data/sources/ifcc-aminotransferase-ri-2010.txt",
+    "license_bucket": "licensed-cite-only",
+    "retrieval": "curl",
+    "note": "僅 PubMed 摘要，未取得全文（期刊付費牆）。快照是 NLM E-utilities efetch 的 text/plain 回應，以 fetch-health-source.py 的 curl()（同 UA、同攔截判定）取回後原樣寫檔、未改動任何位元組；因該工具 --doc-type 只收 pdf／html 而改為手動登記。schema 的 doc_type 沒有「純文字 API 回應」這一型，暫登 html-text 讓收據 gate 以純文字讀取——這份不是瀏覽器抽字，retrieval 照實寫 curl。PubMed 網頁版對 curl 回 cookie 牆（FINDINGS-B3），故走 E-utilities。org：摘要原文只寫 “IFCC Committee on Reference Intervals and Decision Limits (C-RIDL); Committee on Reference Systems for Enzymes (C-RSE)”，IFCC 全稱不在快照內，依 FINDINGS-B3 C4 展開。PubMed 只是索引，著作權屬出版者／IFCC，不是聯邦公有領域。"
+  },
+  {
     "id": "jama-blood-cholesterol-synopsis-2019",
     "title": "Management of Blood Cholesterol",
     "org": "JAMA（American Medical Association）",
@@ -392,6 +462,34 @@
     "note": "J-STAGE 全文 PDF，只引不轉載。引句以 pdftotext -layout 輸出比對。⚠️ Figure 1 流程圖內的文字抽出後字間空白錯亂（`Serumuric acidlevel`、`SUA≧8.0mg / dL`），引句照抄該狀態，比對前正規化空白。8.0／9.0 只出現在 Figure 1，正文散文段落沒有重述。"
   },
   {
+    "id": "liverorg-journal-72-2015",
+    "title": "好心肝會刊 第72期〈肝指數GOT、GPT正常，肝不一定好！〉",
+    "org": "財團法人肝病防治學術基金會",
+    "doc_type": "html",
+    "url": "https://www.liver.org.tw/journalView.php?cat=10&sid=148",
+    "version_or_date": "第72期，出刊日：2015-10-15",
+    "fetched_at": "2026-09-10",
+    "sha256": "8bdc1ce057b875738a9fc0b03e622b3be240982f169e94f419a1adf0a0d457f7",
+    "local_path": "data/sources/liverorg-journal-72-2015.html",
+    "license_bucket": "licensed-cite-only",
+    "retrieval": "curl",
+    "note": "org 取自頁尾版權列「財團法人肝病防治學術基金會 版權所有」；頁首自稱「肝病防治學術基金會」、<title> 簡稱「肝基會」。衛教會刊，不是臨床指引。快照為原始 HTML（未經 trafilatura），探針對原始 HTML 與可見文字都命中。同一 URL 相隔數分鐘兩次 curl 的 raw sha256 不同（動態頁），sha 只當資訊。"
+  },
+  {
+    "id": "livertox-severity-grading-2019",
+    "title": "Severity Grading In Drug Induced Liver Injury（LiverTox: Clinical and Research Information on Drug-Induced Liver Injury）",
+    "org": "National Institute of Diabetes and Digestive and Kidney Diseases",
+    "doc_type": "pdf",
+    "url": "https://www.ncbi.nlm.nih.gov/books/NBK548241/pdf/Bookshelf_NBK548241.pdf",
+    "version_or_date": "Updated: May 4, 2019",
+    "fetched_at": "2026-09-10",
+    "sha256": "18bf719ba6e686b4559c71787095d8b0e30fc94b67360bc0e8baf9f08cc1bd98",
+    "local_path": "data/sources/livertox-severity-grading-2019.pdf",
+    "license_bucket": "us-federal-pd",
+    "retrieval": "curl",
+    "note": "官方 PDF（NCBI Bookshelf NBK548241）。org 照 PDF 內 NLM Citation 的發行者（Bethesda (MD): National Institute of Diabetes and Digestive and Kidney Diseases; 2012-）；另一種掛法：本書由 U.S. National Library of Medicine 的 NCBI Bookshelf 託管（站台掛 NLM／NCBI）。☠️ pdftotext -layout 在第 2→3 頁換頁處，把頁首「Severity Grading In Drug Induced Liver Injury」與頁碼「3」插進 “In the LiverTox website, the” 與 “default ULN for ALT is 40 U/L” 之間，跨這個換頁的引句對快照 grep 不到；從 “default ULN” 起算的片段可命中。"
+  },
+  {
     "id": "medlineplus-a1c-test",
     "title": "A1C Test",
     "org": "MedlinePlus（U.S. National Library of Medicine）",
@@ -403,6 +501,34 @@
     "local_path": "data/sources/medlineplus-a1c-test.html",
     "license_bucket": "us-federal-pd",
     "retrieval": "curl"
+  },
+  {
+    "id": "medlineplus-alt-blood-test",
+    "title": "ALT Blood Test",
+    "org": "MedlinePlus（U.S. National Library of Medicine）",
+    "doc_type": "html",
+    "url": "https://medlineplus.gov/lab-tests/alt-blood-test/",
+    "version_or_date": "Last updated November 5, 2024",
+    "fetched_at": "2026-09-10",
+    "sha256": "3c2a402bda71c175a79da026198f7fea22f88915018a6c13a96eedbe3392a97b",
+    "local_path": "data/sources/medlineplus-alt-blood-test.html",
+    "license_bucket": "us-federal-pd",
+    "retrieval": "curl",
+    "note": "NLM 自製的 /lab-tests/ 頁（聯邦公有領域）。同網域 /ency/ 為 A.D.A.M./Ebix 商業內容，授權不同，本輪不抓。"
+  },
+  {
+    "id": "medlineplus-ast-test",
+    "title": "AST Test",
+    "org": "MedlinePlus（U.S. National Library of Medicine）",
+    "doc_type": "html",
+    "url": "https://medlineplus.gov/lab-tests/ast-test/",
+    "version_or_date": "Last updated November 5, 2024",
+    "fetched_at": "2026-09-10",
+    "sha256": "510cbd7910c6463d5aff7b9946e76c3ce1caed885d70a249ab8ec61b4b376502",
+    "local_path": "data/sources/medlineplus-ast-test.html",
+    "license_bucket": "us-federal-pd",
+    "retrieval": "curl",
+    "note": "NLM 自製的 /lab-tests/ 頁（聯邦公有領域）。☠️ 原始 HTML 把 “Low levels of AST in the blood” 包在 <strong> 標籤內、句子其餘部分在標籤外，收據 gate 對 doc_type=html 讀原始檔只去空白，這句整句 grep 不到（可見文字版命中）；先例 medlineplus-cholesterol-levels 因同類問題改落 html-text，本列是否比照待主席裁。"
   },
   {
     "id": "medlineplus-cholesterol-levels",
