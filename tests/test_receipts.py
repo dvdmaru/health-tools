@@ -114,11 +114,28 @@ class TestRealData(unittest.TestCase):
         """☠️ 5.9%／<5.7%／<100 是篩檢分流門檻，標成 diagnosis 就會在頁面上
         把操作門檻講成診斷線。"""
         rows = json.loads((CRIT_DIR / "hba1c.json").read_text(encoding="utf-8"))
+        # ☠️ 下面這份白名單是絆線，不是型別檢查：任何**新文件**想加 screening_triage 列
+        #    都會讓這條轉紅，逼人親眼把那一列的引句讀過一次。
+        #    起因＝2026-08-29 判準二審抓到「用藥起始門檻以 screening_triage 混上表」（本站紅線）。
+        #    ⇒ 往這裡加 doc_id 之前，必須逐字讀過該列引句，確認它講的是
+        #      「接下來做哪一項檢查」，不是「什麼時候開始用藥」。
+        #      願意付這個覆核成本，就是這條絆線的全部價值；為了讓 build 綠而放寬它，
+        #      等於把它刪掉。
+        TRIAGE_DOCS = {
+            # 糖尿病學會 2022：HbA1c 5.9–6.5% 且未驗空腹血糖 → 做 OGTT
+            "daroc-t2dm-guideline-2022",
+            # 2026-09-10 指揮位逐字覆核後加入。WHO/IDF 2006 第 8 頁 Recommendation 6：
+            # "An OGTT should be used in individuals with fasting plasma glucose
+            #  6.1–6.9mmol/l (110–125mg/dl) to determine glucose tolerance status."
+            # ＝決定接下來驗哪一項，與用藥無關。
+            "who-diabetes-diagnosis-2006",
+        }
         triage = [r for r in rows if r["category"] == "screening_triage"]
         self.assertTrue(triage, "篩檢分流列不見了")
         for r in triage:
             with self.subTest(quote=r["quote"][:20]):
-                self.assertEqual("daroc-t2dm-guideline-2022", r["doc_id"])
+                self.assertIn(r["doc_id"], TRIAGE_DOCS,
+                              "新文件的分流列要先由人逐字覆核引句，再加進 TRIAGE_DOCS")
         for r in rows:
             if r["category"] == "diagnosis" and r["indicator_id"] == "hba1c":
                 with self.subTest(quote=r["quote"][:20]):

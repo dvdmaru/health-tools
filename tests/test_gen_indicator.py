@@ -39,18 +39,30 @@ SLUG = "hba1c"
 ARTICLE = ROOT / "articles" / "indicators" / f"{SLUG}.md"
 CRITERIA = ROOT / "data" / "criteria" / f"{SLUG}.json"
 
+# 「單指標頁」的活體 fixture。
+# ☠️ 2026-09-10 之前這個角色是 hba1c 兼的；那頁併入空腹血糖／OGTT／隨機血糖之後
+#    變成多指標頁，整組「單指標頁該長什麼樣」的斷言跟著失效。
+#    ⇒ 拿真實頁面當 fixture 時，要挑一個「它的形狀就是這組測試要釘的形狀」的頁面，
+#      而不是挑當下剛好符合的那一頁。uric-acid 是站上僅存的單指標頁。
+SINGLE_SLUG = "uric-acid"
+SINGLE_ARTICLE = ROOT / "articles" / "indicators" / f"{SINGLE_SLUG}.md"
+SINGLE_CRITERIA = ROOT / "data" / "criteria" / f"{SINGLE_SLUG}.json"
+
 _NUM = re.compile(r"\d+(?:\.\d+)?")
 
 
-def build_into(tmp: pathlib.Path, published: bool):
-    """把整頁生成到暫存目錄，回傳 (html, pages, tmp)。不動 repo 內的產物。"""
+def build_into(tmp: pathlib.Path, published: bool, slug: str = SLUG):
+    """把整頁生成到暫存目錄，回傳 (html, pages, tmp)。不動 repo 內的產物。
+
+    `slug` 決定回傳哪一頁的 html；整站一律全部生成（不改變既有行為）。
+    """
     out = tmp / "public-health"
     parts = tmp / "sitemap-parts"
     llms = out / "llms.txt"
     out.mkdir(parents=True, exist_ok=True)
     llms.write_text("# 健檢數據誌\n\n## 引用說明\n\n- 一行。\n", encoding="utf-8")
     pages = gen.build(out_root=out, parts_dir=parts, llms_path=llms, published=published)
-    html = (out / "indicators" / SLUG / "index.html").read_text(encoding="utf-8")
+    html = (out / "indicators" / slug / "index.html").read_text(encoding="utf-8")
     return html, pages, out, parts, llms
 
 
@@ -70,9 +82,16 @@ def expected_group_order(rows: list, ids: list):
 
 
 def criteria_rows():
+    """期望值從資料算：這頁收哪些 indicator_id，由它自己的 frontmatter 說了算。
+
+    ☠️ 原本寫死 `[SLUG]`，2026-09-10 hba1c 併入血糖三指標後整組斷言失真。
+       測試的期望值寫死，資料一改就是假紅——更糟的情況是資料縮水時變成假綠。
+    """
+    meta, _, _ = gen.parse_article(ARTICLE)
+    ids = gen.page_indicators(meta, SLUG)[0]
     rows = [r for r in json.loads(CRITERIA.read_text(encoding="utf-8"))
-            if r["indicator_id"] == SLUG and r["category"] in gen.TABLE_CATEGORIES]
-    return expected_group_order(rows, [SLUG])
+            if r["indicator_id"] in ids and r["category"] in gen.TABLE_CATEGORIES]
+    return expected_group_order(rows, ids)
 
 
 def crit_groups(html: str):
@@ -204,7 +223,7 @@ class DoubleSourceIsRejected(unittest.TestCase):
     def test_clean_md_parses(self):
         meta, h1, sections = gen.parse_article(ARTICLE)
         self.assertEqual(len(sections), gen.SECTION_COUNT)
-        self.assertEqual(meta["indicator_id"], SLUG)
+        self.assertIn(SLUG, gen.page_indicators(meta, SLUG)[0])
         self.assertTrue(meta["sources"])
 
     def test_section_count_is_enforced(self):
@@ -558,11 +577,11 @@ class MissingIndicatorLabelsAborts(unittest.TestCase):
 
 
 class SingleIndicatorPageKeepsItsShape(unittest.TestCase):
-    """hba1c 是單指標頁：不加「指標」欄、只有一條數線、標題走 frontmatter。"""
+    """uric-acid 是單指標頁：不加「指標」欄、只有一條數線、標題走 frontmatter。"""
 
     def setUp(self):
         self.tmp = pathlib.Path(tempfile.mkdtemp())
-        self.html, *_ = build_into(self.tmp, published=False)
+        self.html, *_ = build_into(self.tmp, published=False, slug=SINGLE_SLUG)
 
     def tearDown(self):
         shutil.rmtree(self.tmp, ignore_errors=True)
@@ -573,26 +592,26 @@ class SingleIndicatorPageKeepsItsShape(unittest.TestCase):
             self.assertEqual(4, len(row), "單指標頁的判準表維持四欄")
 
     def test_exactly_one_number_line(self):
-        meta, _, _ = gen.parse_article(ARTICLE)
-        self.assertEqual([SLUG], gen.page_indicators(meta, SLUG)[0])
-        self.assertEqual(1, self.html.count(f"data/criteria/{SLUG}.json"))
+        meta, _, _ = gen.parse_article(SINGLE_ARTICLE)
+        self.assertEqual([SINGLE_SLUG], gen.page_indicators(meta, SINGLE_SLUG)[0])
+        self.assertEqual(1, self.html.count(f"data/criteria/{SINGLE_SLUG}.json"))
 
     def test_chart_caption_comes_from_frontmatter(self):
-        meta, _, _ = gen.parse_article(ARTICLE)
+        meta, _, _ = gen.parse_article(SINGLE_ARTICLE)
         self.assertIn(
             f'<figcaption class="ct">{meta["criteria_chart_caption"]}</figcaption>',
             self.html)
 
     def test_missing_caption_aborts_instead_of_rendering_an_empty_title(self):
-        md = ARTICLE.read_text(encoding="utf-8")
+        md = SINGLE_ARTICLE.read_text(encoding="utf-8")
         md = re.sub(r"(?m)^criteria_chart_caption:.*\n", "", md)
         with tempfile.TemporaryDirectory() as d:
             tmp = pathlib.Path(d)
             (tmp / "criteria").mkdir(parents=True)
-            shutil.copy(CRITERIA, tmp / "criteria" / f"{SLUG}.json")
+            shutil.copy(SINGLE_CRITERIA, tmp / "criteria" / f"{SINGLE_SLUG}.json")
             with self.assertRaises(SystemExit):
                 build_fixture_page(tmp, md, json.loads(
-                    CRITERIA.read_text(encoding="utf-8")), slug=SLUG)
+                    SINGLE_CRITERIA.read_text(encoding="utf-8")), slug=SINGLE_SLUG)
 
 
 class FrontmatterIndicatorFields(unittest.TestCase):
@@ -883,7 +902,9 @@ class ErrataSitePage(unittest.TestCase):
                          [r["id"] for r in gen.errata_order(ERRATA_ROWS)])
 
     def test_each_item_links_to_the_page_it_corrects(self):
-        self.assertIn(f'<a href="/indicators/{SLUG}/">糖化血色素（HbA1c）</a>｜',
+        # 連結文字＝該頁 frontmatter 的 title，從資料讀、不寫死
+        # （2026-09-10 hba1c 頁改標題時，這裡寫死的舊標題是唯一一處跟著斷的地方）。
+        self.assertIn(f'<a href="/indicators/{SLUG}/">{gen.parse_article(ARTICLE)[0]["title"]}</a>｜',
                       self.html)
         self.assertIn('<a href="/indicators/blood-pressure/">', self.html)
 

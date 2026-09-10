@@ -24,7 +24,7 @@
     "upper": null,
     "lower_inclusive": true,
     "unit": "mg/dL",
-    "population": "非孕成人（一般）",
+    "population": "非懷孕個體",
     "page_or_table": "Sec. 2, Table 2.1",
     "quote": "FPG ≥126 mg/dL (≥7.0 mmol/L).",
     "fetched_at": "2026-08-28"
@@ -39,7 +39,7 @@
     "upper": null,
     "lower_inclusive": true,
     "unit": "mg/dL",
-    "population": "非孕成人（一般）；75 g 無水葡萄糖 OGTT",
+    "population": "非懷孕個體",
     "page_or_table": "Sec. 2, Table 2.1",
     "quote": "2-h PG ≥200 mg/dL (≥11.1 mmol/L) during OGTT.",
     "fetched_at": "2026-08-28"
@@ -54,9 +54,9 @@
     "upper": null,
     "lower_inclusive": true,
     "unit": "mg/dL",
-    "population": "有典型高血糖症狀或高血糖急症者",
+    "population": "有典型高血糖症狀或高血糖急症者（非懷孕個體）",
     "page_or_table": "Sec. 2, Table 2.1",
-    "quote": "a random plasma glucose ≥200 mg/dL (≥11.1 mmol/L)",
+    "quote": "In an individual with classic symptoms of hyperglycemia or hyperglycemic crisis, a random plasma glucose ≥200 mg/dL (≥11.1 mmol/L).",
     "fetched_at": "2026-08-28"
   },
   {
@@ -83,7 +83,7 @@
     "lower": 100,
     "upper": 125,
     "unit": "mg/dL",
-    "population": "非孕成人",
+    "population": "非懷孕個體",
     "page_or_table": "Sec. 2, Table 2.2",
     "quote": "FPG 100 mg/dL (5.6 mmol/L) to 125 mg/dL (6.9 mmol/L) (IFG)",
     "note": "ADA 的 IFG 自 100 mg/dL 起算；WHO 維持 110 mg/dL（見同檔 WHO 列）。",
@@ -98,7 +98,7 @@
     "lower": 140,
     "upper": 199,
     "unit": "mg/dL",
-    "population": "非孕成人",
+    "population": "非懷孕個體",
     "page_or_table": "Sec. 2, Table 2.2",
     "quote": "2-h PG during 75-g OGTT 140 mg/dL (7.8 mmol/L) to 199 mg/dL (11.0 mmol/L) (IGT)",
     "fetched_at": "2026-08-28"
@@ -209,22 +209,6 @@
     "fetched_at": "2026-08-28"
   },
   {
-    "indicator_id": "fpg",
-    "org": "World Health Organization",
-    "doc_id": "who-hba1c-diagnosis-2011",
-    "version": "2011（引 2005 年諮詢會結論）",
-    "category": "prediabetes",
-    "lower": 110,
-    "upper": null,
-    "lower_inclusive": true,
-    "unit": "mg/dL",
-    "population": "全體",
-    "page_or_table": "第 4 頁",
-    "quote": "The diagnostic cut-point for IFG (6.1 mmol/l; 110 mg/dl) should not be changed.",
-    "note": "WHO 的 IFG 下限維持 110 mg/dL，未跟進 ADA 2003 下修到 100 mg/dL。原文未給 IFG 上限。",
-    "fetched_at": "2026-08-28"
-  },
-  {
     "indicator_id": "hba1c",
     "org": "衛生福利部國民健康署",
     "doc_id": "hpa-diabetes-topic-page",
@@ -307,10 +291,10 @@
     "lower": 100,
     "upper": 125,
     "unit": "mg/dL",
-    "population": "一般民眾",
+    "population": "來源未標示",
     "page_or_table": "新聞稿內文（糖尿病前期判讀段）",
-    "quote": "若檢查報告顯示空腹血糖值介於100至125 mg/dL",
-    "note": "☠️ 國健署「糖尿病」主題頁（S3）只列 4 項診斷標準、未列前期判準；前期判準只在本新聞稿出現。",
+    "quote": "若檢查報告顯示空腹血糖值介於100至125 mg/dL，或糖化血色素（HbA1c）介於5.7%至6.4%，即表示處於糖尿病前期。",
+    "note": "☠️ 國健署「糖尿病」主題頁（S3）只列 4 項診斷標準、未列前期判準；前期判準只在本新聞稿出現。⚠️ 引句必須收到「即表示處於糖尿病前期」為止：只截前半的條件句撐不起 category=prediabetes。",
     "fetched_at": "2026-08-28"
   },
   {
@@ -338,7 +322,7 @@
     "upper": null,
     "lower_inclusive": true,
     "unit": "mg/dL (7.0 mmol/L)",
-    "population": "成人第2型",
+    "population": "來源未標示",
     "page_or_table": "第四章 表二",
     "quote": "空腹血漿葡萄糖≧ 126 mg/dL (7.0 mmol/L)",
     "fetched_at": "2026-08-28"
@@ -353,9 +337,13 @@
     "upper": null,
     "lower_inclusive": true,
     "unit": "mg/dL (11.1 mmol/L)",
-    "population": "成人第2型",
+    "population": "來源未標示",
     "page_or_table": "第四章 表二",
     "quote": "口服 75 公克葡萄糖耐受試驗中第 2 小時血漿葡萄糖≧ 200",
+    "quote_extra": [
+      "mg/dL (11.1 mmol/L) *。"
+    ],
+    "note": "原文這一項的單位在表格排版中被另一欄的「或」字隔開，pdftotext -layout 輸出為「…血漿葡萄糖≧ 200／或／mg/dL (11.1 mmol/L) *。」三段；兩段不連續，故拆 quote 與 quote_extra，不拼接。",
     "fetched_at": "2026-08-28"
   },
   {
@@ -386,7 +374,7 @@
     "population": "有高血糖症狀者",
     "page_or_table": "第四章 表二",
     "quote": "4. 高血糖症狀 ( 包括多尿、頻渴和體重減輕 )\n     且隨機血漿葡萄糖≧ 200 mg/dL (11.1 mmol/L)。",
-    "note": "⚠️ 引句只涵蓋「有高血糖症狀」這個前提，不含 200 mg/dL 這個數字；數字取自同表該列的隨機血漿葡萄糖欄。要在頁面上呈現數字時，請以同機構同表的其他列（或 ADA／國健署列）並列，不要單引這句當數字出處。",
+    "note": "引句橫跨轉檔輸出的兩行（表二第 4 項），症狀前提與 200 mg/dL (11.1 mmol/L) 數值都在引句內。",
     "fetched_at": "2026-08-28"
   },
   {
@@ -398,9 +386,10 @@
     "lower": 140,
     "upper": 199,
     "unit": "mg/dL (7.8~11.0 mmol/L)",
-    "population": "成人",
+    "population": "來源未標示",
     "page_or_table": "第四章 表三",
-    "quote": "第 2 小時血漿葡萄糖為 140-199",
+    "quote": "口服 75 公克血漿葡萄糖耐受試驗中第 2 小時血漿葡萄糖為 140-199 mg/dL (7.8~11.0 mmol/L)。",
+    "note": "原文寫的是「口服 75 公克血漿葡萄糖耐受試驗」（來源自己的用字，不改寫）；引句橫跨轉檔輸出的兩行但中間無其他欄位插入，故仍為一段連續原文。",
     "fetched_at": "2026-08-28"
   },
   {
@@ -412,7 +401,7 @@
     "lower": 100,
     "upper": 125,
     "unit": "mg/dL (5.6~6.9 mmol/L)",
-    "population": "成人",
+    "population": "來源未標示",
     "page_or_table": "第四章 表三",
     "quote": "空腹血漿葡萄糖值為 100-125 mg/dL (5.6~6.9 mmol/L)",
     "fetched_at": "2026-08-28"
@@ -662,5 +651,89 @@
     "quote": "糖化血色素反映病童最近２－３個月來血糖的平均值和糖尿病控制的好壞。",
     "note": "⚠️ 本手冊為 2003 年出版，只用於「反映近 2–3 個月平均血糖」這句定義，判準數字不得引它。同手冊第二章（三）檢驗室的評估段另有一般成人脈絡的同義敘述；若頁面面向一般成人讀者，應另立一列引該處，不要直接把「病童」讀成一般成人。",
     "fetched_at": "2026-08-28"
+  },
+  {
+    "indicator_id": "fpg",
+    "org": "World Health Organization",
+    "doc_id": "who-diabetes-diagnosis-2006",
+    "version": "2006",
+    "category": "diagnosis",
+    "lower": 126,
+    "upper": null,
+    "lower_inclusive": true,
+    "unit": "mg/dl",
+    "population": "來源未標示",
+    "page_or_table": "第 9 頁 summary of technical report and recommendations",
+    "quote": "Diabetes\nFasting plasma glucose ≥7.0mmol/l (126mg/dl)\n2–h plasma glucose* or\n≥11.1mmol/l (200mg/dl)",
+    "note": "WHO 血糖判準的正本出自本報告；2011 年 HbA1c 報告自述為本報告的 addendum，並明言不推翻 2006 對血漿葡萄糖的建議。單位照原文小寫 mg/dl。",
+    "fetched_at": "2026-09-10"
+  },
+  {
+    "indicator_id": "ogtt-2h",
+    "org": "World Health Organization",
+    "doc_id": "who-diabetes-diagnosis-2006",
+    "version": "2006",
+    "category": "diagnosis",
+    "lower": 200,
+    "upper": null,
+    "lower_inclusive": true,
+    "unit": "mg/dl",
+    "population": "來源未標示",
+    "page_or_table": "第 9 頁 summary of technical report and recommendations",
+    "quote": "Diabetes\nFasting plasma glucose ≥7.0mmol/l (126mg/dl)\n2–h plasma glucose* or\n≥11.1mmol/l (200mg/dl)",
+    "note": "原表對糖尿病的空腹與 2 小時判準寫在同一個方框，故本列與同表的 fpg 列共用同一段連續引句；* 註為 Venous plasma glucose 2–h after ingestion of 75g oral glucose load。",
+    "fetched_at": "2026-09-10"
+  },
+  {
+    "indicator_id": "ogtt-2h",
+    "org": "World Health Organization",
+    "doc_id": "who-diabetes-diagnosis-2006",
+    "version": "2006",
+    "category": "prediabetes",
+    "lower": 140,
+    "upper": 200,
+    "lower_inclusive": true,
+    "upper_inclusive": false,
+    "unit": "mg/dl",
+    "population": "來源未標示",
+    "page_or_table": "第 9 頁 summary of technical report and recommendations",
+    "quote": "Impaired Glucose Tolerance (IGT)\nFasting plasma glucose <7.0mmol/l (126mg/dl)\n2–h plasma glucose* and\n≥7.8 and <11.1mmol/l\n(140mg/dl and 200mg/dl)",
+    "note": "WHO 原文稱此區間為 Impaired Glucose Tolerance (IGT)／intermediate hyperglycaemia，報告 Terminology 段明文不鼓勵使用 pre-diabetes 一詞、改用 Intermediate Hyperglycaemia（原句：Use of ‘pre-diabetes’ is discouraged to avoid any stigma associated with the word diabetes）。category 仍填 prediabetes，依 data/criteria/schema.json 對該類別的定義（「糖尿病線專用的前期區間」，並明文 classification「也不是 prediabetes」）——這是站內分類，不是 WHO 的用詞。上界為 <11.1mmol/l（200mg/dl）不含等於。同表另要求空腹血漿葡萄糖 <7.0mmol/l (126mg/dl)。ADA 2026 Table 2.2 對同一段同樣標註 (IGT)，寫法是 140–199 mg/dL；兩者差在寫法（寫到 199 對上 <200），不在切點位置。",
+    "fetched_at": "2026-09-10"
+  },
+  {
+    "indicator_id": "fpg",
+    "org": "World Health Organization",
+    "doc_id": "who-diabetes-diagnosis-2006",
+    "version": "2006",
+    "category": "prediabetes",
+    "lower": 110,
+    "upper": 125,
+    "unit": "mg/dl",
+    "population": "來源未標示",
+    "page_or_table": "第 9 頁 summary of technical report and recommendations",
+    "quote": "Impaired Fasting Glucose (IFG)",
+    "quote_extra": [
+      "Fasting plasma glucose 6.1 to 6.9mmol/l",
+      "(110mg/dl to 125mg/dl)",
+      "and (if measured) <7.8mmol/l (140mg/dl)"
+    ],
+    "note": "WHO 原文稱此區間為 Impaired Fasting Glucose (IFG)／intermediate hyperglycaemia，報告 Terminology 段明文不鼓勵使用 pre-diabetes 一詞、改用 Intermediate Hyperglycaemia（原句：Use of ‘pre-diabetes’ is discouraged to avoid any stigma associated with the word diabetes）；category 填 prediabetes 的理由同 IGT 列（schema 定義，站內分類）。ADA 2026 Table 2.2 對其 100–125 mg/dL 同樣標註 (IFG)——兩家用同一個名稱，切點不同（WHO 110、ADA 100）。原表是兩欄：左欄「Fasting plasma glucose／2–h plasma glucose*」、右欄數值；「(110mg/dl to 125mg/dl)」是空腹那格的換行，「and (if measured) <7.8mmol/l (140mg/dl)」屬 2 小時那格。抽字壓平後 2–h 標籤會夾在空腹數值中間，故拆成 quote＋quote_extra 三段，不收那個標籤、不拼接。此列是有上下界的區間，不是只有下限的切點。",
+    "fetched_at": "2026-09-10"
+  },
+  {
+    "indicator_id": "fpg",
+    "org": "World Health Organization",
+    "doc_id": "who-diabetes-diagnosis-2006",
+    "version": "2006",
+    "category": "screening_triage",
+    "lower": 110,
+    "upper": 125,
+    "unit": "mg/dl",
+    "population": "空腹血漿葡萄糖 6.1–6.9mmol/l（110–125mg/dl）的個體",
+    "page_or_table": "第 8 頁 Recommendation 6",
+    "quote": "An OGTT should be used in individuals with fasting plasma glucose 6.1–6.9mmol/l (110–125mg/dl) to determine glucose tolerance status.",
+    "note": "這是「接下來做哪一項檢查」的分流門檻，不是診斷線；數值區間與同來源的 IFG 列相同，但用途不同。",
+    "fetched_at": "2026-09-10"
   }
 ]
