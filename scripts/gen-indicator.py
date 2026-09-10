@@ -190,7 +190,7 @@ AXIS = {
     "waist": {"min": 70, "max": 110, "ticks": [70, 80, 88, 90, 94, 102, 110], "label": "腰圍（cm）"},
     "ast": {"min": 0, "max": 50, "ticks": [0, 10, 20, 30, 40, 50], "label": "GOT／AST（U/L）"},
     "alt": {"min": 0, "max": 70, "ticks": [0, 10, 20, 30, 40, 50, 60, 70], "label": "GPT／ALT（U/L）"},
-    "egfr": {"min": 0, "max": 120, "ticks": [0, 15, 30, 45, 60, 90, 120], "label": "eGFR（ml/min/1.73 m2）"},
+    "egfr": {"min": 0, "max": 120, "ticks": [0, 15, 30, 45, 60, 90, 120], "label": "eGFR（ml/min/1.73 m2）", "seg_unit": False},
 }
 
 
@@ -924,7 +924,10 @@ def render_number_line(rows: list, indicator_id: str, mf: dict, slug: str,
                    f"｜依據：{source_ref(r['doc_id'], mf, r['page_or_table'])}")
             title = f"<title>{esc(tip)}</title>"
             lo, up = r.get("lower"), r.get("upper")
-            label = value_text(r, short=True)
+            # AXIS 設 seg_unit=False 的指標（單位字串長、色帶窄，例：eGFR 的 ml/min per 1.73 m2），
+            # 色帶上只印數字：單位已在軸標，完整單位仍在 tooltip（criteria_cell）與判準表。
+            # 沒設這個鍵的指標行為不變（既有頁 byte-identical）。
+            label = value_text(dict(r, unit=None) if cfg.get("seg_unit") is False else r, short=True)
             if lo is None and up is None:
                 if r["category"] == "no_criterion_stated":
                     cx = (X0 + float(X(refs[0]))) / 2 if refs else (X0 + X1) / 2
