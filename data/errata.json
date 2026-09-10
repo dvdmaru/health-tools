@@ -1,1 +1,23 @@
-[]
+[
+  {
+    "id": "E1",
+    "date": "2026-09-10",
+    "slug": "hba1c",
+    "section": "4",
+    "was": "貧血、洗腎、血紅素變異，會讓 HbA1c 失真",
+    "now": "貧血、洗腎、血紅素變異，ADA 與 WHO 各自列為可能影響 HbA1c 判讀的情況",
+    "reason": "原標題把來源寫的「可能不適合用來診斷」說成確定會發生的「會讓 HbA1c 失真」，比來源強了一級；改成標明是哪兩個機構在說，以及他們用的是「可能」。段落內文未改。",
+    "doc_id": "ada-standards-of-care-2026",
+    "quote": "A1C may not be a suitable diagnostic test in people with anemia, people treated with erythropoietin, or people undergoing hemodialysis or HIV treatment"
+  },
+  {
+    "id": "E2",
+    "date": "2026-09-10",
+    "slug": "blood-pressure",
+    "section": "4",
+    "was": "診間量起來正常、實際上是高血壓，則是隱蔽性高血壓。",
+    "now": "（這句已移除。該段改為轉述 2022 台灣高血壓指引把血壓分成四型的分法，以及該指引寫的「隱蔽性高血壓的心血管風險與持續性高血壓相當」。）",
+    "reason": "這句白話定義，在本站與該段相關的兩份來源快照裡都找不到對應原文——白袍高血壓的定義國健署 2025 年新聞稿有寫，隱蔽性高血壓的定義兩份都沒有。依本站體例，掛不出出處的定義句不留在頁面上。",
+    "note": "同段的白袍高血壓定義有國健署新聞稿原文，保留並改成具名轉述。日後若補到寫明隱蔽性高血壓定義的官方來源，再把這句加回來並附出處。"
+  }
+]
