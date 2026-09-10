@@ -680,6 +680,10 @@ class NewTableCategories(unittest.TestCase):
         self.assertTrue(lanes[1][1].endswith("・男性"))
         same = {"X": [row(25, None, "成人"), row(25, 29.99, "成人")]}
         self.assertEqual(1, len(gen._lanes(["X"], same, 15, 42)))
+        chb = {"X": [row(10, 40, "慢性 B 型肝炎（CHB）處置用途（原文：For purposes of guiding management of CHB）"),
+                     row(20, 50, "女性")]}
+        self.assertEqual("X・慢性 B 型肝炎（CHB）處置用途", gen._lanes(["X"], chb, 0, 70)[0][1],
+                         "族群標籤只去掉結尾的（原文：…），不在第一個全形括號截斷")
         cls = {"X": [dict(row(25, None, "男性"), category="classification"),
                      dict(row(25, 29.99, "女性"), category="classification")]}
         self.assertEqual(1, len(gen._lanes(["X"], cls, 15, 42)),

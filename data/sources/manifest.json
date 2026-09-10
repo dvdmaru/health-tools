@@ -528,7 +528,7 @@
     "local_path": "data/sources/medlineplus-ast-test.html",
     "license_bucket": "us-federal-pd",
     "retrieval": "curl",
-    "note": "NLM 自製的 /lab-tests/ 頁（聯邦公有領域）。☠️ 原始 HTML 把 “Low levels of AST in the blood” 包在 <strong> 標籤內、句子其餘部分在標籤外，收據 gate 對 doc_type=html 讀原始檔只去空白，這句整句 grep 不到（可見文字版命中）；先例 medlineplus-cholesterol-levels 因同類問題改落 html-text，本列是否比照待主席裁。"
+    "note": "NLM 自製的 /lab-tests/ 頁（聯邦公有領域）。原始 HTML 內有句子被 <strong>、<a> 等標籤切開；收據 gate 對 doc_type=html 讀原始檔只去空白，判準列依標籤邊界把引句拆成 quote／quote_extra（2026-09-10 R1 裁決：不改快照型態）。"
   },
   {
     "id": "medlineplus-cholesterol-levels",

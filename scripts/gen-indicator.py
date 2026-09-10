@@ -61,7 +61,7 @@ SITEMAP_OWNER = "indicators"
 # classification 與 risk_threshold 同理：分級是把連續數值切成命名等級（高血壓第一期、
 # BMI 過重），風險門檻是「超過此值風險升高」但來源沒說它構成診斷（腰圍 ≥90 cm）。
 # 分類就是判準的一部分。
-# reference_interval＝來源用健康參考族群統計出的參考區間（檢驗報告的「參考值」多半是這一類），
+# reference_interval＝來源用健康參考族群統計出、並自稱參考區間的區間，
 # 不是分級、也不是診斷線（2026-09-10 肝功能頁加；IFCC 的 RI 標成 classification 被查核桌判 BLOCKER）。
 TABLE_CATEGORIES = ["diagnosis", "prediabetes", "screening_triage",
                     "classification", "reference_interval", "risk_threshold",
@@ -863,7 +863,7 @@ def _lanes(orgs: list, by_org: dict, vmin, vmax) -> list:
             out.append((org, org_label(org), rows))
             continue
         for p in dict.fromkeys(r["population"] for r in rows):
-            out.append((org, f"{org_label(org)}・{p.split('（')[0]}",
+            out.append((org, f"{org_label(org)}・{re.sub(r'（原文[:：].*）$', '', p)}",
                         [r for r in rows if r["population"] == p]))
     return out
 

@@ -189,9 +189,9 @@ class TestReferenceIntervalCategory(unittest.TestCase):
         ITEM_VALIDATOR.validate({**FIXTURE_CLASSIFICATION, "category": "reference_interval",
                                  "lower": 8, "upper": 41})
 
-    def test_description_draws_the_line_against_classification_diagnosis_risk(self):
+    def test_description_draws_the_line_against_classification_diagnosis_risk_definition(self):
         seg = self.DESC[self.DESC.index("・reference_interval"):]
-        for other in ("classification", "diagnosis", "risk_threshold"):
+        for other in ("classification", "diagnosis", "risk_threshold", "definition"):
             with self.subTest(other=other):
                 self.assertIn(other, seg)
 

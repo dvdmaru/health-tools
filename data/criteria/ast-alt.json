@@ -97,7 +97,7 @@
     "population": "來源未標示（原文為研究族群描述：in prospectively-studied populations without identifiable risk factors for liver disease）",
     "page_or_table": "PDF 第 5 頁，What are Truly Normal Liver Chemistry Tests? → Summary statements 第 1 條",
     "quote": "A true healthy normal ALT level in prospectively-studied populations without identifiable risk factors for liver disease ranges from 29-33 IU/L for males and 19-25 IU/L for females, and levels above this should be assessed by physicians.",
-    "note": "為什麼不進表：它描述的是前瞻研究族群（without identifiable risk factors for liver disease）裡的健康正常 ALT 值，屬 MODEL.md §1-1 的回述型 definition；另外原文界線本身是區間（男 29-33、女 19-25 IU/L），schema 無法承載，拆成 lower／upper 或挑端點都是我們換算。身分是 Summary statement（不帶 strength／evidence 等級），不列於 Table 1 的 Recommendations（R1 裁決 2026-09-10）。數字留在 quote。快照是 ACG 自家 CDN 的 Guideline Summary PDF，不是期刊完整正文。同文件第 1 頁 Abstract 另有措辭不同的同義句（29 to 33 IU/l），不得與本句拼接。",
+    "note": "為什麼不進表：它描述的是前瞻研究族群（without identifiable risk factors for liver disease）裡的健康正常 ALT 值，屬 MODEL.md §1-1 的回述型 definition；另外原文的健康正常值本身寫成一個區間（男 29-33、女 19-25 IU/L），指的是上限落點的範圍、不是一段數值的上下界；照 lower／upper 存會被讀成「正常值介於 29 到 33」，挑端點則是我們換算（R1b 請指揮位講清楚是哪種語義無法承載）。身分是 Summary statement（不帶 strength／evidence 等級），不列於 Table 1 的 Recommendations（R1 裁決 2026-09-10）。數字留在 quote。快照是 ACG 自家 CDN 的 Guideline Summary PDF，不是期刊完整正文。同文件第 1 頁 Abstract 另有措辭不同的同義句（29 to 33 IU/l），不得與本句拼接。",
     "fetched_at": "2026-09-10"
   },
   {
@@ -182,9 +182,12 @@
     "unit": null,
     "population": "來源未標示",
     "page_or_table": "What is an AST test? 段",
-    "quote": "It is found mainly in your liver but also in your heart, muscles, and other tissues.",
+    "quote": "AST (aspartate aminotransferase) is an enzyme, a protein that speeds up certain chemical reactions in your body. It is found mainly in your liver but also in your heart, muscles, and other tissues.",
     "fetched_at": "2026-09-10",
-    "note": "這個數字量的是什麼：原文說 AST 主要在肝臟，也在心臟、肌肉與其他組織。definition 的本義（schema：來源對「這個數字量的是什麼」的定義敘述，不帶數值；血壓頁 MedlinePlus 列前例）。取代原本「Low levels of AST…」一列（R1 兩席：定性判讀句不屬 definition，刪）。"
+    "note": "這個數字量的是什麼：原文說 AST 血液檢驗量的是血中 AST 的量（quote_extra）；AST 是一種酵素，主要在肝臟，也在心臟、肌肉與其他組織（quote；主詞與代名詞在同一段連續原文內，R1b 兩席指出單收 It 那句撐不住指標歸屬）。definition 的本義（schema：來源對「這個數字量的是什麼」的定義敘述，不帶數值；血壓頁 MedlinePlus 列前例）。取代原本「Low levels of AST…」一列（R1 兩席：定性判讀句不屬 definition，刪）。",
+    "quote_extra": [
+      "An AST blood test measures the amount of AST in your blood."
+    ]
   },
   {
     "indicator_id": "alt",
@@ -199,7 +202,7 @@
     "page_or_table": "Is there anything else I need to know about an ALT blood test? 段",
     "quote": "Since ALT is mostly found in the liver, an ALT test checks more specifically for liver damage.",
     "fetched_at": "2026-09-10",
-    "note": "這個數字量的是什麼：原文說 ALT 大多在肝臟，所以 ALT 檢查對肝臟損傷較具特異性（原文 more specifically）。definition 的本義（同 AST 那列）。R1 兩席 Q5 交集缺口補列。"
+    "note": "這個數字量的是什麼：原文說 ALT 大多在肝臟，所以 ALT 檢查更專門針對肝臟損傷（原文：checks more specifically for liver damage；不譯作檢驗統計的「特異性」，R1b）。definition 的本義（同 AST 那列）。R1 兩席 Q5 交集缺口補列。"
   },
   {
     "indicator_id": "ast",
@@ -213,7 +216,7 @@
     "population": "成人預防保健服務（表題原文：健康署成人預防保健服務檢查紀錄結果表單）",
     "page_or_table": "附表六之四 健康署成人預防保健服務檢查紀錄結果表單，PDF 第 7 頁，實驗室檢查・生化檢查欄",
     "quote": "AST（GOT）： IU/L（參考值: ）",
-    "note": "同表其他行（飯前血糖、總膽固醇、肌酸酐）與 BMI 理想值那一行放 quote_extra，作為「非肝指數特有」的收據（R1 裁決 2026-09-10）。檢查單上AST（GOT）那一行：「參考值:」後的括號內空白、沒有任何數字。同表所有檢驗值參考值欄皆空白，非肝指數特有：同頁印有「參考值」欄的尿蛋白定量、飯前血糖、總膽固醇、三酸甘油脂、高密度脂蛋白膽固醇、低密度脂蛋白膽固醇、AST（GOT）、ALT（GPT）、肌酸酐，括號全部空白；尿酸與 eGFR 兩行沒有參考值欄；整張表只有 BMI 印了理想值（【理想值：18.5≦BMI＜24 】）。結果欄「肝功能：□正常□異常」也沒有印判定門檻。「參考值:」的冒號是原表單的半形字元，照抄；欄內空白不影響比對。不是數值判準，lower／upper／unit 皆 null。",
+    "note": "同表其他行（飯前血糖、總膽固醇、肌酸酐）與 BMI 理想值那一行放 quote_extra，作為「非肝指數特有」的收據（R1 裁決 2026-09-10）。檢查單上AST（GOT）那一行：「參考值:」後的括號內空白、沒有任何數字。所附 quote／quote_extra 中 GOT、GPT、飯前血糖、總膽固醇、肌酸酐的參考值欄均未列數字；BMI 另印有理想值（R1b：不寫「所有」「只有」，那超出所附引句）。「參考值:」的冒號是原表單的半形字元，照抄；欄內空白不影響比對。不是數值判準，lower／upper／unit 皆 null。",
     "fetched_at": "2026-09-10",
     "quote_extra": [
       "飯前血糖: mg/dl （參考值: ）",
@@ -234,7 +237,7 @@
     "population": "成人預防保健服務（表題原文：健康署成人預防保健服務檢查紀錄結果表單）",
     "page_or_table": "附表六之四 健康署成人預防保健服務檢查紀錄結果表單，PDF 第 7 頁，實驗室檢查・生化檢查欄",
     "quote": "ALT（GPT）： IU/L （參考值: ）",
-    "note": "同表其他行（飯前血糖、總膽固醇、肌酸酐）與 BMI 理想值那一行放 quote_extra，作為「非肝指數特有」的收據（R1 裁決 2026-09-10）。檢查單上ALT（GPT）那一行：「參考值:」後的括號內空白、沒有任何數字。同表所有檢驗值參考值欄皆空白，非肝指數特有：同頁印有「參考值」欄的尿蛋白定量、飯前血糖、總膽固醇、三酸甘油脂、高密度脂蛋白膽固醇、低密度脂蛋白膽固醇、AST（GOT）、ALT（GPT）、肌酸酐，括號全部空白；尿酸與 eGFR 兩行沒有參考值欄；整張表只有 BMI 印了理想值（【理想值：18.5≦BMI＜24 】）。結果欄「肝功能：□正常□異常」也沒有印判定門檻。「參考值:」的冒號是原表單的半形字元，照抄；欄內空白不影響比對。不是數值判準，lower／upper／unit 皆 null。",
+    "note": "同表其他行（飯前血糖、總膽固醇、肌酸酐）與 BMI 理想值那一行放 quote_extra，作為「非肝指數特有」的收據（R1 裁決 2026-09-10）。檢查單上ALT（GPT）那一行：「參考值:」後的括號內空白、沒有任何數字。所附 quote／quote_extra 中 GOT、GPT、飯前血糖、總膽固醇、肌酸酐的參考值欄均未列數字；BMI 另印有理想值（R1b：不寫「所有」「只有」，那超出所附引句）。「參考值:」的冒號是原表單的半形字元，照抄；欄內空白不影響比對。不是數值判準，lower／upper／unit 皆 null。",
     "fetched_at": "2026-09-10",
     "quote_extra": [
       "飯前血糖: mg/dl （參考值: ）",

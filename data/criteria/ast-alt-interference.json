@@ -2,7 +2,7 @@
   {
     "id": "L1",
     "direction": "unspecified",
-    "factor": "ALT：年齡、性別、體重，以及某些藥物與膳食補充品會影響檢驗結果（來源未指方向）",
+    "factor": "ALT：年齡、性別、體重，以及某些藥物與膳食補充品可能影響檢驗結果（來源未指方向）",
     "org": "MedlinePlus（U.S. National Library of Medicine）",
     "doc_id": "medlineplus-alt-blood-test",
     "version": "Last updated November 5, 2024",
@@ -14,7 +14,7 @@
   {
     "id": "L2",
     "direction": "unspecified",
-    "factor": "AST：懷孕、運動、某些藥物，以及年齡或性別會影響檢驗結果（來源未指方向）",
+    "factor": "AST：懷孕、運動、某些藥物，以及年齡或性別可能影響檢驗結果（來源未指方向）",
     "org": "MedlinePlus（U.S. National Library of Medicine）",
     "doc_id": "medlineplus-ast-test",
     "version": "Last updated November 5, 2024",
@@ -26,7 +26,7 @@
   {
     "id": "L3",
     "direction": "unspecified",
-    "factor": "ALT：劇烈運動，以及處於月經週期的哪個階段，會影響檢驗結果（來源未指方向）",
+    "factor": "ALT：劇烈運動，以及處於月經週期的哪個階段，可能影響檢驗結果（來源未指方向）",
     "org": "MedlinePlus（U.S. National Library of Medicine）",
     "doc_id": "medlineplus-alt-blood-test",
     "version": "Last updated November 5, 2024",
