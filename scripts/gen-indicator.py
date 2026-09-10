@@ -155,6 +155,9 @@ ORG_DISPLAY = {
     "American College of Gastroenterology": ("ACG", "us"),
     "American Association for the Study of Liver Diseases": ("AASLD", "us"),
     "National Institute of Diabetes and Digestive and Kidney Diseases": ("NIDDK", "us"),
+    "Kidney Disease: Improving Global Outcomes (KDIGO)": ("KDIGO", "intl"),
+    "National Kidney Foundation": ("NKF", "us"),
+    "National Kidney Foundation and American Society of Nephrology Task Force on Reassessing the Inclusion of Race in Diagnosing Kidney Disease": ("NKF-ASN 工作小組", "us"),
     "European Association for the Study of the Liver": ("EASL", "intl"),
 }
 # 名單外的機構＝去強調灰，不配系列色（系列色是已具名機構屬性的識別，不能被稀釋）。
@@ -187,7 +190,7 @@ AXIS = {
     "waist": {"min": 70, "max": 110, "ticks": [70, 80, 88, 90, 94, 102, 110], "label": "腰圍（cm）"},
     "ast": {"min": 0, "max": 50, "ticks": [0, 10, 20, 30, 40, 50], "label": "GOT／AST（U/L）"},
     "alt": {"min": 0, "max": 70, "ticks": [0, 10, 20, 30, 40, 50, 60, 70], "label": "GPT／ALT（U/L）"},
-    "egfr": {"min": 0, "max": 120, "ticks": [0, 15, 30, 45, 60, 90, 120], "label": "eGFR（mL/min/1.73 m²）"},
+    "egfr": {"min": 0, "max": 120, "ticks": [0, 15, 30, 45, 60, 90, 120], "label": "eGFR（ml/min/1.73 m2）"},
 }
 
 
