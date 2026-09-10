@@ -61,14 +61,18 @@ SITEMAP_OWNER = "indicators"
 # classification 與 risk_threshold 同理：分級是把連續數值切成命名等級（高血壓第一期、
 # BMI 過重），風險門檻是「超過此值風險升高」但來源沒說它構成診斷（腰圍 ≥90 cm）。
 # 分類就是判準的一部分。
+# reference_interval＝來源用健康參考族群統計出、並自稱參考區間的區間，
+# 不是分級、也不是診斷線（2026-09-10 肝功能頁加；IFCC 的 RI 標成 classification 被查核桌判 BLOCKER）。
 TABLE_CATEGORIES = ["diagnosis", "prediabetes", "screening_triage",
-                    "classification", "risk_threshold", "no_criterion_stated"]
+                    "classification", "reference_interval", "risk_threshold",
+                    "no_criterion_stated"]
 
 CATEGORY_LABEL = {
     "diagnosis": "診斷",
     "prediabetes": "糖尿病前期",
     "screening_triage": "篩檢分流（非診斷判準）",
     "classification": "分級",
+    "reference_interval": "參考區間",
     "risk_threshold": "風險門檻",
     "no_criterion_stated": "未訂判準",
 }
@@ -144,6 +148,14 @@ ORG_DISPLAY = {
     "中華民國風濕病醫學會": ("風濕病醫學會", "tw-society"),
     "台灣血脂及動脈硬化學會（Taiwan Society of Lipids and Atherosclerosis）等八學會": ("血脂學會等八學會", "tw-society"),
     "WHO expert consultation": ("WHO 專家諮詢會", "intl"),
+    # ---- 2026-09-10 肝功能頁 ----
+    "International Federation of Clinical Chemistry and Laboratory Medicine (IFCC) Committee on Reference Intervals and Decision Limits (C-RIDL); Committee on Reference Systems for Enzymes (C-RSE)": ("IFCC", "intl"),
+    # 基金會的衛教會刊，不是專科學會——歸 other，不借 tw-society 的色（顏色承載的是機構屬性）。
+    "財團法人肝病防治學術基金會": ("肝病防治學術基金會", "other"),
+    "American College of Gastroenterology": ("ACG", "us"),
+    "American Association for the Study of Liver Diseases": ("AASLD", "us"),
+    "National Institute of Diabetes and Digestive and Kidney Diseases": ("NIDDK", "us"),
+    "European Association for the Study of the Liver": ("EASL", "intl"),
 }
 # 名單外的機構＝去強調灰，不配系列色（系列色是已具名機構屬性的識別，不能被稀釋）。
 ORG_FALLBACK_FAMILY = "other"
@@ -173,6 +185,8 @@ AXIS = {
     "uric-acid": {"min": 6.0, "max": 10.0, "ticks": [6.0, 6.8, 7.0, 8.0, 9.0, 10.0], "label": "尿酸（mg/dL）"},
     "bmi": {"min": 15, "max": 42, "ticks": [15, 18.5, 23, 24, 25, 27, 30, 35, 40], "label": "BMI（kg/m²）"},
     "waist": {"min": 70, "max": 110, "ticks": [70, 80, 88, 90, 94, 102, 110], "label": "腰圍（cm）"},
+    "ast": {"min": 0, "max": 50, "ticks": [0, 10, 20, 30, 40, 50], "label": "GOT／AST（U/L）"},
+    "alt": {"min": 0, "max": 70, "ticks": [0, 10, 20, 30, 40, 50, 60, 70], "label": "GPT／ALT（U/L）"},
 }
 
 
@@ -732,7 +746,7 @@ CRIT_OPEN_ALL_MAX = 12
 # 預設展開的類別：診斷、分級、風險門檻是讀者翻到這頁要找的數字（腰圍頁只有風險門檻
 # 一種，不開就整段看不到腰圍的值——M5 拍板加進來）。其餘（篩檢分流、未訂判準）
 # 預設收合——但收合的內容仍在 DOM 裡（原生 <details>，無 JS），爬蟲與 RAG 讀得到。
-CRIT_OPEN_CATEGORIES = ("diagnosis", "classification", "risk_threshold")
+CRIT_OPEN_CATEGORIES = ("diagnosis", "classification", "reference_interval", "risk_threshold")
 
 
 def group_criteria_rows(rows: list, multi: bool = False, labels: dict = None) -> list:
@@ -823,6 +837,37 @@ def line_title(indicator_id: str, rows: list, labels: dict) -> str:
     return f"{labels[indicator_id]}（{units[0]}）" if units else labels[indicator_id]
 
 
+def _lanes(orgs: list, by_org: dict, vmin, vmax) -> list:
+    """數線的跑道：回 [(org, 跑道標籤, 該跑道的列)]。預設一個機構一條。
+
+    只有**參考區間（reference_interval）**會拆：同一機構給不同族群的參考區間互相重疊時
+    （IFCC 的 ALT 女 8–41、男 9–59），按族群拆成多條、標籤加註族群——那是平行的兩個選項，
+    疊在同一條上會被讀成上下兩級，也分不出哪段是誰的。
+    ☠️ 其他類別一律不拆（2026-09-10 初版對所有類別生效，A／B 比對抓到血壓、BMI 腰圍、血脂、
+    尿酸四個已上線頁被改，BMI 腰圍頁 2 條跑道炸成 25 條）：分級的上下位重疊（WHO BMI 的
+    Overweight ≥25 與 Preobese 25–29.99）是來源自己的結構，那些頁的呈現不在這條規則的射程。
+    """
+    def span(r):
+        return (vmin if r.get("lower") is None else r["lower"],
+                vmax if r.get("upper") is None else r["upper"])
+
+    out = []
+    for org in orgs:
+        rows = by_org[org]
+        banded = [r for r in rows if r["category"] == "reference_interval"
+                  and (r.get("lower") is not None or r.get("upper") is not None)]
+        split = any(span(a)[0] < span(b)[1] and span(b)[0] < span(a)[1]
+                    and a["population"] != b["population"]
+                    for i, a in enumerate(banded) for b in banded[i + 1:])
+        if not split:
+            out.append((org, org_label(org), rows))
+            continue
+        for p in dict.fromkeys(r["population"] for r in rows):
+            out.append((org, f"{org_label(org)}・{re.sub(r'（原文[:：].*）$', '', p)}",
+                        [r for r in rows if r["population"] == p]))
+    return out
+
+
 def render_number_line(rows: list, indicator_id: str, mf: dict, slug: str,
                        caption: str) -> str:
     """各機構判準數線：同一批 criteria 列，畫的與表上的是同一份數字。
@@ -857,13 +902,13 @@ def render_number_line(rows: list, indicator_id: str, mf: dict, slug: str,
 
     undrawable, parts = [], []
     bottom = FIRST_ROW_Y + ROW_H
-    for i, org in enumerate(orgs):
+    for i, (org, lane_label, lane_rows) in enumerate(_lanes(orgs, by_org, vmin, vmax)):
         y = FIRST_ROW_Y + ROW_PITCH * i
         mid = y + ROW_H / 2
         color = org_color(org)
         parts.append(f'<text class="lb" x="106" y="{mid:g}" text-anchor="end" '
-                     f'dominant-baseline="central">{esc(org_label(org))}</text>')
-        for r in by_org[org]:
+                     f'dominant-baseline="central">{esc(lane_label)}</text>')
+        for r in lane_rows:
             tip = (f"{org_label(org)}｜{criteria_cell(r)}｜族群：{r['population']}"
                    f"｜依據：{source_ref(r['doc_id'], mf, r['page_or_table'])}")
             title = f"<title>{esc(tip)}</title>"

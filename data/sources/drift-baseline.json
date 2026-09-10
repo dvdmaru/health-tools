@@ -1,5 +1,23 @@
 [
   {
+    "id": "aasld-hbv-guidance-2018",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5975958/",
+    "doc_type": "html",
+    "checked_at": "2026-09-10T10:47:20Z",
+    "http_code": "200",
+    "status": "ok",
+    "etag": null,
+    "last_modified": null,
+    "remote_sha256": "d5e613f6d1daca61dd4f3245373282e8dc54a5540ab72120cbdb3c8170e28b27",
+    "text_sha256": "21ec8fdf044fefd79d3a5aa16dbb6a1470d8873cde79bf3828e6e1dce5ced98b",
+    "quotes_total": 2,
+    "quotes_verified": [
+      "For purposes of guiding management of CHB, an upper limit of normal for ALT of 35 U/L for males and 25 U/L for females is recommended",
+      "though differences in repeat testing of the same sample have been described"
+    ],
+    "quotes_never_verified": []
+  },
+  {
     "id": "acc-aha-blood-cholesterol-guideline-2018",
     "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7403606/",
     "doc_type": "html-text",
@@ -37,6 +55,24 @@
     "text_sha256": null,
     "quotes_total": 5,
     "quotes_verified": [],
+    "quotes_never_verified": []
+  },
+  {
+    "id": "acg-abnormal-liver-chemistries-2017",
+    "url": "https://acgcdn.gi.org/wp-content/uploads/2018/04/ACG-Abnormal-Liver-Chemistries-Guideline-Summary.pdf",
+    "doc_type": "pdf",
+    "checked_at": "2026-09-10T10:47:20Z",
+    "http_code": "200",
+    "status": "ok",
+    "etag": "\"010ae97da2691edca3a50d4ecde0376f\"",
+    "last_modified": "Tue, 30 Apr 2019 23:55:11 GMT",
+    "remote_sha256": "cb033dfc384234383410b221977155dbd0c3ff54d04be8336f5ade3835c6fcdf",
+    "text_sha256": "09bbd79adec631b16d1892ae5b0e002e1ba7146e7224e399985f72eed3b7870e",
+    "quotes_total": 2,
+    "quotes_verified": [
+      "A true healthy normal ALT level in prospectively-studied populations without identifiable risk factors for liver disease ranges from 29-33 IU/L for males and 19-25 IU/L for females, and levels above this should be assessed by physicians.",
+      "AST and ALT ULN ranges can vary between different labs."
+    ],
     "quotes_never_verified": []
   },
   {
@@ -187,6 +223,26 @@
     "quotes_never_verified": []
   },
   {
+    "id": "easl-hbv-cpg-2017",
+    "url": "https://easl.eu/wp-content/uploads/2018/10/HepB-English-report.pdf",
+    "doc_type": "pdf",
+    "checked_at": "2026-09-10T10:47:22Z",
+    "http_code": "200",
+    "status": "ok",
+    "etag": null,
+    "last_modified": "Wed, 27 Feb 2019 17:16:05 GMT",
+    "remote_sha256": "5d571b6248e21409145cc36c485a5627b5a8011d773242400b307bebd001fac3",
+    "text_sha256": "045fe6bd4a0e349d32d55ca85b24de29dd56dacc4e5139d6d334d4a288953e9f",
+    "quotes_total": 4,
+    "quotes_verified": [
+      "Phase 1: HBeAg-positive chronic HBV infection",
+      "[upper limit of normal (ULN) approximately 40 IU/L]",
+      "serum HBeAg, very high levels of HBV DNA and ALT persistently",
+      "within the normal range according to traditional cut-off values"
+    ],
+    "quotes_never_verified": []
+  },
+  {
     "id": "eular-gout-recommendations-2016",
     "url": "https://ard.bmj.com/content/annrheumdis/76/1/29.full.pdf",
     "doc_type": "pdf",
@@ -276,6 +332,28 @@
     "quotes_verified": [
       "給付金額從每案520元調升至880元",
       "自114年1月1日起篩檢增加30至39歲民眾每5年可接受一次免費健康檢查"
+    ],
+    "quotes_never_verified": []
+  },
+  {
+    "id": "hpa-adult-preventive-form-2026",
+    "url": "https://www.hpa.gov.tw/Pages/ashx/GetFile.ashx?lang=c&type=1&sid=44a2f553a9dc43b6aeea1057b83c1e13",
+    "doc_type": "pdf",
+    "checked_at": "2026-09-10T10:47:20Z",
+    "http_code": "200",
+    "status": "ok",
+    "etag": null,
+    "last_modified": null,
+    "remote_sha256": "59af3bd0406a7220584d7828b1123ba9bb50261956098f7274252d93b3fbb767",
+    "text_sha256": "2b0dbf052d740d6981f131e2b5a5ed4c43ced3d92c5e6a6df25949f7a6c4a5aa",
+    "quotes_total": 6,
+    "quotes_verified": [
+      "ALT（GPT）： IU/L （參考值: ）",
+      "AST（GOT）： IU/L（參考值: ）",
+      "【理想值：18.5≦BMI＜24 】",
+      "總膽固醇： mg/dl （參考值: ）",
+      "肌酸酐： mg/dl （參考值: ）",
+      "飯前血糖: mg/dl （參考值: ）"
     ],
     "quotes_never_verified": []
   },
@@ -502,6 +580,25 @@
     "quotes_never_verified": []
   },
   {
+    "id": "ifcc-aminotransferase-ri-2010",
+    "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=21034260&rettype=abstract&retmode=text",
+    "doc_type": "html-text",
+    "checked_at": "2026-09-10T10:47:24Z",
+    "http_code": "200",
+    "status": "ok",
+    "etag": null,
+    "last_modified": null,
+    "remote_sha256": "e125b6686e1f22f28983695a5015fb1e45294265815ebc443ded1fff7f996943",
+    "text_sha256": "44ffe609c247755ecaaa1e1747f25166970e9dd3183e72fdce039b8f30c85e4d",
+    "quotes_total": 3,
+    "quotes_verified": [
+      "AST results from the four regions (Milan, Beijing, Bursa and Nordic Countries) were statistically different, but these differences were too small to be clinically relevant.",
+      "Likewise, differences between the upper reference limits for genders was only 1.7 U/L (0.03 μkat/L), allowing a single RI of 11-34 U/L (0.18-0.57 μkat/L) to be defined.",
+      "RIs for ALT were 8-41 U/L (0.13-0.68 μkat/L) for females and 9-59 U/L (0.15-0.99 μkat/L) for males, respectively."
+    ],
+    "quotes_never_verified": []
+  },
+  {
     "id": "jama-blood-cholesterol-synopsis-2019",
     "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6679800/",
     "doc_type": "html",
@@ -562,6 +659,42 @@
     "quotes_never_verified": []
   },
   {
+    "id": "liverorg-journal-72-2015",
+    "url": "https://www.liver.org.tw/journalView.php?cat=10&sid=148",
+    "doc_type": "html",
+    "checked_at": "2026-09-10T10:47:25Z",
+    "http_code": "200",
+    "status": "ok",
+    "etag": null,
+    "last_modified": null,
+    "remote_sha256": "ea0168bb52f8e87cf9ab25b97c2bddc8339b2c2759ecd1fc57dee5bc2b4d573e",
+    "text_sha256": "59231cf251e606f29416c1eb9569d1de6222f3e57fc2e20ecd914b6b9a1671dd",
+    "quotes_total": 1,
+    "quotes_verified": [
+      "一般而言，GOT、GPT指數其正常值在40U/L以下，超過40U/L代表肝臟處於發炎狀態。但以GPT來說，若數值僅35U/L，是否就代表沒問題？其實也不盡然。"
+    ],
+    "quotes_never_verified": []
+  },
+  {
+    "id": "livertox-severity-grading-2019",
+    "url": "https://www.ncbi.nlm.nih.gov/books/NBK548241/pdf/Bookshelf_NBK548241.pdf",
+    "doc_type": "pdf",
+    "checked_at": "2026-09-10T10:47:17Z",
+    "http_code": "200",
+    "status": "ok",
+    "etag": "548241-16759388-20260703143642",
+    "last_modified": null,
+    "remote_sha256": "18bf719ba6e686b4559c71787095d8b0e30fc94b67360bc0e8baf9f08cc1bd98",
+    "text_sha256": "3e8fc84dd16b7c0c8c6dd5a129c99f16414554d006ade9e597ba1434f6cb87f1",
+    "quotes_total": 3,
+    "quotes_verified": [
+      "A problem with all grading systems using the upper limit of normal as an index is that there is little consensus on what the ULN should be or how it should be calculated. Thus, the upper limit of normal of ALT in different testing laboratories can range from 19 to 77 U/L, and some laboratories use a different reference range for women than men. Actually, current automated systems for measuring ALT values yield very similar results and use of common reference limits is reasonable, particularly in multicenter trials.",
+      "In the LiverTox website, the",
+      "default ULN for ALT is 40 U/L, alkaline phosphatase 115 U/L and bilirubin 1.2 mg/dL."
+    ],
+    "quotes_never_verified": []
+  },
+  {
     "id": "medlineplus-a1c-test",
     "url": "https://medlineplus.gov/a1c.html",
     "doc_type": "html",
@@ -575,6 +708,45 @@
     "quotes_total": 1,
     "quotes_verified": [
       "It measures your average blood glucose, or blood sugar, level over the past 3 months."
+    ],
+    "quotes_never_verified": []
+  },
+  {
+    "id": "medlineplus-alt-blood-test",
+    "url": "https://medlineplus.gov/lab-tests/alt-blood-test/",
+    "doc_type": "html",
+    "checked_at": "2026-09-10T10:47:18Z",
+    "http_code": "200",
+    "status": "ok",
+    "etag": "\"00361c7c31c1eeb2a1b174c659adc1d5\"",
+    "last_modified": "Thu, 10 Sep 2026 04:15:27 GMT",
+    "remote_sha256": "3c2a402bda71c175a79da026198f7fea22f88915018a6c13a96eedbe3392a97b",
+    "text_sha256": "cd1393796d3783b1f43cc6a1e09661d493e1cc8cb7a6a5d85c751a238414d25b",
+    "quotes_total": 4,
+    "quotes_verified": [
+      "Many things can affect your results, such as your age, sex, weight, and certain medicines and dietary supplements.",
+      "Since ALT is mostly found in the liver, an ALT test checks more specifically for liver damage.",
+      "Your ALT levels can also be affected by intense exercise and where you are in your",
+      "menstrual cycle"
+    ],
+    "quotes_never_verified": []
+  },
+  {
+    "id": "medlineplus-ast-test",
+    "url": "https://medlineplus.gov/lab-tests/ast-test/",
+    "doc_type": "html",
+    "checked_at": "2026-09-10T10:47:19Z",
+    "http_code": "200",
+    "status": "ok",
+    "etag": "\"b55b3d34cbe51d49e38451829f64160c\"",
+    "last_modified": "Thu, 10 Sep 2026 04:15:26 GMT",
+    "remote_sha256": "510cbd7910c6463d5aff7b9946e76c3ce1caed885d70a249ab8ec61b4b376502",
+    "text_sha256": "c304017c4e93c4d729ae131e107ab77297b79d9592e3bdd2d107342bea467a77",
+    "quotes_total": 3,
+    "quotes_verified": [
+      "AST (aspartate aminotransferase) is an enzyme, a protein that speeds up certain chemical reactions in your body. It is found mainly in your liver but also in your heart, muscles, and other tissues.",
+      "An AST blood test measures the amount of AST in your blood.",
+      "Many things can affect your results, such as pregnancy, exercise, certain medicines, and your age or sex."
     ],
     "quotes_never_verified": []
   },
@@ -1131,6 +1303,29 @@
     "text_sha256": null,
     "quotes_total": 2,
     "quotes_verified": [],
+    "quotes_never_verified": []
+  },
+  {
+    "id": "who-diabetes-diagnosis-2006",
+    "url": "https://iris.who.int/server/api/core/bitstreams/ef6a81ae-5db3-4c5c-9136-c047bd8f8344/content",
+    "doc_type": "pdf",
+    "checked_at": "2026-09-10T10:48:04Z",
+    "http_code": "200",
+    "status": "ok",
+    "etag": "\"a23f564b155a3546c956fee091a6db8a\"",
+    "last_modified": "Fri, 19 Sep 2025 10:39:19 GMT",
+    "remote_sha256": "ae658daa4370559bc6b7d00cd65e22f4aac4ef80937f0cc7eba0c2c6a0d35a94",
+    "text_sha256": "04400b95b8ac6b5e9a658bdf9d2db96862c85ce3150860d0248777193eaa5153",
+    "quotes_total": 7,
+    "quotes_verified": [
+      "(110mg/dl to 125mg/dl)",
+      "An OGTT should be used in individuals with fasting plasma glucose 6.1–6.9mmol/l (110–125mg/dl) to determine glucose tolerance status.",
+      "Diabetes\nFasting plasma glucose ≥7.0mmol/l (126mg/dl)\n2–h plasma glucose* or\n≥11.1mmol/l (200mg/dl)",
+      "Fasting plasma glucose 6.1 to 6.9mmol/l",
+      "Impaired Fasting Glucose (IFG)",
+      "Impaired Glucose Tolerance (IGT)\nFasting plasma glucose <7.0mmol/l (126mg/dl)\n2–h plasma glucose* and\n≥7.8 and <11.1mmol/l\n(140mg/dl and 200mg/dl)",
+      "and (if measured) <7.8mmol/l (140mg/dl)"
+    ],
     "quotes_never_verified": []
   },
   {

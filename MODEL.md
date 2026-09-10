@@ -22,6 +22,7 @@
 - 同一指標多機構判準不一致時**並列、各綁版本，不選邊**；WHO 沒訂前期＝`no_criterion_stated`，不是空白也不是套 ADA 的值。
 - **三個資料檔以「頁面 slug」定位，不是 indicator_id**；「這頁收哪些 `indicator_id`」是 `articles/indicators/<slug>.md` frontmatter 的 `indicator_ids` 決定的（單數 `indicator_id` 仍支援）。多指標頁的中文短標籤只能來自 frontmatter 的 `indicator_labels`，**缺一個就中止**——生成器不從 id 造中文，也不從單位猜。
 - **`classification` 與 `risk_threshold` 都不是 `diagnosis`**：前者＝來源把連續數值切成具名等級（高血壓第一期、BMI 過重），後者＝來源說超過此值風險升高但沒說它構成診斷（腰圍 ≥90 cm）。`risk_threshold` 也不是 `screening_triage`（那是指向下一項檢查的流程門檻）。☠️ 標錯就會在頁面上把「腰圍超標」講成一個診斷。
+- **`reference_interval`（參考區間）也不是 `classification`**：來源用健康參考族群統計出的區間（例：IFCC 的 RI），來源沒有把數值切成具名等級，區間外也不等於符合某病。與 `definition` 的分界：只描述某研究族群裡的健康值、特定用途才用的上限、預設值、回述他人的數字，仍歸 `definition`（§1-1）。原文寫「a-b」沒寫端點含不含等號時，旗標採預設、頁面照原文區間寫法呈現（2026-09-10 肝功能頁加；IFCC 的 RI 標成 classification 被查核桌兩席判 BLOCKER）。
 
 ### 1-1. 判準列體例（2026-08-29 二審裁決，474 列逐列核出的規則；schema 描述為準、這裡是人讀版）
 - **population 只能來自兩處**：引句本身，或該列 `page_or_table` 指到的表題／節名／章名，照原文字面抄。整份文件的標題不算。其餘一律「來源未標示」——「全體」「一般民眾」「成人（來源沒寫）」都是我們加的，二審一次清掉 40 多列。
@@ -57,7 +58,7 @@
 ## 4. 發布契約
 
 - `config/site.json` `published:false`＝dormant：頁面照生，但不進 sitemap／llms.txt／導覽。翻開關前 build 必須 byte-identical，翻開關後才接線；兩態都有測試。
-- **2026-08-28 起 `published:true`、站已公開**（health.twtools.cc）。**部署是手動的**：合 main 不會自動上線，要在對齊 `origin/main` 的 checkout 上跑 build 四步（`build-articles` → `gen-indicator` → `gen-indicators-index` → `build-sitemap`）再 `wrangler deploy -c wrangler-health.jsonc`；驗收＝線上與本機產物逐檔 byte 比對（`verify-deploy.py`，首次部署 DNS 未傳播時改 `curl --resolve`），不看 HTTP 200。sites-dashboard 的部署新鮮度會在「合了沒部署」6 小時後出聲。
+- **2026-08-28 起 `published:true`、站已公開**（health.twtools.cc）。**部署是手動的**：合 main 不會自動上線，要在對齊 `origin/main` 的 checkout 上跑 build 五步（`build-articles` → `gen-indicator` → `gen-indicators-index` → `gen-worksheet` → `build-sitemap`）再 `wrangler deploy -c wrangler-health.jsonc`；驗收＝線上與本機產物逐檔 byte 比對（`verify-deploy.py`，首次部署 DNS 未傳播時改 `curl --resolve`），不看 HTTP 200。sites-dashboard 的部署新鮮度會在「合了沒部署」6 小時後出聲。
 - 觀測：GA4 `ga_id` 在 `config/site.json`（空字串＝不輸出 tag）；GSC sitemap 已提交；站群日報第 12 站。
 - 生成器跑兩次 SHA-256 必須全同（禁時間戳）。
 - **公開後改動要留痕，判準是頁面主張有沒有變，不是字元有沒有變**：主張的**強度**改變（「會失真」→「可能不適用」）、**數值**改變、**內容移除**，就在 `data/errata.json` 加一列（`was` 照舊頁抄、`now`、`reason`；有依據文件就附 `doc_id`＋`quote`，同樣受收據 gate；理由是「來源查無原文」的移除可以沒有 `doc_id`）。純粹補「是誰說的」、換更精確的機構全稱、體例統一、主詞或句型改寫而主張不變，不加列——這是 PR #25（整節重寫零列）與 PR #33（六處改動兩列）已經在用的判準（2026-09-10 Charlie 裁定寫回本條）。有勘誤的指標頁在第⑥段之後多一段「勘誤紀錄」，站級清單在 `/errata/`。☠️ 不是「改完再寫一段話說明」——沒有那一列，頁面上就不會有痕跡。
@@ -80,6 +81,9 @@
    派工單要明寫：**刪除與加限定是安全的；解釋、推算、加形容詞是危險的。**
    ⚠️ 本站特別高風險的位置：判準列的 `quote` 被「順手補完整」、`note` 欄新增沒有來源的換算或分級說明。
    ⚠️ 輸出是候選清單不是判決（同第 4 條「gate 綠≠合規」的精神）；合法的推導值也會被列，要求交代來源即可。
+9. **查核桌的事實包用 `python3 scripts/gen-factpack.py <slug>` 產生，不要另寫一次性腳本挑欄位印**（2026-09-10 立）。它照三份 criteria schema 與 manifest schema 全欄印，選填欄沒填也印「（未填）」；印完把產物讀回來數欄位，少一欄就 exit 1；也不挑列，整個 `<slug>.json` 都印（含不進判準表的列）。新頁還沒有正文時加 `--ids`。
+   ☠️ 判例：血糖併頁那輪事實包是手選欄位印的，同一天漏了三次（`*_inclusive`、`quote_extra`、某列的 `category`），每漏一欄查核席就生出一條假 finding，還稀釋掉真的那幾條。
+   ⚠️ 程式只保證「用了這支就不會漏欄」，**沒有任何東西強制你用它**——這條靠人記得。
 
 ### ☠️ 本站與 racing 是同一套架構，那個「第二輸出根目錄」的洞在這裡同樣成立（2026-09-03/04）
 

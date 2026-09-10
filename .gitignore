@@ -58,6 +58,12 @@ data/sources/aha-acc-hypertension-guideline-2025.txt
 data/sources/jnc8-hypertension-guideline-2014.txt
 # M6 bmi-waist（licensed-cite-only）
 data/sources/who-asian-bmi-lancet-summary-2004.txt
+# M7 liver（licensed-cite-only）
+data/sources/acg-abnormal-liver-chemistries-2017.pdf
+data/sources/aasld-hbv-guidance-2018.html
+data/sources/easl-hbv-cpg-2017.pdf
+data/sources/ifcc-aminotransferase-ri-2010.txt
+data/sources/liverorg-journal-72-2015.html
 
 # 二審用 dump（scripts/audit-rowctx.py 產物）
 .audit/

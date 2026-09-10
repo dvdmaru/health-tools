@@ -1,4 +1,5 @@
 https://health.twtools.cc/indicators/
+https://health.twtools.cc/indicators/ast-alt/
 https://health.twtools.cc/indicators/blood-pressure/
 https://health.twtools.cc/indicators/bmi-waist/
 https://health.twtools.cc/indicators/hba1c/

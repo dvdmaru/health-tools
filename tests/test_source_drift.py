@@ -474,6 +474,37 @@ class TestChallengePageIsBlockedNotDrift(unittest.TestCase):
 
 
 # ---------------------------------------------------------------------------
+# 2b. 活體：repo 裡的 manifest 與 baseline 要對得起來
+# ---------------------------------------------------------------------------
+
+REAL_MANIFEST = SCRIPTS.parent / "data" / "sources" / "manifest.json"
+REAL_BASELINE = SCRIPTS.parent / "data" / "sources" / "drift-baseline.json"
+
+
+def missing_from_baseline(manifest_rows: list, baseline_rows: list) -> list:
+    return sorted({m["id"] for m in manifest_rows} - {b["id"] for b in baseline_rows})
+
+
+class TestBaselineCoversManifest(unittest.TestCase):
+    """☠️ 2026-09-10：who-diabetes-diagnosis-2006（PR #35）登進 manifest 卻沒進 baseline——
+    每週 drift 監測從此漏看這一份，而且「沒有 baseline」這件事本身不會出聲。
+    新來源登進 manifest 時要一起跑 `check-source-drift.py --only <id> --update-baseline`。"""
+
+    def test_every_manifest_source_has_a_baseline_row(self):
+        manifest = json.loads(REAL_MANIFEST.read_text(encoding="utf-8"))
+        baseline = json.loads(REAL_BASELINE.read_text(encoding="utf-8"))
+        self.assertEqual([], missing_from_baseline(manifest, baseline),
+                         "這些來源在 manifest 裡、drift baseline 沒有，每週監測看不到它們")
+
+    def test_checker_catches_a_missing_row(self):
+        """陰性對照：拿掉 baseline 的一列，檢查器必須點名它。"""
+        manifest = json.loads(REAL_MANIFEST.read_text(encoding="utf-8"))
+        baseline = json.loads(REAL_BASELINE.read_text(encoding="utf-8"))
+        dropped = baseline[0]["id"]
+        self.assertEqual([dropped], missing_from_baseline(manifest, baseline[1:]))
+
+
+# ---------------------------------------------------------------------------
 # 3. main() 整條 pipeline
 # ---------------------------------------------------------------------------
 
@@ -647,6 +678,44 @@ class TestMainEndToEnd(unittest.TestCase):
         self.assertEqual(set(urls), set(ids))
         for r in rows:
             self.assertEqual("ok", r["status"])
+
+    def test_update_baseline_with_only_keeps_other_rows(self):
+        """☠️ 2026-09-10 前 `--only X --update-baseline` 會把整份 baseline 覆蓋成只剩 X 一筆，
+        其他來源的監測基準靜默消失。現在只重抓 X、其餘既有列逐欄原樣保留。"""
+        urls = {"aaa-doc": "https://example.org/a", "new-doc": "https://example.org/n"}
+        self._write_manifest([
+            {"id": doc_id, "title": doc_id, "url": url, "doc_type": "html"}
+            for doc_id, url in urls.items()
+        ])
+        self._write_criteria([
+            {"doc_id": doc_id, "quote": f"quote for {doc_id}"} for doc_id in urls
+        ])
+        keep = {"id": "aaa-doc", "status": "ok", "marker": "既有列原樣保留"}
+        self._write_baseline([keep])
+        drift.curl_with_headers = fake_curl({
+            url: {"code": "200", "body": f"<p>quote for {doc_id}</p>".encode()}
+            for doc_id, url in urls.items()
+        })
+
+        code, out = self._run_main(["--only", "new-doc", "--update-baseline",
+                                    "--workers", "1", "--timeout", "5"])
+        self.assertEqual(0, code, out)
+        rows = json.loads(drift.BASELINE.read_text(encoding="utf-8"))
+        self.assertEqual(["aaa-doc", "new-doc"], [r["id"] for r in rows])
+        self.assertEqual(keep, rows[0], "沒重抓的既有列必須逐欄原樣保留")
+
+    def test_full_update_baseline_still_rebuilds_from_scratch(self):
+        """陰性對照：不帶 --only 時照舊整份重建——manifest 已經沒有的 id 不會殘留在 baseline。"""
+        url = "https://example.org/a"
+        self._write_manifest([{"id": "aaa-doc", "title": "a", "url": url, "doc_type": "html"}])
+        self._write_criteria([{"doc_id": "aaa-doc", "quote": "quote for aaa-doc"}])
+        self._write_baseline([{"id": "gone-doc", "status": "ok"}])
+        drift.curl_with_headers = fake_curl({url: {"code": "200", "body": b"<p>quote for aaa-doc</p>"}})
+
+        code, out = self._run_main(["--update-baseline", "--workers", "1", "--timeout", "5"])
+        self.assertEqual(0, code, out)
+        rows = json.loads(drift.BASELINE.read_text(encoding="utf-8"))
+        self.assertEqual(["aaa-doc"], [r["id"] for r in rows])
 
     def test_update_baseline_records_never_verified_not_drift_on_first_build(self):
         """第一次建 baseline 時,某份文件的引句就是驗不到(例如 JS 渲染)——

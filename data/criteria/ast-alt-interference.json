@@ -1,0 +1,53 @@
+[
+  {
+    "id": "L1",
+    "direction": "unspecified",
+    "factor": "ALT：年齡、性別、體重，以及某些藥物與膳食補充品可能影響檢驗結果（來源未指方向）",
+    "org": "MedlinePlus（U.S. National Library of Medicine）",
+    "doc_id": "medlineplus-alt-blood-test",
+    "version": "Last updated November 5, 2024",
+    "page_or_table": "What do the results mean? 段",
+    "quote": "Many things can affect your results, such as your age, sex, weight, and certain medicines and dietary supplements.",
+    "fetched_at": "2026-09-10",
+    "note": "來源只說 can affect your results，沒有說偏高或偏低，direction=unspecified。"
+  },
+  {
+    "id": "L2",
+    "direction": "unspecified",
+    "factor": "AST：懷孕、運動、某些藥物，以及年齡或性別可能影響檢驗結果（來源未指方向）",
+    "org": "MedlinePlus（U.S. National Library of Medicine）",
+    "doc_id": "medlineplus-ast-test",
+    "version": "Last updated November 5, 2024",
+    "page_or_table": "What do the results mean? 段",
+    "quote": "Many things can affect your results, such as pregnancy, exercise, certain medicines, and your age or sex.",
+    "fetched_at": "2026-09-10",
+    "note": "來源只說 can affect your results，沒有說偏高或偏低，direction=unspecified。"
+  },
+  {
+    "id": "L3",
+    "direction": "unspecified",
+    "factor": "ALT：劇烈運動，以及處於月經週期的哪個階段，可能影響檢驗結果（來源未指方向）",
+    "org": "MedlinePlus（U.S. National Library of Medicine）",
+    "doc_id": "medlineplus-alt-blood-test",
+    "version": "Last updated November 5, 2024",
+    "page_or_table": "What do the results mean? 段",
+    "quote": "Your ALT levels can also be affected by intense exercise and where you are in your",
+    "quote_extra": [
+      "menstrual cycle"
+    ],
+    "fetched_at": "2026-09-10",
+    "note": "來源只說 can also be affected，沒有說偏高或偏低，direction=unspecified。原文連續；快照因 HTML 連結標籤切開，menstrual cycle 放 quote_extra。"
+  },
+  {
+    "id": "L4",
+    "direction": "unspecified",
+    "factor": "AST 與 ALT：各檢驗室採用的正常上限（ULN）範圍可能不同（來源未指方向）",
+    "org": "American College of Gastroenterology",
+    "doc_id": "acg-abnormal-liver-chemistries-2017",
+    "version": "Am J Gastroenterol 2017; 112:18–35; published online 20 December 2016",
+    "page_or_table": "PDF 第 5 頁，What are Truly Normal Liver Chemistry Tests? → Summary statements 第 6 條",
+    "quote": "AST and ALT ULN ranges can vary between different labs.",
+    "fetched_at": "2026-09-10",
+    "note": "來源只說 can vary，沒有說哪個方向，direction=unspecified。講的是各檢驗室的上限，不是個人數值的偏移；收在限制列，是因為報告上的「超過上限」取決於那家檢驗室用的上限（R1 Terra Q5「檢測條件」缺口）。"
+  }
+]

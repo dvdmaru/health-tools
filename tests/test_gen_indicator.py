@@ -668,6 +668,37 @@ class NewTableCategories(unittest.TestCase):
         self.assertEqual("分級", gen.CATEGORY_LABEL["classification"])
         self.assertEqual("風險門檻", gen.CATEGORY_LABEL["risk_threshold"])
 
+    def test_overlapping_bands_of_one_org_split_only_when_populations_differ(self):
+        """IFCC ALT 女 8–41／男 9–59 疊在同一條會讀成兩個等級；只有參考區間會拆，族群相同也不拆。"""
+        def row(lo, up, pop):
+            return {"org": "X", "category": "reference_interval", "lower": lo, "upper": up,
+                    "population": pop}
+        by_org = {"X": [row(8, 41, "女性（原文：for females）"), row(9, 59, "男性（原文：for males）")]}
+        lanes = gen._lanes(["X"], by_org, 0, 70)
+        self.assertEqual(2, len(lanes))
+        self.assertTrue(lanes[0][1].endswith("・女性"))
+        self.assertTrue(lanes[1][1].endswith("・男性"))
+        same = {"X": [row(25, None, "成人"), row(25, 29.99, "成人")]}
+        self.assertEqual(1, len(gen._lanes(["X"], same, 15, 42)))
+        chb = {"X": [row(10, 40, "慢性 B 型肝炎（CHB）處置用途（原文：For purposes of guiding management of CHB）"),
+                     row(20, 50, "女性")]}
+        self.assertEqual("X・慢性 B 型肝炎（CHB）處置用途", gen._lanes(["X"], chb, 0, 70)[0][1],
+                         "族群標籤只去掉結尾的（原文：…），不在第一個全形括號截斷")
+        cls = {"X": [dict(row(25, None, "男性"), category="classification"),
+                     dict(row(25, 29.99, "女性"), category="classification")]}
+        self.assertEqual(1, len(gen._lanes(["X"], cls, 15, 42)),
+                         "只有參考區間會拆；分級就算族群不同也不拆（既有頁的呈現不在射程）")
+        adjacent = {"X": [row(None, 120, "甲"), row(120, 129, "乙")]}
+        self.assertEqual(1, len(gen._lanes(["X"], adjacent, 100, 160)),
+                         "相接不算重疊（120 同時是上一段的上界與下一段的下界）")
+
+    def test_reference_interval_is_a_table_category_with_its_own_label(self):
+        """參考區間要進表、有自己的標籤；和「分級」共用標籤就等於沒分開。"""
+        self.assertIn("reference_interval", gen.TABLE_CATEGORIES)
+        self.assertIn("reference_interval", gen.CRIT_OPEN_CATEGORIES)
+        self.assertEqual("參考區間", gen.CATEGORY_LABEL["reference_interval"])
+        self.assertNotEqual(gen.CATEGORY_LABEL["reference_interval"], gen.CATEGORY_LABEL["classification"])
+
     def test_every_table_category_has_a_label(self):
         for c in gen.TABLE_CATEGORIES:
             with self.subTest(category=c):
