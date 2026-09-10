@@ -430,8 +430,15 @@ def run(manifest: list, baseline_map: dict, timeout: int, workers: int,
     return out
 
 
-def write_baseline(results: list):
-    rows = [r["_baseline_entry_for_write"] for r in results]
+def write_baseline(results: list, keep: list = None):
+    """寫 baseline。`keep`＝這一輪沒有重抓、要原樣保留的既有列（`--only` 時傳入）。
+
+    ☠️ 2026-09-10 前 `--only X --update-baseline` 只寫這一輪的 results，整份 baseline 被覆蓋成
+    只剩 X 一筆——其他來源的監測基準靜默消失，下週 CI 對它們一律「無 baseline」，不會出聲。
+    """
+    fresh = [r["_baseline_entry_for_write"] for r in results]
+    ids = {r["id"] for r in fresh}
+    rows = [r for r in (keep or []) if r["id"] not in ids] + fresh
     rows.sort(key=lambda r: r["id"])
     BASELINE.write_text(json.dumps(rows, ensure_ascii=False, indent=2) + "\n",
                         encoding="utf-8")
@@ -577,6 +584,7 @@ def main() -> int:
         manifest = filtered
 
     baseline_map = {}
+    baseline_rows = []
     if BASELINE.exists():
         try:
             baseline_rows = json.loads(BASELINE.read_text(encoding="utf-8"))
@@ -593,8 +601,10 @@ def main() -> int:
                   building=args.update_baseline)
 
     if args.update_baseline:
-        write_baseline(results)
-        print(f"✅ 已寫入 {BASELINE.relative_to(ROOT)}（{len(results)} 份）")
+        # --only 時只重抓一份，其餘既有列原樣保留；全量時整份重建。
+        write_baseline(results, keep=baseline_rows if args.only else None)
+        print(f"✅ 已寫入 {BASELINE.relative_to(ROOT)}（本輪 {len(results)} 份"
+              + ("，其餘既有列原樣保留" if args.only else "") + "）")
 
     out_dir = DEFAULT_OUT_DIR
     report_path = pathlib.Path(args.report) if args.report else out_dir / "report.md"
