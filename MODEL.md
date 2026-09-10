@@ -22,6 +22,7 @@
 - 同一指標多機構判準不一致時**並列、各綁版本，不選邊**；WHO 沒訂前期＝`no_criterion_stated`，不是空白也不是套 ADA 的值。
 - **三個資料檔以「頁面 slug」定位，不是 indicator_id**；「這頁收哪些 `indicator_id`」是 `articles/indicators/<slug>.md` frontmatter 的 `indicator_ids` 決定的（單數 `indicator_id` 仍支援）。多指標頁的中文短標籤只能來自 frontmatter 的 `indicator_labels`，**缺一個就中止**——生成器不從 id 造中文，也不從單位猜。
 - **`classification` 與 `risk_threshold` 都不是 `diagnosis`**：前者＝來源把連續數值切成具名等級（高血壓第一期、BMI 過重），後者＝來源說超過此值風險升高但沒說它構成診斷（腰圍 ≥90 cm）。`risk_threshold` 也不是 `screening_triage`（那是指向下一項檢查的流程門檻）。☠️ 標錯就會在頁面上把「腰圍超標」講成一個診斷。
+- **`reference_interval`（參考區間）也不是 `classification`**：來源用健康參考族群統計出的區間（例：IFCC 的 RI；檢驗報告上印的「參考值」多半是這一類），來源沒有把數值切成具名等級，區間外也不等於符合某病。原文寫「a-b」沒寫端點含不含等號時，旗標採預設、頁面照原文區間寫法呈現（2026-09-10 肝功能頁加；IFCC 的 RI 標成 classification 被查核桌兩席判 BLOCKER）。
 
 ### 1-1. 判準列體例（2026-08-29 二審裁決，474 列逐列核出的規則；schema 描述為準、這裡是人讀版）
 - **population 只能來自兩處**：引句本身，或該列 `page_or_table` 指到的表題／節名／章名，照原文字面抄。整份文件的標題不算。其餘一律「來源未標示」——「全體」「一般民眾」「成人（來源沒寫）」都是我們加的，二審一次清掉 40 多列。

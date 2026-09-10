@@ -174,6 +174,35 @@ FIXTURE_RISK_THRESHOLD = {
 }
 
 
+class TestReferenceIntervalCategory(unittest.TestCase):
+    """reference_interval：檢驗報告的「參考值」多半是參考區間（2026-09-10 肝功能頁加）。
+
+    ☠️ 它不是 classification（來源沒切具名等級）——查核桌兩席把 IFCC 的 RI 標成 classification 判 BLOCKER。
+    分界要寫在 description 裡，不是口耳相傳。
+    """
+
+    ENUM = SCHEMA["$defs"]["criterion"]["properties"]["category"]["enum"]
+    DESC = SCHEMA["$defs"]["criterion"]["properties"]["category"]["description"]
+
+    def test_in_whitelist_and_a_two_sided_row_validates(self):
+        self.assertIn("reference_interval", self.ENUM)
+        ITEM_VALIDATOR.validate({**FIXTURE_CLASSIFICATION, "category": "reference_interval",
+                                 "lower": 8, "upper": 41})
+
+    def test_description_draws_the_line_against_classification_diagnosis_risk(self):
+        seg = self.DESC[self.DESC.index("・reference_interval"):]
+        for other in ("classification", "diagnosis", "risk_threshold"):
+            with self.subTest(other=other):
+                self.assertIn(other, seg)
+
+    def test_a_typo_is_still_rejected(self):
+        """陰性對照：白名單只多了一個具名值，沒有放寬。"""
+        for bad in ("reference-interval", "參考區間", "reference_intervals"):
+            with self.subTest(value=bad):
+                with self.assertRaises(Exception):
+                    ITEM_VALIDATOR.validate({**FIXTURE_CLASSIFICATION, "category": bad})
+
+
 class TestNewCategories(unittest.TestCase):
     """classification／risk_threshold：M4 的血壓分級與腰圍風險線要裝得進來。
 

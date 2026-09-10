@@ -262,6 +262,7 @@ python3 scripts/verify-deploy.py public-health/index.html
   易混的兩對——`classification`（來源把連續數值切成具名等級：高血壓第一期、BMI 過重）
   與 `risk_threshold`（來源說超過此值風險升高、但沒說它構成診斷：腰圍 ≥90 cm）都**不是**
   `diagnosis`；`risk_threshold` 也不是 `screening_triage`（那是指向下一項檢查的流程門檻）。
+  `reference_interval`（參考區間：來源用健康參考族群統計出的區間，檢驗報告的「參考值」多半是這一類）也不是 `classification`——來源沒有把數值切成具名等級。
 - **引句照抄**：不做繁簡、標點、單位大小寫的美化。原文的 `≧`／`≥`、`mg/dl`／`mg/dL`
   不一致就照抄，那是回查原文的鑰匙。
 - **只存明細**：判準層禁止任何統計／彙總欄位（schema 已用 `additionalProperties: false`
