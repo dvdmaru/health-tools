@@ -34,9 +34,10 @@
   收據 gate 對有 `doc_id` 的列一樣逐句 grep）。有勘誤的指標頁自動多一段「勘誤紀錄」，站級清單在 `/errata/`
   （`published` 才進 sitemap／llms.txt／頁尾）。目前是 `[]`——上線前的修改不是勘誤，不補記。
 
-`config/site.json` 的 `published` 仍為 `false`，`public-health/` 只有骨架與 dormant 指標頁。
-`config/site.json` 的 `published` 為 `false`，帶 `"requires": "published"` 的導覽與頁尾
-入口一律不輸出——翻開關之前，站上不會出現任何連到未生成頁面的死連結。
+`config/site.json` 的 `published` **自 2026-08-28 起為 `true`**（見本檔開頭「目前狀態」）。這個開關的行為是：
+為 `false` 時，帶 `"requires": "published"` 的導覽與頁尾入口一律不輸出——翻開關之前，站上不會出現
+任何連到未生成頁面的死連結。☠️ 這兩行原本寫死「仍為 `false`」，與開頭那段自相矛盾了十三天，
+2026-09-10 才被發現：**描述現況的句子沒有人守，改開關的人不會回來改說明**。
 
 ## 三層架構
 
