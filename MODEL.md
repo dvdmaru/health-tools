@@ -57,7 +57,7 @@
 ## 4. 發布契約
 
 - `config/site.json` `published:false`＝dormant：頁面照生，但不進 sitemap／llms.txt／導覽。翻開關前 build 必須 byte-identical，翻開關後才接線；兩態都有測試。
-- **2026-08-28 起 `published:true`、站已公開**（health.twtools.cc）。**部署是手動的**：合 main 不會自動上線，要在對齊 `origin/main` 的 checkout 上跑 build 四步（`build-articles` → `gen-indicator` → `gen-indicators-index` → `build-sitemap`）再 `wrangler deploy -c wrangler-health.jsonc`；驗收＝線上與本機產物逐檔 byte 比對（`verify-deploy.py`，首次部署 DNS 未傳播時改 `curl --resolve`），不看 HTTP 200。sites-dashboard 的部署新鮮度會在「合了沒部署」6 小時後出聲。
+- **2026-08-28 起 `published:true`、站已公開**（health.twtools.cc）。**部署是手動的**：合 main 不會自動上線，要在對齊 `origin/main` 的 checkout 上跑 build 五步（`build-articles` → `gen-indicator` → `gen-indicators-index` → `gen-worksheet` → `build-sitemap`）再 `wrangler deploy -c wrangler-health.jsonc`；驗收＝線上與本機產物逐檔 byte 比對（`verify-deploy.py`，首次部署 DNS 未傳播時改 `curl --resolve`），不看 HTTP 200。sites-dashboard 的部署新鮮度會在「合了沒部署」6 小時後出聲。
 - 觀測：GA4 `ga_id` 在 `config/site.json`（空字串＝不輸出 tag）；GSC sitemap 已提交；站群日報第 12 站。
 - 生成器跑兩次 SHA-256 必須全同（禁時間戳）。
 - **公開後改動要留痕，判準是頁面主張有沒有變，不是字元有沒有變**：主張的**強度**改變（「會失真」→「可能不適用」）、**數值**改變、**內容移除**，就在 `data/errata.json` 加一列（`was` 照舊頁抄、`now`、`reason`；有依據文件就附 `doc_id`＋`quote`，同樣受收據 gate；理由是「來源查無原文」的移除可以沒有 `doc_id`）。純粹補「是誰說的」、換更精確的機構全稱、體例統一、主詞或句型改寫而主張不變，不加列——這是 PR #25（整節重寫零列）與 PR #33（六處改動兩列）已經在用的判準（2026-09-10 Charlie 裁定寫回本條）。有勘誤的指標頁在第⑥段之後多一段「勘誤紀錄」，站級清單在 `/errata/`。☠️ 不是「改完再寫一段話說明」——沒有那一列，頁面上就不會有痕跡。
@@ -80,6 +80,9 @@
    派工單要明寫：**刪除與加限定是安全的；解釋、推算、加形容詞是危險的。**
    ⚠️ 本站特別高風險的位置：判準列的 `quote` 被「順手補完整」、`note` 欄新增沒有來源的換算或分級說明。
    ⚠️ 輸出是候選清單不是判決（同第 4 條「gate 綠≠合規」的精神）；合法的推導值也會被列，要求交代來源即可。
+9. **查核桌的事實包用 `python3 scripts/gen-factpack.py <slug>` 產生，不要另寫一次性腳本挑欄位印**（2026-09-10 立）。它照三份 criteria schema 與 manifest schema 全欄印，選填欄沒填也印「（未填）」；印完把產物讀回來數欄位，少一欄就 exit 1；也不挑列，整個 `<slug>.json` 都印（含不進判準表的列）。新頁還沒有正文時加 `--ids`。
+   ☠️ 判例：血糖併頁那輪事實包是手選欄位印的，同一天漏了三次（`*_inclusive`、`quote_extra`、某列的 `category`），每漏一欄查核席就生出一條假 finding，還稀釋掉真的那幾條。
+   ⚠️ 程式只保證「用了這支就不會漏欄」，**沒有任何東西強制你用它**——這條靠人記得。
 
 ### ☠️ 本站與 racing 是同一套架構，那個「第二輸出根目錄」的洞在這裡同樣成立（2026-09-03/04）
 
