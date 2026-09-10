@@ -1,0 +1,26 @@
+[
+  {
+    "id": "L1",
+    "direction": "unspecified",
+    "factor": "ALT：年齡、性別、體重，以及某些藥物與膳食補充品會影響檢驗結果（來源未指方向）",
+    "org": "MedlinePlus（U.S. National Library of Medicine）",
+    "doc_id": "medlineplus-alt-blood-test",
+    "version": "Last updated November 5, 2024",
+    "page_or_table": "What do the results mean? 段",
+    "quote": "Many things can affect your results, such as your age, sex, weight, and certain medicines and dietary supplements.",
+    "fetched_at": "2026-09-10",
+    "note": "來源只說 can affect your results，沒有說偏高或偏低，direction=unspecified。"
+  },
+  {
+    "id": "L2",
+    "direction": "unspecified",
+    "factor": "AST：懷孕、運動、某些藥物，以及年齡或性別會影響檢驗結果（來源未指方向）",
+    "org": "MedlinePlus（U.S. National Library of Medicine）",
+    "doc_id": "medlineplus-ast-test",
+    "version": "Last updated November 5, 2024",
+    "page_or_table": "What do the results mean? 段",
+    "quote": "Many things can affect your results, such as pregnancy, exercise, certain medicines, and your age or sex.",
+    "fetched_at": "2026-09-10",
+    "note": "來源只說 can affect your results，沒有說偏高或偏低，direction=unspecified。"
+  }
+]

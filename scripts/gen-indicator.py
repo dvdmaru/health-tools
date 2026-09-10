@@ -173,6 +173,8 @@ AXIS = {
     "uric-acid": {"min": 6.0, "max": 10.0, "ticks": [6.0, 6.8, 7.0, 8.0, 9.0, 10.0], "label": "尿酸（mg/dL）"},
     "bmi": {"min": 15, "max": 42, "ticks": [15, 18.5, 23, 24, 25, 27, 30, 35, 40], "label": "BMI（kg/m²）"},
     "waist": {"min": 70, "max": 110, "ticks": [70, 80, 88, 90, 94, 102, 110], "label": "腰圍（cm）"},
+    "ast": {"min": 0, "max": 50, "ticks": [0, 10, 20, 30, 40, 50], "label": "GOT／AST（U/L）"},
+    "alt": {"min": 0, "max": 70, "ticks": [0, 10, 20, 30, 40, 50, 60, 70], "label": "GPT／ALT（U/L）"},
 }
 
 
