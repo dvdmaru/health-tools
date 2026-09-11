@@ -1,11 +1,19 @@
 """rowctx.py <slug>：把 criteria／history／interference 每一列連同快照裡引句前後文 dump 成 markdown，
 供查核席逐列核對（二審 SOP 見 MODEL.md §1-1）。用法：python3 scripts/audit-rowctx.py blood-pressure → .audit/<slug>-rows.md（.audit/ 已 gitignore）"""
-import json, pathlib, re, sys, subprocess, html
+import importlib.util, json, pathlib, re, sys, subprocess, html
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 OUT = ROOT / '.audit'; OUT.mkdir(exist_ok=True)
 slug = sys.argv[1]
 manifest = {m['id']: m for m in json.loads((ROOT / 'data/sources/manifest.json').read_text())}
 _cache = {}
+_rc = None
+def _receipts():
+    """借用 check-receipts.py 的 ods_text()（檔名有連字號，不能一般 import）——收據 gate 與二審同一套抽字。"""
+    global _rc
+    if _rc is None:
+        spec = importlib.util.spec_from_file_location('check_receipts', ROOT / 'scripts/check-receipts.py')
+        _rc = importlib.util.module_from_spec(spec); spec.loader.exec_module(_rc)
+    return _rc
 def text_of(doc_id):
     if doc_id in _cache: return _cache[doc_id]
     m = manifest.get(doc_id)
@@ -14,6 +22,8 @@ def text_of(doc_id):
     if not p.exists(): _cache[doc_id] = None; return None
     if m['doc_type'] == 'pdf':
         t = subprocess.run(['pdftotext', '-layout', str(p), '-'], capture_output=True, text=True).stdout
+    elif m['doc_type'] == 'ods':
+        t = _receipts().ods_text(p.read_bytes())
     else:
         t = p.read_text(errors='replace')
         if m['doc_type'] == 'html':

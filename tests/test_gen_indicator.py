@@ -212,11 +212,12 @@ class DoubleSourceIsRejected(unittest.TestCase):
     def test_handwritten_table_in_md_aborts(self):
         with tempfile.TemporaryDirectory() as d:
             bad = pathlib.Path(d) / "bad.md"
-            text = ARTICLE.read_text(encoding="utf-8")
-            text = text.replace("同一個數字，不同機構的門檻不一樣，以下並列，不選邊。",
-                                "同一個數字，不同機構的門檻不一樣，以下並列，不選邊。\n\n"
-                                "| 機構 | 判準值 |\n|---|---|\n| ADA | ≥6.5% |")
-            bad.write_text(text, encoding="utf-8")
+            # 手寫表插在第②段標題的下一行。不綁正文某一句：綁句子會讓「改一句全站文案」
+            # 變成「也得改測試」，2026-09-10 肝功能 R2 就因此把那句的修正延後（09-11 才改）。
+            lines = ARTICLE.read_text(encoding="utf-8").split("\n")
+            h2 = [i for i, line in enumerate(lines) if line.startswith("## ")][1]
+            lines[h2 + 1:h2 + 1] = ["", "| 機構 | 判準值 |", "|---|---|", "| ADA | ≥6.5% |"]
+            bad.write_text("\n".join(lines), encoding="utf-8")
             with self.assertRaises(SystemExit):
                 gen.parse_article(bad)
 
@@ -345,6 +346,43 @@ class ValueComposition(unittest.TestCase):
             "≧6.5%",
             gen.value_text({"lower": 6.5, "upper": None, "lower_inclusive": True,
                             "unit": "%", "quote": "糖化血色素≧6.5%"}))
+
+    def test_fullwidth_lt_gt_follow_the_source(self):
+        """＜／＞ 與 ≧ 同一條規則：國健署分期表寫 ＜15、日本痛風學會寫 ＞7.0，就照印。"""
+        self.assertEqual(
+            "＜15 ml/min",
+            gen.value_text({"lower": None, "upper": 15, "upper_inclusive": False,
+                            "unit": "ml/min", "quote": "第五期 ＜15 末期腎臟病變"}))
+        self.assertEqual(
+            "＞7 mg/dL",
+            gen.value_text({"lower": 7.0, "upper": None, "lower_inclusive": False,
+                            "unit": "mg/dL", "quote": "Serumuric acidlevel (SUA)＞7.0mg / dL"}))
+
+    def test_fullwidth_lt_must_touch_this_number(self):
+        """＜ 貼在別的數字前面不算：＜150 不能讓上限 15 印成 ＜15。"""
+        self.assertEqual(
+            "<15 ml/min",
+            gen.value_text({"lower": None, "upper": 15, "upper_inclusive": False,
+                            "unit": "ml/min", "quote": "TG ＜150；eGFR <15"}))
+
+    def test_tilde_range_follows_the_source(self):
+        """國健署分期表寫 60~89，就不改成 60–89。"""
+        self.assertEqual(
+            "60~89 ml/min",
+            gen.value_text({"lower": 60, "upper": 89, "unit": "ml/min",
+                            "quote": "第二期 60~89 輕度腎衰竭且出現蛋白尿、血尿"}))
+
+    def test_tilde_elsewhere_is_not_this_rows_range_sign(self):
+        """☠️ 陰性對照：quote 裡有 ~ 不代表是本列的區間號。
+        WHO 2000 腰圍表的 ≥ 被抽字抽成 ~94；學會的 mmol 換算 (7.8~11.0) 不是 140-199 的區間號。"""
+        self.assertEqual(
+            "≥94 cm",
+            gen.value_text({"lower": 94, "upper": None, "lower_inclusive": True,
+                            "unit": "cm", "quote": "Increased ~94 ~80"}))
+        self.assertEqual(
+            "140–199 mg/dL",
+            gen.value_text({"lower": 140, "upper": 199, "unit": "mg/dL",
+                            "quote": "血漿葡萄糖為 140-199 mg/dL (7.8~11.0 mmol/L)。"}))
 
     def test_closed_range(self):
         self.assertEqual(

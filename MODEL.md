@@ -27,12 +27,13 @@
 
 ### 1-1. 判準列體例（2026-08-29 二審裁決，474 列逐列核出的規則；schema 描述為準、這裡是人讀版）
 - **population 只能來自兩處**：引句本身，或該列 `page_or_table` 指到的表題／節名／章名，照原文字面抄。整份文件的標題不算。其餘一律「來源未標示」——「全體」「一般民眾」「成人（來源沒寫）」都是我們加的，二審一次清掉 40 多列。
-- **definition 不帶數值**：來源用「定義為／defined as」把此值定義成某狀態、且那是該機構自己的判準＝`diagnosis`；若只是單一建議的射程定義、或回述他人調查所用的定義（NAHSIT 7.7／6.6、ACR 6.8）＝`definition` 且 lower／upper 皆 null，數字留在 quote。帶數值的 definition 會被「統一規則」誤升成診斷線。
+- **definition 不帶數值**：來源用「定義為／defined as」把此值定義成某狀態、**單次的這個數值就足以構成該狀態**、且那是該機構自己的判準＝`diagnosis`；若只是單一建議的射程定義、或回述他人調查所用的定義（NAHSIT 7.7／6.6、ACR 6.8）＝`definition` 且 lower／upper 皆 null，數字留在 quote。**定義本身還要求持續期間或其他條件時，同樣歸 `definition`**：KDIGO 2024 的 CKD 定義要兩類條件至少一類、且持續至少 3 個月（原文 present for a minimum of 3 months），單次 eGFR <60 構不成它；照「defined as」字面歸 diagnosis，判準表與數線就會把 <60 單獨畫成診斷線（2026-09-10 腎功能 R1 兩席推翻原歸類，2026-09-11 補進本條）。帶數值的 definition 會被「統一規則」誤升成診斷線。
 - **用藥起始門檻＝紅線**，與治療目標同族：JSGNA 8.0／9.0、EULAR >8.0 這類「≥此值開始 ULT」的門檻整列不落地（曾以 `screening_triage` 混進判準表）。`screening_triage` 只收「接下來做哪一項檢查」的分流。
 - **history 的 `org`＝做出變更的機構，不是轉述者**：回述列（status「已證實（需補充）」）的 doc 可以是別人的文件；測試對 criteria 嚴格要求 org＝manifest[doc].org，對 history 放行回述列。`change` 欄要自帶「依某某回顧」的限定語，因為 status／note 不上頁。
 - **同機構新版取代舊版時舊列填 `superseded_by`**（2017 ACC/AHA 八列 → 2025）：生成器據此在表格標「已被取代」、數線不畫舊列；不填就是兩套一樣的分級並排當兩個現行機構。
 - **interference 的 `direction` 只從原文明講的方向來**：「風險被低估」不是「數值偏低」，機轉句（抑制排泄）不推成 high；來源沒指方向就 `unspecified`。
 - **generator 排序不靠檔序**：history 依 (year, id 數字) 排；`indicator_id` 不在頁面 ids 的列會印 ⚠️（曾靜默丟掉 whr 兩列）。
+- **判準值欄的符號照原文，但只認緊貼數字的那一個**：`value_text()` 用 lower／upper／inclusive 組字，符號字形回頭看 quote——≧／≦ 在 quote 任一處出現就用（M2 起）；＜／＞ 要緊貼該端點、區間的波浪號（`60~89`、全形 `～`）要夾在兩個端點中間才算。WHO 2000 腰圍表的 ≥ 被 pdftotext 抽成 `~94`、國健署 BMI 頁有語助詞「啊～」、學會的 mmol 換算寫 `(7.8~11.0 mmol/L)`——出現在 quote 裡，不代表是這一列的符號。連字號與 en dash 不區分、一律印 `–`：抽字分不準這兩個，當不了回查原文的指紋（2026-09-11；之前 ＜／＞／~ 一律折成 <、>、–，同一張國健署分期表會印出 ≧90 與 <15 並排）。
 - 二審方法（可重跑）：`scripts/audit-rowctx.py <slug>` 把每列＋快照上下文 dump 成 `.audit/<slug>-rows.md`，五席分 slug 逐列問 C1–C8（category 語意／inclusive／unit／population／indicator_id／org／引句撐不撐得起／同 doc 矛盾），只回 findings 不改檔；主席裁決成 RULING.md 再派修正棒。找到引句 ≠ 列正確——收據 gate 只證前者。
 
 ## 2. 來源契約 — 三桶授權，抓法有雷

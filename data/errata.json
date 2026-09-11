@@ -41,5 +41,15 @@
     "reason": "原句寫 2009 年由「該委員會」改建議採用 6.5%，等於說 1997 年不建議用糖化血色素診斷、與 2009 年建議採用 6.5% 的是同一個委員會。實際上 2009 年的建議出自另一個委員會：2008 年召集、成員由 ADA、歐洲糖尿病研究學會與國際糖尿病聯盟指派的國際專家委員會。改成分別寫出兩個委員會。",
     "doc_id": "iec-a1c-report-2009",
     "quote": "An International Expert Committee with members appointed by the American Diabetes Association, the European Association for the Study of Diabetes, and the International Diabetes Federation was convened in 2008"
+  },
+  {
+    "id": "E5",
+    "date": "2026-09-11",
+    "slug": "ast-alt",
+    "section": "2",
+    "was": "同一個數字，不同機構的門檻不一樣，以下並列，不選邊。",
+    "now": "同一個數字，不同機構的判準不一樣，以下並列，不選邊。",
+    "reason": "表上兩家給的是 IFCC 一項多中心研究訂出的參考區間，以及肝病防治學術基金會衛教會刊寫的正常值，兩者都不是門檻；原句把它們統稱為「門檻」。改用本站判準表的通稱「判準」。",
+    "note": "同一句也出現在血壓、BMI 與腰圍、血糖、血脂、尿酸五頁，同日一併把「門檻」改成「判準」；那五頁的表上確有診斷、分級或篩檢分流的門檻，屬用詞統一、主張未變，未另列勘誤。"
   }
 ]
