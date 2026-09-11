@@ -410,6 +410,33 @@ def _glyph(row: dict, full: str, plain: str) -> str:
     return full if full in quotes else plain
 
 
+def _num_pat(v) -> str:
+    """原文裡「這個數字」的比對式：num() 把 7.0 印成 7，原文可能寫 7.0；前後不得再接數字。"""
+    return r"(?<![\d.])" + re.escape(num(v)) + r"(?:\.0+)?(?![\d.])"
+
+
+def _glyph_at(row: dict, full: str, plain: str, v) -> str:
+    """＜／＞ 照原文，但只認緊貼在該數字前面的那一個（`＜15`、`BMI＜24`、`＞7.0`）。
+
+    與 _glyph 不同，這裡要求緊鄰：quote 裡出現某個字元，不代表它是這個數字的符號
+    （2026-09-11 起；之前 ＜／＞ 一律折成半形，同一張國健署分期表會印出 ≧90 與 <15 並排）。
+    """
+    quotes = " ".join([row.get("quote", "")] + list(row.get("quote_extra") or []))
+    return full if re.search(re.escape(full) + r"\s*" + _num_pat(v), quotes) else plain
+
+
+def _range_sep(row: dict, lo, up) -> str:
+    """區間號：來源寫 `60~89`（半形或全形波浪號）就照印，其餘一律 en dash。
+
+    只認夾在兩個端點中間的那一個：WHO 2000 腰圍表的 ≥ 被 pdftotext 抽成 `~94`、
+    國健署 BMI 頁有語助詞「啊～」、學會的 mmol 換算寫 `(7.8~11.0 mmol/L)`，都不是這一列的區間號。
+    連字號與 en dash 不區分——抽字分不準這兩個，當不了回查原文的指紋。
+    """
+    quotes = " ".join([row.get("quote", "")] + list(row.get("quote_extra") or []))
+    m = re.search(_num_pat(lo) + r"\s*([~～])\s*" + _num_pat(up), quotes)
+    return m.group(1) if m else "–"
+
+
 NO_RANGE = "（原文未給數值區間）"
 
 
@@ -424,6 +451,7 @@ def value_text(row: dict, short: bool = False) -> str:
 
     short=True 給圖上的標籤用（單位只留 %／原單位主體，不帶括號補述）。
     兩端都是 null＝來源沒給數值區間，照實說，不留空、不腦補。
+    符號字形照原文：≧／≦ 見 _glyph，＜／＞ 見 _glyph_at，區間號見 _range_sep。
     """
     lo, up = row.get("lower"), row.get("upper")
     unit = row.get("unit") or ""
@@ -434,17 +462,19 @@ def value_text(row: dict, short: bool = False) -> str:
     le = _glyph(row, "≦", "≤")
     if lo is None and up is None:
         return NO_RANGE
+    gt = _glyph_at(row, "＞", ">", lo) if lo is not None else ">"
+    lt = _glyph_at(row, "＜", "<", up) if up is not None else "<"
     if up is None:
-        return f"{ge if row.get('lower_inclusive') is not False else '>'}{num(lo)}{u}"
+        return f"{ge if row.get('lower_inclusive') is not False else gt}{num(lo)}{u}"
     if lo is None:
-        return f"{le if row.get('upper_inclusive') is not False else '<'}{num(up)}{u}"
+        return f"{le if row.get('upper_inclusive') is not False else lt}{num(up)}{u}"
     if row.get("upper_inclusive") is False or row.get("lower_inclusive") is False:
-        lo_s = f"{ge}{num(lo)}{u}" if row.get("lower_inclusive") is not False else f">{num(lo)}{u}"
-        up_s = f"{le}{num(up)}{u}" if row.get("upper_inclusive") is not False else f"<{num(up)}{u}"
+        lo_s = f"{ge}{num(lo)}{u}" if row.get("lower_inclusive") is not False else f"{gt}{num(lo)}{u}"
+        up_s = f"{le}{num(up)}{u}" if row.get("upper_inclusive") is not False else f"{lt}{num(up)}{u}"
         return f"{lo_s} 且 {up_s}"
     if lo == up:
         return f"{num(lo)}{u}"
-    return f"{num(lo)}–{num(up)}{u}"
+    return f"{num(lo)}{_range_sep(row, lo, up)}{num(up)}{u}"
 
 
 def criteria_cell(row: dict) -> str:
