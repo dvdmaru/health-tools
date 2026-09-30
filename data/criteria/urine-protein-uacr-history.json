@@ -1,0 +1,97 @@
+[
+  {
+    "id": "H1",
+    "year": 2012,
+    "org": "Kidney Disease: Improving Global Outcomes (KDIGO)",
+    "change": "2012 年版指引以 Table 6 列出白蛋白尿三級 A1／A2／A3（ACR <30／30-300／>300 mg/g）",
+    "doc_id": "kdigo-ckd-guideline-2012",
+    "version": "2012（Kidney International Supplements volume 3 | issue 1 | JANUARY 2013）",
+    "page_or_table": "Recommendation 1.2.4 與 Table 6 | Albuminuria categories in CKD，p. 28（PDF 第 41 頁）",
+    "quote": "A1 o30 o3 o30 Normal to mildly",
+    "quote_extra": [
+      "A2 30-300 3-30 30-300 Moderately increased",
+      "A3 4300 430 4300 Severely increased",
+      "Table 6 | Albuminuria categories in CKD"
+    ],
+    "corroboration": [
+      {
+        "doc_id": "kdigo-ckd-guideline-2024",
+        "quote": "A1 <30 <3 <30 Normal to mildly"
+      }
+    ],
+    "status": "已證實",
+    "note": "Table 6 的 A1／A2／A3 三列：A1 在 quote（等級名稱後半 increased 在下一行，不引），A2、A3 與表題在 quote_extra。PDF 文字層符號被抽錯：< 抽成 o、> 抽成 4（o30＝<30、4300＝>300），照抽字結果抄。corroboration 是 KDIGO 2024 Table 3 的 A1 列，表示 2024 版同一位置的數值；兩版三級的 AER／ACR 數值逐格相同（V1 核對），所以判準列只寫 2024 版一組。版本年 2012，刊於 Kidney International Supplements 2013 年 1 月。",
+    "fetched_at": "2026-09-10"
+  },
+  {
+    "id": "H2",
+    "year": 2012,
+    "org": "Kidney Disease: Improving Global Outcomes (KDIGO)",
+    "change": "Recommendation 1.4.4.2.1 寫檢驗室不該再使用「microalbuminuria」一詞",
+    "doc_id": "kdigo-ckd-guideline-2012",
+    "version": "2012（Kidney International Supplements volume 3 | issue 1 | JANUARY 2013）",
+    "page_or_table": "Recommendation 1.4.4.2.1，p. 7（PDF 第 20 頁）",
+    "quote": "1.4.4.2.1: The term microalbuminuria should no longer be used by laboratories. (Not Graded)",
+    "status": "已證實",
+    "note": "原文對象是檢驗室（by laboratories），未分級（Not Graded）。版本年 2012，刊於 Kidney International Supplements 2013 年 1 月。",
+    "fetched_at": "2026-09-10"
+  },
+  {
+    "id": "H3",
+    "year": 2012,
+    "org": "Kidney Disease: Improving Global Outcomes (KDIGO)",
+    "change": "Table 7 把「蛋白質試紙」與白蛋白尿三級並排（A1 Negative to trace／A2 Trace to +／A3 + or greater）；表註寫明同一級內各量法之間的關係不精確（not exact）、各級之間的關係只是近似（approximate only），且試紙結果與其他量法的關係取決於尿液濃度",
+    "doc_id": "kdigo-ckd-guideline-2012",
+    "version": "2012（Kidney International Supplements volume 3 | issue 1 | JANUARY 2013）",
+    "page_or_table": "Table 7 | Relationship among categories for albuminuria and proteinuria，p. 31（PDF 第 44 頁）；Recommendation 1.2.4 註，p. 28（PDF 第 41 頁）",
+    "quote": "Protein reagent strip Negative to trace Trace to + + or greater",
+    "quote_extra": [
+      "Table 7 | Relationship among categories for albuminuria and proteinuria",
+      "Measure Normal to mildly increased (A1) Moderately increased (A2) Severely increased (A3)",
+      "Relationships among measurement methods within a category are not exact.",
+      "therefore the relationship among these categories is approximate only.",
+      "The relationship between urine reagent strip results and other measures depends on urine concentration.",
+      "where albuminuria measurement is not available, urine reagent strip results can be substituted (Table 7)"
+    ],
+    "status": "已證實",
+    "note": "quote 是 Table 7 的 Protein reagent strip 那一列；表題、欄名與表註三句放 quote_extra（表註三句在原文不相鄰）。本文 1.2.4 的註「where albuminuria measurement is not available, urine reagent strip results can be substituted (Table 7)」在 p. 28，也放 quote_extra。本列只陳述 2012 版有這張並排表，不與 2024 版比較有無。版本年 2012，刊於 Kidney International Supplements 2013 年 1 月。",
+    "fetched_at": "2026-09-10"
+  },
+  {
+    "id": "H4",
+    "year": 2015,
+    "org": "財團法人國家衛生研究院",
+    "change": "臺灣慢性腎臟病臨床診療指引把 KDIGO 2012 定量標準與 SIGN 2008 試紙定性分級彙整成一張表；試紙在三欄（正常至輕微增加／中度增加／嚴重增加）的寫法是 陰性／陰性～微量／1+～3+",
+    "doc_id": "tw-ckd-clinical-guideline-2015",
+    "version": "中華民國一○四年九月，第一版（GPN 1010401769；ISBN 9789860459319）",
+    "page_or_table": "第四章「偵測方法」段末彙整表，PDF 第 72 頁（印刷頁 070）",
+    "quote": "針對蛋白尿偵測方式和診斷標準，參考「SIGN 2008」和「KDIGO 2012 CKD 臨床診療指引」，建議「台灣 CKD 臨床診療指引」採用 KDIGO 2012 定量標準，與 SIGN 2008 dipstick 定性分級，彙整表格如下 :",
+    "quote_extra": [
+      "正常至輕微增加 中度增加 嚴重增加",
+      "(mg/g) < 30 30-300 > 300",
+      "蛋白質試紙 (SIGN，2008) 陰性 陰性∼微量 1+~3+"
+    ],
+    "status": "已證實",
+    "note": "quote 是引出彙整表的那句；表的三欄欄名、ACR (mg/g) 那一列與「蛋白質試紙 (SIGN，2008)」那一列放 quote_extra。試紙列的「∼」（U+223C）與「~」（半形）照抽字結果抄。change 欄的三欄名稱照表頭原文，不改寫成 A1／A2／A3。",
+    "fetched_at": "2026-09-30"
+  },
+  {
+    "id": "H5",
+    "year": 2024,
+    "org": "Kidney Disease: Improving Global Outcomes (KDIGO)",
+    "change": "本文寫常用的總蛋白試紙（reagent strip devices measuring total protein）用來偵測蛋白尿敏感度不足、不校正尿液濃度、只是半定量，且各廠牌之間沒有標準化",
+    "doc_id": "kdigo-ckd-guideline-2024",
+    "version": "2024（Kidney International 2024; 105(4S): S117–S314，APRIL 2024）",
+    "page_or_table": "Chapter 1，1.3 Evaluation of albuminuria 本文，p. S192 左欄（PDF 第 77 頁）",
+    "quote": "protein are insufﬁciently sensitive for the reliable detection of",
+    "quote_extra": [
+      "Commonly used reagent strip devices measuring total",
+      "proteinuria, do not adjust for urinary concentration, and are",
+      "only semiquantitative. Furthermore, there is no standardization",
+      "between manufacturers."
+    ],
+    "status": "已證實",
+    "note": "射程限定：原文主詞是 Commonly used reagent strip devices measuring total protein（量總蛋白的試紙），不包含白蛋白專用試紙；同段下一句另把 validated point-of-care devices for urine albumin/ACR 列為替代選項，同書 Practice Point 1.3.1.1 也把 reagent strip urinalysis for albumin and ACR 與總蛋白試紙分開列。change 欄只寫總蛋白試紙。本列不與 2012 版 Table 7 比較有無。原文連續；快照因 pdftotext -layout 雙欄交錯切開成五段，quote 放承載主張的那段，其餘依序放 quote_extra。引句中的 ﬁ 為 PDF 文字層的連字字元，照抽字結果抄。",
+    "fetched_at": "2026-09-10"
+  }
+]

@@ -1,0 +1,98 @@
+[
+  {
+    "id": "L1",
+    "direction": "unspecified",
+    "factor": "試紙：KDIGO 2012 Table 7 表註說，尿液試紙結果與其他量法之間的關係取決於尿液濃度（來源未指方向）",
+    "org": "Kidney Disease: Improving Global Outcomes (KDIGO)",
+    "doc_id": "kdigo-ckd-guideline-2012",
+    "version": "2012（Kidney International Supplements volume 3 | issue 1 | JANUARY 2013）",
+    "page_or_table": "Table 7 表註，p. 31（PDF 第 44 頁）",
+    "quote": "The relationship between urine reagent strip results and other measures depends on urine concentration.",
+    "fetched_at": "2026-09-10",
+    "note": "來源只說關係取決於尿液濃度，沒有說試紙偏高或偏低，direction=unspecified。原文跨兩行、單欄排版，比對時去空白即連續。"
+  },
+  {
+    "id": "L2",
+    "direction": "unspecified",
+    "factor": "試紙：試紙上越多「＋」代表尿中蛋白的濃度較高，但不一定表示尿蛋白排泄總量較多，需考量受檢查時尿液濃縮或稀釋的影響（來源未指方向）",
+    "org": "衛生福利部國民健康署",
+    "doc_id": "hpa-ckd-health-manual-2018",
+    "version": "107 年 1 月，第二版",
+    "page_or_table": "健康記事篇「3. 尿蛋白」段，PDF 第 13 頁（印刷頁 8）",
+    "quote": "越多「＋」代表尿中蛋白的「濃度」較高，但不一定表示尿蛋白排泄總量較多，需考量受檢查時尿液濃縮或稀釋的影響。",
+    "fetched_at": "2026-09-30",
+    "note": "來源只說要考量尿液濃縮或稀釋，沒有說濃縮使試紙偏高或稀釋使其偏低，direction=unspecified，不替它補方向。原文措辭是「不一定表示尿蛋白排泄總量較多」「需考量受檢查時」，照快照抄。「＋」為全形 U+FF0B。"
+  },
+  {
+    "id": "L3",
+    "direction": "unspecified",
+    "factor": "試紙：尿中蛋白未超過每天 300～500 mg 時，尿液試紙檢查不會呈陽性反應；在微量白蛋白尿時，尿液試紙檢查無法呈現陽性（來源未指數值偏高或偏低）",
+    "org": "財團法人國家衛生研究院",
+    "doc_id": "tw-ckd-clinical-guideline-2015",
+    "version": "中華民國一○四年九月，第一版（GPN 1010401769；ISBN 9789860459319）",
+    "page_or_table": "第四章「偵測方法」之「（一）Dipstick 蛋白尿檢測試紙」段，PDF 第 70 頁（印刷頁 068）",
+    "quote": "當尿中蛋白尿未超過每天 300 ∼ 500 mg，尿液試紙檢查不會呈陽性反應﹔當尿液試紙呈陽性反應，表示尿液中已出現巨量白蛋白尿，而在微量白蛋白尿時，尿液試紙檢查無法呈現陽性",
+    "fetched_at": "2026-09-30",
+    "note": "原文說試紙在這些情況下不會／無法呈現陽性，講的是試紙能偵測的範圍，沒有用偏高、偏低或偽陰性的字眼，direction=unspecified，不替它加因果或方向（見紀錄 §7）。同句之後原文另寫「因此，診斷早期糖尿病腎病變的準確度有所限制」，本列不引。「∼」（U+223C）與「﹔」（U+FE54）照抽字結果抄。"
+  },
+  {
+    "id": "L4",
+    "direction": "unspecified",
+    "factor": "試紙：NIDDK 說 300 mg/g 這個切點只是大致對應傳統白蛋白試紙的敏感度下限（來源未指方向）",
+    "org": "National Institute of Diabetes and Digestive and Kidney Diseases",
+    "doc_id": "niddk-assess-urine-albumin",
+    "version": "Last Reviewed March 2012",
+    "page_or_table": "頁首正文（Assess Urine Albumin 標題下），Urine albumin is a continuous risk factor 段",
+    "quote": "However, the 300 mg/g cut-off merely represents a rough correlation with the lower limit of sensitivity of the traditional urine dipstick for albumin.",
+    "fetched_at": "2026-09-30",
+    "note": "來源只說 300 mg/g 切點與傳統試紙敏感度下限是粗略對應，沒有說試紙偏高或偏低，direction=unspecified。同段 UACR 門檻句不引（本頁不收 NIDDK 的判準）。"
+  },
+  {
+    "id": "L5",
+    "direction": "unspecified",
+    "factor": "試紙：KDIGO 2012 本文說 AER 達 30 mg/24 hours 時，視尿液濃度，試紙有時可能呈 trace，但要到 AER 超過約 300 mg/24 hours 才會一致地出現（來源未指數值偏高或偏低）",
+    "org": "Kidney Disease: Improving Global Outcomes (KDIGO)",
+    "doc_id": "kdigo-ckd-guideline-2012",
+    "version": "2012（Kidney International Supplements volume 3 | issue 1 | JANUARY 2013）",
+    "page_or_table": "Chapter 1，Albuminuria 段 rationale 清單第二項，p. 22 右欄（PDF 第 35 頁）",
+    "quote": "300 mg/24 hours (ACRZ300 mg/g [Z30 mg/mmol]).",
+    "quote_extra": [
+      "An AER of Z30 mg/24 hours (ACRZ30 mg/g [Z3 mg/",
+      "mmol]) may sometimes be detectable as ‘trace’ using a urine",
+      "reagent strip, depending on urine concentration, but this is",
+      "not a consistent finding until AER exceeds approximately",
+      "Abbreviations: AER, albumin excretion rate"
+    ],
+    "fetched_at": "2026-09-10",
+    "note": "原文連續；快照因 pdftotext -layout 雙欄交錯切開，承載數字 300 的那段放 quote，其餘依序放 quote_extra（清單符號 K 不帶）。PDF 文字層的 ≥ 被抽成 Z，照抽字結果抄。來源講的是試紙能否一致呈現，沒有說偏高或偏低，direction=unspecified。縮寫 AER 的展開（albumin excretion rate）取自同書 Table 6 頁（PDF 第 41 頁）底部縮寫列，放在 quote_extra 最後一句，只用來說明 AER 是什麼。"
+  },
+  {
+    "id": "L6",
+    "direction": "unspecified",
+    "factor": "隨機尿白蛋白（非比值）：KDIGO 2024 說隨機尿（spot）樣本會因稀釋程度不同而高估或低估尿白蛋白（來源未指哪種情況偏高、哪種偏低）",
+    "org": "Kidney Disease: Improving Global Outcomes (KDIGO)",
+    "doc_id": "kdigo-ckd-guideline-2024",
+    "version": "2024（Kidney International 2024; 105(4S): S117–S314，APRIL 2024）",
+    "page_or_table": "Chapter 1，Practice Point 1.3.1.3 之後的本文，p. S191 左欄（PDF 第 76 頁）",
+    "quote": "Such spot samples can over- or underesti-",
+    "quote_extra": [
+      "mate urine albumin due to variation in dilution. Use of ACR",
+      "or protein-to-creatinine ratio (PCR) in spot urine samples",
+      "can decrease this error."
+    ],
+    "fetched_at": "2026-09-10",
+    "note": "原文兩句連續（Such spot samples … variation in dilution. Use of ACR or protein-to-creatinine ratio (PCR) in spot urine samples can decrease this error.）；快照因 pdftotext -layout 雙欄交錯切開，依序拆成 quote＋quote_extra，斷字符號 underesti- 照快照保留。對象是量白蛋白或蛋白質濃度的隨機尿樣本（同段前一句 spot samples measuring albumin or protein），不是 UACR 本身；原文另說改用 ACR／PCR 可減少此誤差。原文寫 over- or underestimate，兩個方向都可能、但沒有說哪種稀釋情況對應哪個方向，不構成 both（同一列原文列出偏高與偏低兩組情況），direction=unspecified。"
+  },
+  {
+    "id": "L7",
+    "direction": "unspecified",
+    "factor": "試紙（白蛋白專用試紙）與免疫法單測白蛋白：ADA 說隨機尿只量白蛋白、未同時量尿肌酸酐時，會因水分攝取造成的尿液濃度差異而可能出現偽陰性與偽陽性（來源未指哪種情況偏高、哪種偏低）",
+    "org": "American Diabetes Association",
+    "doc_id": "ada-standards-of-care-ch11-2026",
+    "version": "2026（Diabetes Care 2026;49(Suppl. 1):S246–S260；PMID 41358881；PMC12690176）",
+    "page_or_table": "Assessment of Albuminuria and Estimated Glomerular Filtration Rate 節，第一段",
+    "quote": "Measurement of a spot urine sample for albumin alone (whether by immunoassay or by using a sensitive dipstick test specific for albuminuria) without simultaneously measuring urine creatinine is less expensive but susceptible to false-negative and false-positive determinations as a result of variation in urine concentration due to hydration",
+    "fetched_at": "2026-09-30",
+    "note": "對象是隨機尿「只量白蛋白」（免疫法或白蛋白專用的敏感試紙）且未同時量尿肌酸酐，不是 UACR；原文句尾文獻號 (8) 不帶。原文寫 false-negative and false-positive，兩個方向都可能、但沒有說哪種濃度情況對應哪個方向，不構成 both，direction=unspecified。快照為 html-text（正文第 5 行起）。"
+  }
+]
