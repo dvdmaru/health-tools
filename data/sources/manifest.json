@@ -112,6 +112,20 @@
     "note": "原始頁面擋 curl（Cloudflare 403）。快照為瀏覽器抽出的純文字，前 3 行是 SOURCE_URL／FETCHED_AT／METHOD 標頭，第 5 行起為正文；引句比對前正規化空白。"
   },
   {
+    "id": "ada-standards-of-care-ch11-2026",
+    "title": "11. Chronic Kidney Disease and Risk Management: Standards of Care in Diabetes—2026",
+    "org": "American Diabetes Association",
+    "doc_type": "html-text",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12690176/",
+    "version_or_date": "2026（Diabetes Care 2026;49(Suppl. 1):S246–S260；PMID 41358881；PMC12690176）",
+    "fetched_at": "2026-09-30",
+    "sha256": "c9fac82da52db68c531ae969c6baa7ec1c55b86866145f065f6221838e35a56a",
+    "local_path": "data/sources/ada-standards-of-care-ch11-2026.txt",
+    "license_bucket": "licensed-cite-only",
+    "retrieval": "manual",
+    "note": "此為 PMC 上的同一篇文章（PMC12690176），原刊 URL 為 https://diabetesjournals.org/care/article/49/Supplement_1/S246/163914/11-Chronic-Kidney-Disease-and-Risk-Management（curl 403），PMC 為替代頁（照 MODEL.md §5-1 替代原則的精神）。作者列為 American Diabetes Association Professional Practice Committee for Diabetes；org 照既有 ada-standards-of-care-2026 列寫學會全名。版權：© 2025 by the American Diabetes Association，僅限教育、非商業用途引用，快照只留本機（.gitignore）。☠️ 抽字雷：原始 HTML 把 < 寫成實體 &lt;（> 寫成 &gt;），≥ 則是字面字元；收據 gate 讀 HTML 原始檔、不做 unescape，含 < 的引句在原始檔視角比對不到（2026-09-30 V1 實測：三條定義句探針原始檔 1／3、可見文字 3／3），待指揮位裁。PMC 對 GitHub IP 偶爾回 HTTP 200 替代頁，引句全缺時先看 <title>。2026-09-30 指揮位改存：PMC 原始 HTML 把 < 寫成 &lt;，收據 gate 讀原始字串、不做字元參照還原，定義句 <30／<300 兩條比對不到；改存以 html.parser 抽出的可見文字（前 3 行為 SOURCE_URL／FETCHED_AT／METHOD 標頭，METHOD 記原 HTML 的 sha256），形狀照 ada-standards-of-care-2026。PMC 為動態頁，同一頁三次抓取 sha256 不同，不可當「沒改版」訊號。retrieval 填 manual：快照由 curl 取得的 HTML 經腳本抽字產生，不是瀏覽器抽出，也不是原始檔；drift 監測對 html-text 會做 entity unescape，可對線上頁比對引句。"
+  },
+  {
     "id": "ades-2013-acc-aha-cholesterol-commentary-2014",
     "title": "A controversial step forward: a commentary on the 2013 ACC/AHA guideline on the treatment of blood cholesterol to reduce atherosclerotic cardiovascular risk in adults",
     "org": "Coronary Artery Disease（期刊評論，作者 Philip A. Ades）",
@@ -264,6 +278,20 @@
     "license_bucket": "tw-gov",
     "retrieval": "browser-text",
     "note": "原始頁面擋 curl（hpa.gov.tw 對 curl 回攔截頁）。快照為瀏覽器抽出的純文字，前 3 行是 SOURCE_URL／FETCHED_AT／METHOD 標頭，第 5 行起為正文；引句比對前正規化空白。"
+  },
+  {
+    "id": "hpa-ckd-health-manual-2018",
+    "title": "慢性腎臟病健康管理手冊",
+    "org": "衛生福利部國民健康署",
+    "doc_type": "pdf",
+    "url": "https://www.tsn.org.tw/archive/20210906/9f72cc0a-57e8-4158-8311-4ec202f31d92/9f72cc0a-57e8-4158-8311-4ec202f31d92.pdf",
+    "version_or_date": "107 年 1 月，第二版",
+    "fetched_at": "2026-09-30",
+    "sha256": "090b45f11da6d0f0e992be1d90fec988b46d5060a77e327fd9150a56be0cca50",
+    "local_path": "data/sources/hpa-ckd-health-manual-2018.pdf",
+    "license_bucket": "licensed-cite-only",
+    "retrieval": "curl",
+    "note": "託管於台灣腎臟醫學會網站，非發行機關網站。書名照封面（PDF 第 1 頁「慢性腎臟病 健康管理手冊」）與版權頁（PDF 第 84 頁）書名列。版權頁著（編、譯）者：衛生福利部國民健康署、高雄醫學大學附設中和紀念醫院腎臟照護團隊、台灣腎臟醫學會；出版機關與著作財產權人：衛生福利部國民健康署，「本書保留所有權利」——無開放授權宣告，歸 licensed-cite-only，快照只留本機（.gitignore）。版權頁 GPN／ISBN 欄空白；版次印「第二版」。84 頁、14,104,560 bytes。頁碼對照：印刷頁 8＝PDF 第 13 頁。抽字注意：第 13 頁試紙級距的「＋」為全形 U+FF0B、「微量（10-20 mg/dl）」括號為全形，其餘 mg/dl 括號為半形；限定句原文是「不一定表示尿蛋白排泄總量較多」。"
   },
   {
     "id": "hpa-ckd-stage-criteria",
@@ -795,6 +823,20 @@
     "note": "共同發布者尚有 National Institute of Diabetes and Digestive and Kidney Diseases 與 North American Association for the Study of Obesity（封面標示）。☠️ 原始文件是上列 URL 的 PDF，但它是**三欄排版**：`pdftotext -layout` 的每一行會同時橫跨三欄，任何跨行的句子在全頁文字裡都不連續，直接對 PDF grep 引句必得 0 命中＝假陰性。因此本列登記的快照是**逐頁分欄抽取後串接的純文字檔**（`pdftotext -layout -x/-y/-W/-H` 掃過每頁的三個欄視窗，檔內以 `===== PAGE n <window> =====` 分段），doc_type 標 html-text 以誠實標示「這不是原 PDF 的直出文字」。sha256 是這個 .txt 的雜湊，不是原 PDF 的。引句比對前須正規化空白（原文另有 `measur-`／`abdo-` 這類連字斷行，已在抽取後併行）。"
   },
   {
+    "id": "niddk-assess-urine-albumin",
+    "title": "Assess Urine Albumin",
+    "org": "National Institute of Diabetes and Digestive and Kidney Diseases",
+    "doc_type": "html",
+    "url": "https://www.niddk.nih.gov/health-information/professionals/clinical-tools-patient-management/kidney-disease/identify-manage-patients/evaluate-ckd/assess-urine-albumin",
+    "version_or_date": "Last Reviewed March 2012",
+    "fetched_at": "2026-09-30",
+    "sha256": "48139b6d2f01556a725c682584b92d12a99feffc242427228e5afa624287cf45",
+    "local_path": "data/sources/niddk-assess-urine-albumin.html",
+    "license_bucket": "us-federal-pd",
+    "retrieval": "curl",
+    "note": "NIDDK 醫療專業人員臨床工具頁（聯邦公有領域）；title 照 <title>「Assess Urine Albumin - NIDDK」去站名，org 照 og:site_name 的機構全名。原始 HTML 與可見文字兩個視角探針都命中。"
+  },
+  {
     "id": "niddk-gfr-equations",
     "title": "Glomerular Filtration Rate Equations",
     "org": "National Institute of Diabetes and Digestive and Kidney Diseases",
@@ -905,6 +947,20 @@
     "license_bucket": "licensed-cite-only",
     "retrieval": "curl",
     "note": "學會指引 PDF，只引不轉載（快照不入版控）。引句以 pdftotext -layout 輸出比對，PDF 轉檔會在中文與數字間插入或吃掉空白，比對前須正規化空白。id 前綴 tra＝Taiwan Rheumatology Association；文件內的英文機構名為 Rheumatology Association of the Republic of China。"
+  },
+  {
+    "id": "tw-ckd-clinical-guideline-2015",
+    "title": "2015 臺灣慢性腎臟病臨床診療指引",
+    "org": "財團法人國家衛生研究院",
+    "doc_type": "pdf",
+    "url": "https://www.tsn.org.tw/archive/20210906/0eacf2b1-c5e0-4a56-aaa3-33032a382d43/0eacf2b1-c5e0-4a56-aaa3-33032a382d43.pdf",
+    "version_or_date": "中華民國一○四年九月，第一版（GPN 1010401769；ISBN 9789860459319）",
+    "fetched_at": "2026-09-30",
+    "sha256": "34d48a64965ef08e2cd5142113e00e97675539ec17255cd4c55f77575153a0d1",
+    "local_path": "data/sources/tw-ckd-clinical-guideline-2015.pdf",
+    "license_bucket": "licensed-cite-only",
+    "retrieval": "curl",
+    "note": "託管於台灣腎臟醫學會網站，非發行機關網站。版權頁（PDF 第 744 頁）：發行機關財團法人國家衛生研究院；製作機關財團法人國家衛生研究院、台灣腎臟醫學會；著作財產人財團法人國家衛生研究院，「本書內容之複製與引用，請洽版權所屬單位」——無開放授權宣告，歸 licensed-cite-only，快照只留本機（.gitignore）。封面標題印「2015 臺灣慢性腎臟病 臨床診療指引 專書」，版權頁書名列印「台灣慢性腎臟病臨床診療指引」（台／臺不一），title 照派工單寫法。746 頁、15,626,302 bytes。舊網址 /UI/H/2015TCKDCG/…pdf 已 404。頁碼對照：印刷頁 055＝PDF 第 57 頁、068＝第 70 頁、070＝第 72 頁。抽字注意：出版年月的「○」是 U+25CB；第 57 頁表註把 ACR 寫成「白蛋白 - 血清肌酸酐比值」（原文如此）。"
   },
   {
     "id": "who-asia-pacific-obesity-2000",

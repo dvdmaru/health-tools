@@ -191,6 +191,7 @@ AXIS = {
     "ast": {"min": 0, "max": 50, "ticks": [0, 10, 20, 30, 40, 50], "label": "GOT／AST（U/L）"},
     "alt": {"min": 0, "max": 70, "ticks": [0, 10, 20, 30, 40, 50, 60, 70], "label": "GPT／ALT（U/L）"},
     "egfr": {"min": 0, "max": 120, "ticks": [0, 15, 30, 45, 60, 90, 120], "label": "eGFR（ml/min/1.73 m2）", "seg_unit": False},
+    "uacr": {"min": 0, "max": 400, "ticks": [0, 30, 300, 400], "label": "UACR（mg/g）", "seg_unit": False},
 }
 
 
@@ -1139,7 +1140,7 @@ def render_history(rows: list, mf: dict, slug: str) -> str:
 
 # ---------- 圖三：失真卡 ----------
 
-def render_interference(rows: list, mf: dict, slug: str) -> str:
+def render_interference(rows: list, mf: dict, slug: str, caption: str = "") -> str:
     """五種 direction 各自成欄；來源沒指方向的收在「未指方向」欄，不併也不猜。
 
     interference 檔同樣以頁面 slug 定位，多指標頁共用一張失真卡。
@@ -1180,7 +1181,7 @@ def render_interference(rows: list, mf: dict, slug: str) -> str:
              + head + "<tbody>" + body + "</tbody></table></div>")
     basis = "、".join(f"{r['id']}（{r['doc_id']}）" for r in rows)
     return f"""<figure class="chart">
-<figcaption class="ct">同一批狀況，各機構標的方向不一樣，也有只說會影響而未指方向的</figcaption>
+<figcaption class="ct">{esc(caption) if caption else "同一批狀況，各機構標的方向不一樣，也有只說會影響而未指方向的"}</figcaption>
 <div class="lg">{legend}</div>
 <div class="fx">{"".join(cols)}</div>
 <p class="src">依據：data/criteria/{esc(slug)}-interference.json {esc(basis)}。方向一律照來源原文標示，來源未指方向者不推論。</p>
@@ -1342,7 +1343,11 @@ def render_page(meta: dict, h1: str, sections: list, crit: list, hist: list,
             if i == 2 and hist:                      # ③ 判準什麼時候改過
                 blocks.append(render_history(hist, mf, slug))
             elif i == 3 and intf:                    # ④ 哪些情況這個數字會失真
-                blocks.append(render_interference(intf, mf, slug))
+                # 預設標題「各機構標的方向不一樣」只在頁面真的有不同方向時才成立；
+                # 全部未指方向的頁面（例：urine-protein-uacr）由 frontmatter 的
+                # interference_chart_caption 改寫。沒填就照舊，其他頁位元組不動。
+                blocks.append(render_interference(
+                    intf, mf, slug, meta.get("interference_chart_caption", "")))
             elif i == 5:                             # ⑥ 來源與版本
                 blocks.append(render_sources(meta["sources"], mf))
 

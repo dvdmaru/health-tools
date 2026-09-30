@@ -139,6 +139,25 @@
     "quotes_never_verified": []
   },
   {
+    "id": "ada-standards-of-care-ch11-2026",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12690176/",
+    "doc_type": "html-text",
+    "checked_at": "2026-09-30T13:22:35Z",
+    "http_code": "200",
+    "status": "ok",
+    "etag": null,
+    "last_modified": null,
+    "remote_sha256": "79a7ffeb34b973218ff74f197820741a0a74a12fb507093433bd88f7d14adc52",
+    "text_sha256": "55e52f5fd5d5cffa515e1ddfcd9dc4d41339f38fe287febe7f7c79ea7690edb2",
+    "quotes_total": 3,
+    "quotes_verified": [
+      "Measurement of a spot urine sample for albumin alone (whether by immunoassay or by using a sensitive dipstick test specific for albuminuria) without simultaneously measuring urine creatinine is less expensive but susceptible to false-negative and false-positive determinations as a result of variation in urine concentration due to hydration",
+      "Normal to mildly increased level of urine albumin excretion is defined as <30 mg/g creatinine, moderately elevated albuminuria is defined as ≥30 to <300 mg/g creatinine, and severely elevated albuminuria is defined as ≥300 mg/g creatinine.",
+      "two of three specimens of UACR collected within a 3- to 6-month period should be abnormal before considering an individual to have moderately or severely elevated albuminuria"
+    ],
+    "quotes_never_verified": []
+  },
+  {
     "id": "ades-2013-acc-aha-cholesterol-commentary-2014",
     "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4107357/",
     "doc_type": "html",
@@ -372,6 +391,26 @@
     "quotes_verified": [
       "或糖化血色素（HbA1c）介於5.7%至6.4%，即表示處於糖尿病前期",
       "若檢查報告顯示空腹血糖值介於100至125 mg/dL"
+    ],
+    "quotes_never_verified": []
+  },
+  {
+    "id": "hpa-ckd-health-manual-2018",
+    "url": "https://www.tsn.org.tw/archive/20210906/9f72cc0a-57e8-4158-8311-4ec202f31d92/9f72cc0a-57e8-4158-8311-4ec202f31d92.pdf",
+    "doc_type": "pdf",
+    "checked_at": "2026-09-30T13:22:39Z",
+    "http_code": "200",
+    "status": "ok",
+    "etag": null,
+    "last_modified": "Mon, 23 May 2022 12:49:54 GMT",
+    "remote_sha256": "090b45f11da6d0f0e992be1d90fec988b46d5060a77e327fd9150a56be0cca50",
+    "text_sha256": "a27e9ede872f4dd81a0b705ae5ebae065269862a8855750e0ba762878cfbe14f",
+    "quotes_total": 4,
+    "quotes_verified": [
+      "5. ＋＋＋ (300 mg/dl)",
+      "6. ＋＋＋＋ (1000 mg/dl 以上 )",
+      "尿液檢查試紙定性結果常分為： 1. negative 陰性（表示尿蛋白濃度少於 10 mg/dl） 2. trace 微量（10-20 mg/dl） 3. ＋ (30 mg/dl) 4. ＋＋ (100 mg/dl)",
+      "越多「＋」代表尿中蛋白的「濃度」較高，但不一定表示尿蛋白排泄總量較多，需考量受檢查時尿液濃縮或稀釋的影響。"
     ],
     "quotes_never_verified": []
   },
@@ -1228,6 +1267,23 @@
     ]
   },
   {
+    "id": "niddk-assess-urine-albumin",
+    "url": "https://www.niddk.nih.gov/health-information/professionals/clinical-tools-patient-management/kidney-disease/identify-manage-patients/evaluate-ckd/assess-urine-albumin",
+    "doc_type": "html",
+    "checked_at": "2026-09-30T13:22:43Z",
+    "http_code": "200",
+    "status": "ok",
+    "etag": null,
+    "last_modified": null,
+    "remote_sha256": "48139b6d2f01556a725c682584b92d12a99feffc242427228e5afa624287cf45",
+    "text_sha256": "cc8b76ea2dbb17d18a61e2868abae3108d41afd81ac71241c94ed16ce2ac8b19",
+    "quotes_total": 1,
+    "quotes_verified": [
+      "However, the 300 mg/g cut-off merely represents a rough correlation with the lower limit of sensitivity of the traditional urine dipstick for albumin."
+    ],
+    "quotes_never_verified": []
+  },
+  {
     "id": "niddk-gfr-equations",
     "url": "https://www.niddk.nih.gov/research-funding/research-programs/kidney-clinical-research-epidemiology/laboratory/glomerular-filtration-rate-equations",
     "doc_type": "html",
@@ -1497,6 +1553,42 @@
       "限鹽 Salt restriction",
       "飢餓 Starvation",
       "高尿酸血症若定義為男性血尿酸濃度 >7.70 mg/dL 或女性 >6.60 mg/dL"
+    ],
+    "quotes_never_verified": []
+  },
+  {
+    "id": "tw-ckd-clinical-guideline-2015",
+    "url": "https://www.tsn.org.tw/archive/20210906/0eacf2b1-c5e0-4a56-aaa3-33032a382d43/0eacf2b1-c5e0-4a56-aaa3-33032a382d43.pdf",
+    "doc_type": "pdf",
+    "checked_at": "2026-09-30T13:22:37Z",
+    "http_code": "200",
+    "status": "ok",
+    "etag": null,
+    "last_modified": "Mon, 23 May 2022 12:49:53 GMT",
+    "remote_sha256": "34d48a64965ef08e2cd5142113e00e97675539ec17255cd4c55f77575153a0d1",
+    "text_sha256": "e8dd38b9626252a4e4923b98e894a68c55287d4a2e82230842370861cd2e4bc6",
+    "quotes_total": 20,
+    "quotes_verified": [
+      "(mg/g) < 30 30-300 > 300",
+      "1+ 30",
+      "2+ 100",
+      "3+ 300",
+      "4+ > 1000",
+      "A1 <30 <3 <30 正常或輕度升高",
+      "A2 30-300 3-30 30-300 中度升高",
+      "A3 >300 >30 >300 重度升高",
+      "AER ACR",
+      "CKD 的白蛋白尿分期",
+      "但只能用來定性、而非定量，尿液試紙價數可以預估蛋白尿的量，如下表：",
+      "微量 (+/-) (trace) 15",
+      "期別 （mg/g） 描述",
+      "正常至輕微增加 中度增加 嚴重增加",
+      "當尿中蛋白尿未超過每天 300 ∼ 500 mg，尿液試紙檢查不會呈陽性反應﹔當尿液試紙呈陽性反應，表示尿液中已出現巨量白蛋白尿，而在微量白蛋白尿時，尿液試紙檢查無法呈現陽性",
+      "蛋白質試紙 (SIGN，2008) 陰性 陰性∼微量 1+~3+",
+      "試紙判讀 蛋白尿（mg/dL）",
+      "針對蛋白尿偵測方式和診斷標準，參考「SIGN 2008」和「KDIGO 2012 CKD 臨床診療指引」，建議「台灣 CKD 臨床診療指引」採用 KDIGO 2012 定量標準，與 SIGN 2008 dipstick 定性分級，彙整表格如下 :",
+      "陰性 < 10",
+      "（mg/24 h） （mg/mmol）"
     ],
     "quotes_never_verified": []
   },

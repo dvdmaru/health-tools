@@ -69,6 +69,10 @@ data/sources/kdigo-ckd-guideline-2024.pdf
 data/sources/kdigo-ckd-guideline-2012.pdf
 data/sources/kdoqi-ckd-guideline-2002.pdf
 data/sources/nkf-asn-egfr-task-force-2021.txt
+# M8 uacr（licensed-cite-only）
+data/sources/ada-standards-of-care-ch11-2026.txt
+data/sources/tw-ckd-clinical-guideline-2015.pdf
+data/sources/hpa-ckd-health-manual-2018.pdf
 
 # 二審用 dump（scripts/audit-rowctx.py 產物）
 .audit/
