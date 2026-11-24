@@ -658,17 +658,18 @@
   },
   {
     "id": "medlineplus-gfr-test",
-    "title": "Glomerular Filtration Rate (GFR) Test",
+    "title": "Estimated Glomerular Filtration Rate (eGFR) and GFR Tests",
     "org": "MedlinePlus（U.S. National Library of Medicine）",
     "doc_type": "html",
-    "url": "https://medlineplus.gov/lab-tests/glomerular-filtration-rate-gfr-test/",
-    "version_or_date": "Last updated July 6, 2023",
-    "fetched_at": "2026-09-10",
-    "sha256": "3cd9531c24dc18bc84d7fafcec87877ceaa24b117b7a730d0006040eb08cac9f",
+    "url": "https://medlineplus.gov/lab-tests/estimated-glomerular-filtration-rate-egfr-and-gfr-tests/",
+    "version_or_date": "Last updated September 30, 2026",
+    "fetched_at": "2026-11-24",
+    "sha256": "30a8bc76283bc0b081108f5b2b1b838a84c8490dd0f831f448cac7505f3b47f5",
     "local_path": "data/sources/medlineplus-gfr-test.html",
     "license_bucket": "us-federal-pd",
-    "retrieval": "curl",
-    "note": "NLM 自製的 /lab-tests/ 頁（聯邦公有領域）。☠️ 原始 HTML 把 “A normal eGFR” 包在 <strong> 內、句子其餘部分在標籤外（<strong>A normal eGFR</strong> means that you probably …），收據 gate 對 doc_type=html 讀原始檔只去空白，這句整句 grep 不到（可見文字命中 1 次）；同型先例 medlineplus-ast-test（待裁）、medlineplus-cholesterol-levels（改落 html-text）。頁面沒有 eGFR 數值、沒有點名公式。"
+    "retrieval": "curl"
+,
+    "note": "NLM 自製的 /lab-tests/ 頁（聯邦公有領域）。2026-11-24 來源改版：原網址 /lab-tests/glomerular-filtration-rate-gfr-test/ 仍回 200 但 canonical 改指新網址，標題由 Glomerular Filtration Rate (GFR) Test 改為現名，版本由 Last updated July 6, 2023 換成 September 30, 2026；新版把 mGFR 與 eGFR 分開寫，並在 What do the results mean? 段列出 eGFR 數值分段（本站未引用）。id 沿用舊名不改，避免斷掉判準列與勘誤列的指涉。"
   },
   {
     "id": "medlineplus-high-blood-pressure",

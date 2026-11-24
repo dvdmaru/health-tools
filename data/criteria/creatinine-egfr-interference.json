@@ -29,11 +29,11 @@
     "factor": "eGFR：某些藥物可能影響檢驗結果（來源未指方向）",
     "org": "MedlinePlus（U.S. National Library of Medicine）",
     "doc_id": "medlineplus-gfr-test",
-    "version": "Last updated July 6, 2023",
-    "page_or_table": "Will I need to do anything to prepare for the test? 段",
-    "quote": "Certain medicines can affect your results.",
-    "fetched_at": "2026-09-10",
-    "note": "來源只說 can affect your results，沒有說偏高或偏低，direction=unspecified。"
+    "version": "Last updated September 30, 2026",
+    "page_or_table": "Will I need to do anything to prepare for these tests? 段",
+    "quote": "Certain medicines can also affect your results.",
+    "fetched_at": "2026-11-24",
+    "note": "來源只說 can also affect your results，沒有說偏高或偏低，direction=unspecified。2026-11-24 來源改版（2023-07-06 版原句 Certain medicines can affect your results. 改成多一個 also），主張未變，換引句不列勘誤。"
   },
   {
     "id": "L4",
