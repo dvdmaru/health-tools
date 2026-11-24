@@ -51,5 +51,17 @@
     "now": "同一個數字，不同機構的判準不一樣，以下並列，不選邊。",
     "reason": "表上兩家給的是 IFCC 一項多中心研究訂出的參考區間，以及肝病防治學術基金會衛教會刊寫的正常值，兩者都不是門檻；原句把它們統稱為「門檻」。改用本站判準表的通稱「判準」。",
     "note": "同一句也出現在血壓、BMI 與腰圍、血糖、血脂、尿酸五頁，同日一併把「門檻」改成「判準」；那五頁的表上確有診斷、分級或篩檢分流的門檻，屬用詞統一、主張未變，未另列勘誤。"
+  },
+  {
+    "id": "E6",
+    "date": "2026-11-24",
+    "slug": "creatinine-egfr",
+    "section": "1",
+    "was": "MedlinePlus 則寫，GFR 檢查是一種血液檢驗，檢查腎臟運作得多好；估算出來的 GFR，就叫 eGFR。",
+    "now": "MedlinePlus 則寫，eGFR 與 GFR 檢查，都是在檢查腎臟運作得多好；直接量測的 GFR（mGFR）不常見，所以醫療人員通常用估算值，也就是 eGFR。",
+    "reason": "MedlinePlus 這一頁在 2026-09-30 改版，不再說 GFR 檢查整體是血液檢驗：新版把直接量測的 GFR（mGFR，要注射物質再監測腎臟濾出的速度）與估算的 eGFR 分開寫。拿掉「是一種血液檢驗」，改寫成新版的說法。",
+    "doc_id": "medlineplus-gfr-test",
+    "quote": "Estimated glomerular filtration rate (eGFR) and GFR tests check how well your kidneys are working.",
+    "note": "同一來源的另一句（某些藥物有可能影響結果）新版只多一個 also，主張未變，第④段未改、未另列勘誤。"
   }
 ]

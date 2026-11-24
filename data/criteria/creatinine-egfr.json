@@ -258,19 +258,19 @@
     "indicator_id": "egfr",
     "org": "MedlinePlus（U.S. National Library of Medicine）",
     "doc_id": "medlineplus-gfr-test",
-    "version": "Last updated July 6, 2023",
+    "version": "Last updated September 30, 2026",
     "category": "definition",
     "lower": null,
     "upper": null,
     "unit": null,
     "population": "來源未標示",
-    "page_or_table": "What is a glomerular filtration rate (GFR) test? 段",
-    "quote": "A glomerular filtration rate (GFR) test is a blood test that checks how well your kidneys are working.",
+    "page_or_table": "What are estimated glomerular filtration rate (eGFR) and GFR tests? 段",
+    "quote": "Estimated glomerular filtration rate (eGFR) and GFR tests check how well your kidneys are working.",
     "quote_extra": [
-      "An estimated GFR is called an eGFR."
+      "Because mGFR tests aren't common, providers usually use an estimate (or eGFR) to see how well your kidneys are working."
     ],
-    "note": "這個數字量的是什麼：GFR 檢查是檢查腎臟運作得多好的血液檢驗（quote）；估算的 GFR 叫 eGFR（quote_extra，同一節的第三個段落）。為什麼不進表：definition 不帶數值界線，lower／upper／unit 皆 null。兩句分屬同一節的不同段落、不連續，故拆 quote＋quote_extra。",
-    "fetched_at": "2026-09-10"
+    "note": "這個數字量的是什麼：eGFR 與 GFR 檢查都是檢查腎臟運作得多好（quote）；直接量測的 GFR（mGFR）不常見，醫療人員通常用估算值 eGFR（quote_extra，同一節第四段）。為什麼不進表：definition 不帶數值界線，lower／upper／unit 皆 null。兩句分屬同一節的不同段落、不連續，故拆 quote＋quote_extra。2026-11-24 來源改版：2023-07-06 版寫「GFR test is a blood test」，新版把 mGFR（注射過濾標記物、再抽血或驗尿）與 eGFR（抽血）分開寫，不再整體說 GFR 檢查是血液檢驗——頁面第①段跟著改，見勘誤 E6。",
+    "fetched_at": "2026-11-24"
   },
   {
     "indicator_id": "creatinine",
