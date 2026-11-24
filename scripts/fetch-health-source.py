@@ -135,9 +135,17 @@ def save_manifest(rows: list):
 
 
 def upsert(rows: list, entry: dict) -> str:
+    """☠️ 2026-11-24：更新既有列時，沒帶 --note 會把舊 note 整個洗掉（medlineplus-gfr-test 實例）。
+    note 常記著「這份來源的坑」（標籤切斷引句、改落 html-text…），掉了沒人會發現。
+    所以沒帶 --note 就沿用舊 note，並提醒：來源改版後舊 note 可能已經不對，要人看一次。"""
     for i, r in enumerate(rows):
         if r["id"] == entry["id"]:
             action = "更新" if r.get("sha256") != entry["sha256"] else "無變動"
+            if "note" not in entry and r.get("note"):
+                entry["note"] = r["note"]
+                if action == "更新":
+                    print("⚠️  沿用舊 note（沒帶 --note）。來源內容變了，請確認這段 note 還正確：\n"
+                          f"   {r['note'][:160]}")
             rows[i] = entry
             return action
     rows.append(entry)

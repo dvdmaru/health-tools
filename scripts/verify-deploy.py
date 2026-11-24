@@ -28,6 +28,11 @@ baseline 來自檔案，不來自人的記憶，所以沒有「挑錯哨兵」�
 
 不符時印出第一個差異點的前後文（診斷用，不是只給 pass/fail），
 全部相符 exit 0，逾時仍不符 exit 1。
+
+`_headers`／`_redirects` 是 Cloudflare 的控制檔（設定回應標頭與轉址），不是頁面：
+線上對這個路徑回 0 bytes 是正常的，拿來整檔比對必然「不符」、空等到逾時再回 exit 1，
+等於每次部署都假紅（2026-09-30、2026-11-24 兩次部署都是這樣）。所以傳進來也會跳過，
+並印一行說明；它們有沒有生效，要看回應標頭，不是看這支腳本。
 """
 
 import argparse
@@ -40,6 +45,7 @@ import time
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 UA = "verify-deploy/1.0 (+twtools static site deploy check)"
+CONTROL_FILES = {"_headers", "_redirects"}  # Cloudflare 控制檔，線上不以原文提供
 
 
 def resolve_site(cli_site: str | None) -> str:
@@ -125,13 +131,22 @@ def main() -> int:
     SITE = resolve_site(args.site)
 
     targets = []
+    skipped = []
     for raw in args.paths:
         p = pathlib.Path(raw)
+        if p.name in CONTROL_FILES:
+            skipped.append(raw)
+            continue
         if not p.is_file():
             print(f"❌ 檔案不存在：{raw}（要先 build）", file=sys.stderr)
             return 2
         targets.append((p, p.read_bytes(), path_to_url(p)))
 
+    for raw in skipped:
+        print(f"⏭️  跳過 {raw}：Cloudflare 控制檔，線上本來就不提供原文")
+    if not targets:
+        print("❌ 扣掉控制檔後沒有任何檔案可比對", file=sys.stderr)
+        return 2
     print(f"🔍 比對 {len(targets)} 個檔案 vs {SITE}（整檔 byte 比對，逾時 {args.timeout}s）")
 
     pending = list(targets)
