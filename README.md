@@ -200,7 +200,8 @@ CI 對 exit 1／2 用 label `source-drift` 找開著的 issue，有就貼新報�
 3. **真的變了**：改對應的 `data/criteria/*.json`（或 `*-history.json`）→ 在
    `data/errata.json` 加一列（schema：`data/errata-schema.json`，收據 gate 對有
    `doc_id` 的列一樣逐句 grep）→ `scripts/fetch-health-source.py` 重抓快照、更新
-   manifest → `python3 scripts/check-source-drift.py --update-baseline` → 開 PR。
+   manifest（沒帶 `--note` 會沿用舊 note 並提醒——來源改版後要確認它還正確；
+   來源搬家、canonical 換網址時，`--url` 換新網址、`--id` 沿用舊的，判準列與勘誤列的指涉才不會斷）→ `python3 scripts/check-source-drift.py --update-baseline` → 開 PR。
 4. **只是排版或改版但那句話沒變**（`changed-quotes-intact`）：直接
    `python3 scripts/check-source-drift.py --update-baseline` 即可，不必動
    `data/criteria/` 或 `errata.json`。
