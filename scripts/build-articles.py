@@ -68,7 +68,7 @@ HOME_FAQ = [
     ("為什麼同一個指標會有好幾個判準？",
      "不同機構依據各自的文件訂定判準，數值本來就不一致。本站並列呈現，不代替讀者選邊。"),
     ("不同醫院或檢驗室的報告，同一個項目的數字背後做法會一樣嗎？",
-     "不一定。各指標頁引用的來源寫到：美國肝病學會（ACG）指出各檢驗室的 AST、ALT 正常上限範圍可能不同；"
+     "不一定。各指標頁引用的來源寫到：美國胃腸病學院（American College of Gastroenterology，ACG）指出各檢驗室的 AST、ALT 正常上限範圍可能不同；"
      "腰圍的量測位置，WHO、美國 NIH 與國健署各有各的寫法；腎功能的 eGFR 計算公式也換過版本。"
      "報告上標示的參考範圍與計算方式，可以和您的醫師討論。"),
     ("這裡的內容可以當作診斷依據嗎？",
@@ -152,7 +152,7 @@ def render_article(meta, body_html, slug, excerpt, faq, prev_nav=None, next_nav=
   </article>
   {nav_html}
   </main>"""
-    return hl.page_shell(title, desc, url, jsonld, body, "indicators",
+    return hl.page_shell(title, desc, url, jsonld, body, "articles",
                          extra_css="", og_image=cover)
 
 
@@ -191,8 +191,8 @@ def render_home(articles):
 
 def render_articles_index(articles):
     cards = "\n".join(_idx_card(a) for a in articles) or _EMPTY_HTML
-    title = "所有指標整理"
-    desc = SITE["website_desc"]
+    title = "健檢報告閱讀指南"
+    desc = "從健檢表上的項目名稱與單位，對照原始文件的寫法。"
     body = f"""  <main>
   <h1 class="pg-h1">{html_lib.escape(title)}</h1>
   <p class="pg-sub">{html_lib.escape(desc)}</p>
@@ -201,7 +201,7 @@ def render_articles_index(articles):
     jsonld = hl.graph_ld([
         hl.org_node(), hl.website_node(),
         hl.breadcrumb_node([("首頁", f"{BASE}/"), (title, f"{BASE}/articles/")])])
-    return hl.page_shell(title, desc, f"{BASE}/articles/", jsonld, body, "indicators",
+    return hl.page_shell(title, desc, f"{BASE}/articles/", jsonld, body, "articles",
                          extra_css=INDEX_CSS)
 
 

@@ -120,6 +120,7 @@ def collect_cards(src_dir=None, criteria_dir=None) -> list:
 
         cards.append({
             "slug": slug,
+            "search_ids": " ".join(ids),
             "title": meta.get("title", h1),
             "url": f"{hl.BASE}/indicators/{slug}/",
             "href": f"/indicators/{slug}/",
@@ -143,9 +144,12 @@ def collect_cards(src_dir=None, criteria_dir=None) -> list:
 # ---------- 版面 ----------
 
 INDEX_CSS = """
+.ix-filter{ margin:18px 0; }
+.ix-filter input{ max-width:100%; padding:8px; font:inherit; }
+@media print{ .ix-filter{ display:none; } .ix-card[hidden]{ display:list-item; } }
 .ix-intro{ font-size:15px; color:var(--fg-soft); margin:10px 0 4px; line-height:1.9; }
 .ix-cards{ list-style:none; margin:22px 0 0; padding:0; display:grid;
-           grid-template-columns:repeat(auto-fit,minmax(272px,1fr)); gap:14px; }
+           grid-template-columns:repeat(auto-fit,minmax(min(272px,100%),1fr)); gap:14px; }
 .ix-card{ border:1px solid var(--line); border-radius:var(--radius);
           background:var(--surface); padding:15px 17px 14px; }
 .ix-card .ix-h{ font-family:var(--font-display); font-size:17px; font-weight:800;
@@ -162,6 +166,41 @@ INDEX_CSS = """
 """
 
 
+FILTER_HTML = """
+<div class="ix-filter" hidden>
+  <label for="ix-query">找指標</label>
+  <input id="ix-query" type="search" placeholder="例如 GOT、尿蛋白" autocomplete="off">
+  <span role="status" aria-live="polite"></span>
+</div>"""
+
+FILTER_SCRIPT = """
+<script>
+(() => {
+  const panel = document.querySelector('.ix-filter');
+  const input = panel.querySelector('input');
+  const status = panel.querySelector('[role=status]');
+  const normalize = text => text.normalize('NFKC').toLowerCase().trim();
+  const cards = Array.from(document.querySelectorAll('.ix-card'), card => ({
+    card,
+    names: normalize([card.querySelector('.ix-h').textContent, card.querySelector('.ix-tags').dataset.ids,
+                      ...Array.from(card.querySelectorAll('.ix-tags li'), tag => tag.textContent)].join(' '))
+  }));
+  function filter() {
+    const query = normalize(input.value);
+    let visible = 0;
+    for (const {card, names} of cards) {
+      card.hidden = !names.includes(query);
+      if (!card.hidden) visible++;
+    }
+    status.textContent = query ? (visible ? '找到 ' + visible + ' 頁' : '找不到符合的指標，請換個名稱。') : '';
+  }
+  panel.hidden = false;
+  input.addEventListener('input', filter);
+  filter();
+})();
+</script>"""
+
+
 def render_card(c: dict) -> str:
     tags = "".join(f"<li>{esc(t)}</li>" for t in c["labels"])
     counts = (f"判準 {c['n_rows']} 列・機構 {c['n_orgs']} 家・來源 {c['n_sources']} 份")
@@ -170,7 +209,7 @@ def render_card(c: dict) -> str:
     return (
         '<li class="ix-card">'
         f'<h2 class="ix-h"><a href="{esc(c["href"])}">{esc(c["title"])}</a></h2>'
-        f'<ul class="ix-tags">{tags}</ul>'
+        f'<ul class="ix-tags" data-ids="{esc(c["search_ids"])}">{tags}</ul>'
         f'<p class="ix-desc">{esc(c["desc"])}</p>'
         f'<p class="ix-meta">{esc(counts)}</p>'
         f'{hist}'
@@ -181,8 +220,9 @@ def render_index(cards: list) -> str:
     body = ('  <main>\n'
             f'  <h1 class="pg-h1">{esc(PAGE_TITLE)}</h1>\n'
             f'  <p class="ix-intro">{esc(INTRO)}</p>\n'
+            f'  {FILTER_HTML}\n'
             f'  <ul class="ix-cards">{"".join(render_card(c) for c in cards)}</ul>\n'
-            f'  <p class="ix-foot">{esc(gen.FOOT_LINE)}</p>\n  </main>')
+            f'  <p class="ix-foot">{esc(gen.FOOT_LINE)}</p>\n  </main>{FILTER_SCRIPT}')
 
     page_node = {
         "@type": "CollectionPage", "@id": f"{INDEX_URL}#page",
