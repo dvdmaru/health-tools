@@ -743,6 +743,21 @@ class WidgetRuntimeBehavior(unittest.TestCase):
         self.assertEqual(self.result["ariaLive"], "polite")
         self.assertEqual(self.result["role"], "status")
 
+    def test_filtered_out_match_is_neither_marked_nor_counted(self):
+        script = DOM_SHIM_JS + build_fixture_and_driver() + gen.VALUE_LOCATOR_JS + """
+groupB.details.hidden = true;
+var input = document.querySelector('.vloc-input');
+input.value = '125';
+input.dispatch('input');
+console.log(JSON.stringify({
+  marked: groupB.tr.classList.contains('vloc-hit'),
+  status: document.querySelector('.vloc-status').textContent
+}));
+"""
+        stdout, code, stderr = run_node(script)
+        self.assertEqual(code, 0, stderr)
+        self.assertEqual(json.loads(stdout), {"marked": False, "status": "沒有列包含 125"})
+
     def test_mutation_reverting_badge_to_the_source_column_is_caught(self):
         """改壞會紅：把 markRow 的 cell 選擇改回舊行為（永遠 lastElementChild，
         也就是三方收斂前的「縫進依據欄」），同一個情境重跑，判準值欄應該不再
