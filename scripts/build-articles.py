@@ -173,12 +173,40 @@ _EMPTY_HTML = ('<div class="idx-empty">尚未發布文章。'
                '每頁的判準值都標註機構、文件、版本與頁碼。</div>')
 
 
+REPORT_PATH = "/adult-report/"
+REPORT_TITLE = "成人健檢報告欄位導覽"
+REPORT_CSS = """
+.report-sheet { border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--surface); overflow: hidden; }
+.report-sheet h2 { margin: 0; padding: 12px 18px; background: var(--accent-soft);
+  color: var(--fg); font-size: 16px; }
+.report-sheet details + details { border-top: 1px solid var(--line); }
+.report-sheet summary { padding: 14px 18px; cursor: pointer; font-weight: 700; }
+.report-sheet summary:hover, .report-sheet summary:focus-visible { color: var(--accent); }
+.report-sheet p { margin: 0; padding: 0 18px 16px; line-height: 1.8; }
+.report-source { margin: 0 0 20px; font-size: 14px; }
+.report-guide { margin-top: 24px; }
+"""
+
+
+def render_adult_report():
+    body = (ROOT / "templates" / "adult-report.html").read_text(encoding="utf-8")
+    url = BASE + REPORT_PATH
+    jsonld = hl.graph_ld([hl.org_node(), hl.website_node(),
+                          hl.breadcrumb_node([("首頁", BASE + "/"), (REPORT_TITLE, url)])])
+    return hl.page_shell(REPORT_TITLE, "點選國健署表單節錄的欄位，對照名稱、單位與判準出處。",
+                         url, jsonld, body, "adult-report", extra_css=REPORT_CSS)
+
+
 def render_home(articles):
     cards = "\n".join(_idx_card(a) for a in articles[:8]) or _EMPTY_HTML
     faq_sec = hl.faq_html(HOME_FAQ)
+    report_link = (f'<p><a href="{REPORT_PATH}">從成人健檢報告上的欄位開始查</a></p>'
+                   if hl.PUBLISHED else "")
     body = f"""  <main>
   <h1 class="pg-h1">{html_lib.escape(SITE['home_title'])}</h1>
   <p class="pg-sub">{html_lib.escape(SITE['website_desc'])}</p>
+  {report_link}
   <h2 class="sec-h">最新整理</h2>
 {cards}
   {faq_sec}
@@ -255,6 +283,7 @@ def render_llms_txt(articles):
     # 翻開關前列進 llms.txt 就是餵給 AI 一條死連結（llms.txt 沒人看，錯了不會有人叫）。
     indicators_line = (f"- [指標索引]({BASE}/indicators/)：各項指標的判準並列頁（陸續上線）。\n"
                        if hl.PUBLISHED else "")
+    report_line = f"- [{REPORT_TITLE}]({BASE}{REPORT_PATH})\n" if hl.PUBLISHED else ""
     art_lines = "\n".join(
         f"- [{a['meta'].get('title', a['slug'])}]({BASE}/articles/{a['slug']}/)"
         + (f"（{a['meta']['date']}）" if a["meta"].get("date") else "")
@@ -268,7 +297,7 @@ def render_llms_txt(articles):
 ## 重點頁面
 
 - [首頁]({BASE}/)：站台說明與最新整理。
-{indicators_line}- [所有整理]({BASE}/articles/)：長文與判準沿革。
+{indicators_line}{report_line}- [所有整理]({BASE}/articles/)：長文與判準沿革。
 
 ## 最新內容
 
@@ -349,6 +378,9 @@ def build():
         print(f"✅ {a['slug']}")
 
     PUB.mkdir(parents=True, exist_ok=True)
+    report_dir = PUB / REPORT_PATH.strip("/")
+    report_dir.mkdir(parents=True, exist_ok=True)
+    (report_dir / "index.html").write_text(render_adult_report(), encoding="utf-8")
     (PUB / "index.html").write_text(render_home(articles), encoding="utf-8")
     (PUB / "articles").mkdir(parents=True, exist_ok=True)
     (PUB / "articles" / "index.html").write_text(render_articles_index(articles), encoding="utf-8")
@@ -364,6 +396,8 @@ def build():
 
     urls = ([f"{BASE}/", f"{BASE}/articles/"]
             + [f"{BASE}/articles/{a['slug']}/" for a in articles])
+    if hl.PUBLISHED:
+        urls.append(BASE + REPORT_PATH)
     hl.write_sitemap_part("articles", urls)
     print(f"🏠 index + articles index + feed + llms.txt + robots.txt + sitemap part "
           f"({len(articles)} 篇) → {PUB}/")
