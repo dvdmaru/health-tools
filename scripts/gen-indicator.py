@@ -562,6 +562,15 @@ figure.chart svg.narrow-only{ display:none; }
    --line／--surface／--dim／--accent（跟著配色切換走）；☠️ 不用 --c-* 系列色——
    那組色票在這幾張圖承載的語意是「這條判準是誰發布的」，拿來當組框會讓同一個
    視覺通道多背一種意思。 */
+.purpose-filter{ padding:0; margin:16px 0 8px; border:0; scroll-margin-top:9rem; }
+.purpose-filter legend{ padding:0; margin-bottom:6px; font-weight:700; }
+.purpose-options{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:6px; }
+.purpose-options button{ font:inherit; font-size:14px; padding:7px 12px; cursor:pointer;
+  color:var(--fg); background:var(--surface); border:1px solid var(--line-2); border-radius:6px; }
+.purpose-options button[aria-pressed="true"]{ color:var(--accent-ink); background:var(--accent); font-weight:700; }
+.purpose-options button:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+.purpose-filter a{ font-size:14px; }
+.vloc[hidden]{ display:none; }
 .crit-sum{ font-size:13px; color:var(--dim); margin:10px 0 8px; }
 details.crit-grp{ border:1px solid var(--line); border-radius:var(--radius-sm);
                   background:var(--surface); margin:0 0 8px; }
@@ -739,14 +748,18 @@ VALUE_LOCATOR_JS = """
     wrap.appendChild(status);
     anchor.parentNode.insertBefore(wrap, anchor);
 
-    input.addEventListener('input', function () {
+    function updateMatches() {
       var raw = input.value.trim();
       clearMarks(rows);
-      groups.els.forEach(function (d, i) { d.open = groups.open[i]; });
+      groups.els.forEach(function (d, i) {
+        d.open = Boolean(purpose && !d.hidden) || groups.open[i];
+      });
       if (raw === '' || !/^\\d+(\\.\\d+)?$/.test(raw)) { status.textContent = ''; return; }
       var v = parseFloat(raw);
       if (!isFinite(v) || v > 100000) { status.textContent = ''; return; }
-      var hits = matchRows(rows, v);
+      var hits = matchRows(rows.filter(function (tr) {
+        return !tr.closest('details.crit-grp').hidden;
+      }), v);
       hits.forEach(function (tr) {
         markRow(tr, raw);
         var d = tr.closest('details.crit-grp');
@@ -755,7 +768,12 @@ VALUE_LOCATOR_JS = """
       status.textContent = hits.length
         ? (hits.length + ' 列包含 ' + raw)
         : (NO_HIT_PREFIX + raw);
-    });
+    }
+    input.addEventListener('input', updateMatches);
+    return function refreshScope() {
+      wrap.hidden = groups.els.every(function (d) { return d.hidden; });
+      if (input.value) updateMatches();
+    };
   }
 
   var byIndicator = {};
@@ -763,13 +781,54 @@ VALUE_LOCATOR_JS = """
     var id = tr.dataset.indicator;
     (byIndicator[id] = byIndicator[id] || []).push(tr);
   });
-  var seen = {};
-  document.querySelectorAll('details.crit-grp[data-indicator]').forEach(function (det) {
+  var purpose = '';
+  var widgets = {};
+  var groups = document.querySelectorAll('details.crit-grp[data-indicator]');
+  groups.forEach(function (det) {
     var id = det.dataset.indicator;
-    if (seen[id]) return;
-    seen[id] = true;
-    buildWidget(id, byIndicator[id] || [], det);
+    if (!widgets[id]) widgets[id] = buildWidget(id, byIndicator[id] || [], det);
   });
+
+  var filter = document.querySelector('.purpose-filter');
+  if (!filter) return;
+  var buttons = filter.querySelectorAll('button');
+  var summary = document.querySelector('.crit-sum');
+  var allSummary = summary.textContent;
+  var originalOpen = null;
+  summary.setAttribute('role', 'status');
+
+  function choose(button) {
+    var next = button.value;
+    if (next === purpose) return;
+    if (!purpose) originalOpen = Array.from(groups, function (group) { return group.open; });
+    purpose = next;
+    var count = 0;
+    groups.forEach(function (group, i) {
+      group.hidden = Boolean(purpose && group.dataset.category !== purpose);
+      if (!group.hidden) {
+        group.open = purpose ? true : originalOpen[i];
+        count += group.querySelectorAll('tbody tr').length;
+      }
+    });
+    buttons.forEach(function (item) { item.setAttribute('aria-pressed', String(item === button)); });
+    Object.values(widgets).forEach(function (refresh) { refresh(); });
+    var label = button.textContent;
+    summary.textContent = !purpose ? allSummary : (count
+      ? '「' + label + '」共 ' + count + ' 列。'
+      : '本頁判準表沒有「' + label + '」的資料列。');
+  }
+
+  buttons.forEach(function (button) {
+    button.addEventListener('click', function () { choose(button); });
+  });
+  window.addEventListener('hashchange', function () {
+    var target = document.getElementById(location.hash.slice(1));
+    if (target && target.matches('details.crit-grp') && target.hidden) {
+      choose(buttons[0]);
+      target.scrollIntoView();
+    }
+  });
+  filter.hidden = false;
 })();
 """
 
@@ -828,7 +887,18 @@ def render_criteria_table(rows: list, mf: dict, multi: bool = False,
     open_all = len(rows) <= CRIT_OPEN_ALL_MAX
     head = ("<thead><tr><th>機構</th><th>判準值</th><th>族群</th>"
             "<th>依據文件與版本（含頁碼或表號）</th></tr></thead>")
-    out = [f'<p class="crit-sum">共 {len(rows)} 列，分 {len(groups)} 組；'
+    # 三個主要用途固定可查；其餘類別只列本表實際收錄者。
+    primary = ("reference_interval", "classification", "diagnosis")
+    present = {cat for _, cat, _ in groups}
+    categories = [*primary, *(cat for cat in TABLE_CATEGORIES if cat in present and cat not in primary)]
+    options = ['<button type="button" value="" aria-pressed="true">全部用途</button>']
+    for cat in categories:
+        label = "診斷條件" if cat == "diagnosis" else CATEGORY_LABEL[cat]
+        options.append(f'<button type="button" value="{esc(cat)}" aria-pressed="false">{esc(label)}</button>')
+    out = ['<fieldset class="purpose-filter" id="criteria-purpose" hidden><legend>判準用途</legend>'
+           '<div class="purpose-options">' + "".join(options) + '</div>'
+           '<a href="/articles/reference-interval-and-classification/">參考區間與分級怎麼讀？</a></fieldset>',
+           f'<p class="crit-sum">共 {len(rows)} 列，分 {len(groups)} 組；'
            "點組名可展開或收合。</p>"]
     for iid, cat, grp in groups:
         body = "".join(
@@ -844,7 +914,7 @@ def render_criteria_table(rows: list, mf: dict, multi: bool = False,
         # 給 JS 定位「這個指標的表格從哪裡開始」，插入輸入框用；不影響外觀。
         grp_indicator = esc(grp[0]["indicator_id"])
         out.append(
-            f'<details class="crit-grp" data-indicator="{grp_indicator}" id="{grp_indicator}-{esc(cat)}"{op}>'
+            f'<details class="crit-grp" data-indicator="{grp_indicator}" id="{grp_indicator}-{esc(cat)}" data-category="{esc(cat)}"{op}>'
             f'<summary>{name}（{len(grp)} 列）</summary>'
             '<div class="tbl-scroll"><table class="std-table">'
             + head + "<tbody>" + body + "</tbody></table></div></details>")

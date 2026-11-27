@@ -187,6 +187,14 @@ class NumbersTraceBackToData(unittest.TestCase):
             f'<p class="crit-sum">共 {len(self.rows)} 列，'
             f"分 {len(crit_groups(self.html))} 組；", self.html)
 
+    def test_filter_matches_each_rows_source_category(self):
+        filtered = []
+        for category, group in re.findall(
+                r'<details class="crit-grp"[^>]* data-category="([^"]+)"[^>]*>(.*?)</details>',
+                self.html, re.S):
+            filtered.extend([category] * group.count("<tr data-indicator="))
+        self.assertEqual(filtered, [row["category"] for row in self.rows])
+
     def test_population_and_source_columns_come_from_data(self):
         mf = gen.manifest_index()
         for cell_row, data_row in zip(self.cells, self.rows):
