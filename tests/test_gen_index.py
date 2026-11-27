@@ -313,8 +313,10 @@ class DeterministicOutput(unittest.TestCase):
             def strip(s):
                 # /worksheet/ 是 2026-08-31 加的頁尾連結（gen-worksheet.py），
                 # 與 /indicators/、/errata/ 同樣帶 requires:published。
-                s = re.sub(r'<a href="/(?:indicators|articles|errata|worksheet)/"[^>]*>.*?</a>', "", s)
+                s = re.sub(r'<a href="/(?:adult-report|indicators|articles|errata|worksheet)/"[^>]*>.*?</a>', "", s)
                 return "\n".join(l for l in s.splitlines() if l.strip())
+            self.assertIn('href="/adult-report/"', live)
+            self.assertNotIn('href="/adult-report/"', dormant)
             self.assertEqual(strip(dormant), strip(live))
 
 

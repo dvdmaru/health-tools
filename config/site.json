@@ -15,6 +15,7 @@
   "default_theme": "paper",
   "nav": [
     { "label": "首頁", "href": "/", "key": "home" },
+    { "label": "報告導覽", "href": "/adult-report/", "key": "adult-report", "requires": "published" },
     { "label": "指標", "href": "/indicators/", "key": "indicators", "requires": "published" },
     { "label": "文章", "href": "/articles/", "key": "articles", "requires": "published" }
   ],

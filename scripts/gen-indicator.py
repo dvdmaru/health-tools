@@ -557,6 +557,7 @@ figure.chart svg.narrow-only{ display:none; }
 /* 窄螢幕：表格橫向捲動而不是把欄位擠成一字一行（五欄表擠到 390px 等於沒得讀）。
    .tbl-scroll 本身是 overflow-x:auto，給表格一個 min-width 就會在容器內捲。 */
 @media (max-width:620px){ .tbl-scroll > .std-table{ min-width:600px; } }
+.crit-grp:target { scroll-margin-top: 7rem; outline: 2px solid var(--accent-line); }
 /* 判準表分組折疊：原生 details 元素（無 JS）。組的外框與組名用外殼的
    --line／--surface／--dim／--accent（跟著配色切換走）；☠️ 不用 --c-* 系列色——
    那組色票在這幾張圖承載的語意是「這條判準是誰發布的」，拿來當組框會讓同一個
@@ -843,7 +844,7 @@ def render_criteria_table(rows: list, mf: dict, multi: bool = False,
         # 給 JS 定位「這個指標的表格從哪裡開始」，插入輸入框用；不影響外觀。
         grp_indicator = esc(grp[0]["indicator_id"])
         out.append(
-            f'<details class="crit-grp" data-indicator="{grp_indicator}"{op}>'
+            f'<details class="crit-grp" data-indicator="{grp_indicator}" id="{grp_indicator}-{esc(cat)}"{op}>'
             f'<summary>{name}（{len(grp)} 列）</summary>'
             '<div class="tbl-scroll"><table class="std-table">'
             + head + "<tbody>" + body + "</tbody></table></div></details>")
