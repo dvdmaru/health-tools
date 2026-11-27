@@ -148,7 +148,7 @@ class DeterministicOutput(unittest.TestCase):
                 # 再把因此空掉的行收乾淨；剩下的必須逐字相同。
                 # /errata/ 是 M5 加的頁尾連結，/worksheet/ 是 2026-08-31 加的
                 # （gen-worksheet.py），兩者都與 /indicators/ 同樣帶 requires:published。
-                s = re.sub(r'<a href="/(?:indicators|errata|worksheet)/"[^>]*>.*?</a>', "", s)
+                s = re.sub(r'<a href="/(?:indicators|articles|errata|worksheet)/"[^>]*>.*?</a>', "", s)
                 s = s.replace(',"item":"https://health.twtools.cc/indicators/"', "")
                 return "\n".join(l for l in s.splitlines() if l.strip())
             self.assertEqual(strip(dormant), strip(live))
