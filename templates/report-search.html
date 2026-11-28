@@ -8,6 +8,24 @@
       </div>
       <p><a href="/adult-report/#first-report">第一次拿到健檢報告，從哪裡看起？</a></p>
       <p class="reader-status" role="status"></p>
+      <section id="search-miss" aria-labelledby="miss-title" hidden>
+        <h2 id="miss-title">查不到這一項，怎麼辦？</h2>
+        <p>先看報告的項目名稱。以下是虛構範例，可用 <strong>GPT</strong> 或 <strong>ALT</strong> 查同一項。</p>
+        <dl class="miss-example">{{miss_example}}</dl>
+        <p>這列借用成大醫院 ALT 項目的女性參考上限。範例數值高於這個上限，所以教學範例標 H。讀自己的報告時，請看該院所的參考範圍和圖例。<a href="/adult-report/#read-alt">查看完整範例與出處</a></p>
+        <p>在自己的報告上找到名稱後，可以回到搜尋框再查一次。<a href="#report-query">重新搜尋</a></p>
+        <details>
+          <summary>仍查不到，照報告原文帶去問</summary>
+          <form autocomplete="off">
+            <label for="miss-name">報告上的項目原文</label>
+            <input id="miss-name" type="text" maxlength="100" required>
+            <label for="miss-question">我想問的問題（可修改）</label>
+            <textarea id="miss-question" rows="3" maxlength="500" required></textarea>
+            <button type="submit">確認原文與問題，帶到回診工作表</button>
+            <p role="status"></p>
+          </form>
+        </details>
+      </section>
       <section class="glucose-guide" aria-labelledby="glucose-guide-title">
         <h2 id="glucose-guide-title">我的報告是哪一種血糖檢查？</h2>
         <p>你那一列完整寫了什麼？</p>
@@ -63,6 +81,36 @@
   const input = panel.querySelector('input');
   const results = panel.querySelector('ul');
   const status = panel.querySelector('[role=status]');
+  const miss = panel.querySelector('#search-miss');
+  const original = miss.querySelector('#miss-name');
+  const question = miss.querySelector('textarea');
+  const feedback = miss.querySelector('[role=status]');
+  const defaultQuestion = name => '我的報告寫「' + name + '」，這一項在看什麼？';
+  let previousName = '';
+  function syncQuestion() {
+    if (!question.value || question.value === defaultQuestion(previousName)) {
+      question.value = defaultQuestion(original.value);
+    }
+    previousName = original.value;
+  }
+  original.addEventListener('input', syncQuestion);
+  miss.querySelector('form').addEventListener('submit', event => {
+    event.preventDefault();
+    for (const field of [original, question]) {
+      if (!field.value.trim()) {
+        field.focus();
+        feedback.textContent = '請填寫項目原文與想問的問題。';
+        return;
+      }
+    }
+    try {
+      const key = 'unlisted-item/' + crypto.randomUUID();
+      sessionStorage.setItem(key, JSON.stringify({name: original.value, question: question.value}));
+      location.assign('/worksheet/#' + key);
+    } catch {
+      feedback.textContent = '瀏覽器無法暫存這兩欄。原文與問題仍在這裡，可先複製留存。';
+    }
+  });
   const glucoseGuide = panel.querySelector('.glucose-guide');
   const normalize = text => text.normalize('NFKC').toLowerCase();
   const terms = text => normalize(text).split(/[^\p{L}\p{N}]+/u).filter(Boolean);
@@ -106,10 +154,19 @@
     if (glucoseGuide.hidden) {
       for (const detail of glucoseGuide.querySelectorAll('details[open]')) detail.open = false;
     }
+    miss.hidden = !query || count > 0 || !glucoseGuide.hidden || !lipidGuide.hidden;
+    if (miss.dataset.query !== input.value) {
+      miss.querySelector('details').open = false;
+      original.value = input.value;
+      previousName = original.value;
+      question.value = defaultQuestion(original.value);
+      feedback.textContent = '';
+      miss.dataset.query = input.value;
+    }
     results.hidden = !count;
     status.textContent = !query ? '' : count ? '找到 ' + count + ' 個項目' :
       !glucoseGuide.hidden ? '請依報告上的寫法選擇下方說明。' :
-      '本站尚未收錄符合的名稱。可試試報告上括號內的別名，或瀏覽下方已收錄指標。';
+      '找不到符合的項目名稱。';
   }
   input.addEventListener('input', update);
   input.addEventListener('keydown', event => {

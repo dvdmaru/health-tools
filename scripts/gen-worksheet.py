@@ -153,6 +153,15 @@ def collect_blocks(src_dir=None, criteria_dir=None) -> list:
 # ---------- 版面 ----------
 
 WORKSHEET_CSS = """
+main.ws-original-only > :not(.ws-original){ display:none !important; }
+.ws-original .original-name, .ws-original .original-question { white-space:pre-wrap; overflow-wrap:anywhere; }
+.ws-original button { padding:9px 14px; font:inherit; cursor:pointer; border:0; border-radius:var(--radius-sm);
+  background:var(--accent); color:var(--accent-ink); }
+@page original-question { size:A4; margin:12mm; }
+@media print {
+  html:has(.ws-original-only) { page:original-question; }
+  .ws-original .original-question { white-space:normal; }
+}
 .ws-intro{ font-size:15px; color:var(--fg-soft); margin:10px 0 4px; line-height:1.9; }
 .ws-picker{ margin:18px 0; padding:16px; border:1px solid var(--line-2); border-radius:var(--radius); background:var(--surface); min-width:0; }
 .ws-sampling{ scroll-margin-top:8rem; }
@@ -482,6 +491,13 @@ def render_page(blocks: list, mf: dict) -> str:
         '  <section class="ws-sampling" id="glucose-sampling" aria-labelledby="sampling-heading">'
         '<h2 id="sampling-heading">血糖採檢註記</h2>'
         '<div class="ws-question">我想問的問題<br>這筆血糖有註明空腹採檢嗎？</div></section>'
+        '  <section class="ws-original" aria-labelledby="original-title" hidden>'
+        '<h1 class="pg-h1" id="original-title" tabindex="-1">回診工作表</h1>'
+        '<div class="original-content"><h2>報告上的項目原文</h2><p class="original-name"></p>'
+        '<h2>我想問的問題</h2><p class="original-question"></p>'
+        '<button class="ws-noprint" type="button">只列印這一項</button></div>'
+        '<p class="original-missing" hidden>此分頁找不到先前確認的原文與問題。</p>'
+        '<p class="ws-noprint"><a href="/#report-query">回首頁搜尋</a></p></section>'
         f'  {render_picker(blocks)}\n'
         f'  <div class="ws-blocks">{"".join(render_block(b, mf) for b in blocks)}</div>\n'
         f'  <p class="ws-foot">共 {len(blocks)} 個指標區塊、{n_rows} 個切點。</p>\n'
