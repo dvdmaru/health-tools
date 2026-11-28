@@ -31,7 +31,19 @@ PUBLISHED = SITE.get("published", False) is True
 
 # ---------- GA4（config/site.json 的 ga_id 為空 → 不輸出 tag） ----------
 
-FIRST_REPORT_ALT_QUESTION = "我的報告上，GPT（ALT）的結果要和哪一欄的範圍對照？"
+# 讀報告範例及工作表共用同一組提問與目的項目。
+FIRST_REPORT_ITEMS = {
+    "alt": {
+        "label": "GPT（ALT）",
+        "worksheet_id": "ws-ast-alt-alt",
+        "question": "我的報告上，GPT（ALT）的結果要和哪一欄的範圍對照？",
+    },
+    "urine-protein": {
+        "label": "尿蛋白（試紙）",
+        "worksheet_id": "ws-urine-protein-uacr-urine-protein-dipstick",
+        "question": "我這份報告的尿蛋白結果，要對照哪一欄的說明？",
+    },
+}
 
 def ga_snippet(site: dict = None) -> str:
     gid = (site or SITE).get("ga_id")

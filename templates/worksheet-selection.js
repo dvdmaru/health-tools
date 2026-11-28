@@ -41,15 +41,16 @@
     document.querySelector('.ws-print-empty').hidden = selected.size !== 0;
   }
 
-  const defaultAltQuestion = document.currentScript.dataset.altQuestion;
-  function includeAltQuestion() {
-    const match = /^#first-report-alt(?:\/([a-f0-9-]{36}))?$/.exec(location.hash);
+  function includeReportQuestion() {
+    const match = /^#(first-report-[a-z-]+)(?:\/([a-f0-9-]{36}))?$/.exec(location.hash);
     if (!match) return;
-    const item = document.getElementById('ws-ast-alt-alt');
-    if (!item) return;
+    const [, anchorId, token] = match;
+    const anchor = document.getElementById(anchorId);
+    if (!anchor?.matches('.guide-anchor')) return;
+    const item = anchor.closest('.ws-indicator');
     const choice = choices.find(input => input.value === item.id);
     if (!choice) return;
-    choice.checked = true;
+    for (const input of choices) input.checked = input === choice;
     const box = item.querySelector('.ws-question');
     let editor = box.querySelector('textarea');
     if (editor && editor.dataset.handoff === location.hash) {
@@ -59,7 +60,7 @@
     if (!editor) {
       editor = document.createElement('textarea');
       editor.className = 'ws-noprint';
-      editor.setAttribute('aria-label', 'GPT（ALT）回診問題');
+      editor.setAttribute('aria-label', item.querySelector('h3').textContent + '回診問題');
       editor.rows = 3;
       editor.maxLength = 500;
       const paper = document.createElement('div');
@@ -76,11 +77,11 @@
       });
       box.append(editor, paper, pickerLink);
     }
-    let text = defaultAltQuestion;
-    if (match[1]) {
+    let text = anchor.dataset.question;
+    if (token) {
       text = '';
       try {
-        text = sessionStorage.getItem('first-report-alt/' + match[1]) || '';
+        text = sessionStorage.getItem(anchorId + '/' + token) || '';
       } catch { /* 工作表仍可直接填寫。 */ }
     }
     editor.dataset.handoff = location.hash;
@@ -104,7 +105,7 @@
     update();
   }
 
-  window.addEventListener('hashchange', includeAltQuestion);
+  window.addEventListener('hashchange', includeReportQuestion);
   includeLinkedQuestion();
   window.addEventListener('hashchange', includeLinkedQuestion);
   picker.addEventListener('change', update);
@@ -120,5 +121,5 @@
   update();
   document.querySelector('main').classList.add('ws-selective');
   picker.hidden = false;
-  includeAltQuestion();
+  includeReportQuestion();
 })();

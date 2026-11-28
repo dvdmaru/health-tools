@@ -23,42 +23,61 @@ for (const row of document.querySelectorAll('.reading-row')) {
 
 function revealLinkedField() {
   const target = document.getElementById(location.hash.slice(1));
+  const practice = target?.closest('.report-practice');
+  for (const section of document.querySelectorAll('.report-practice')) {
+    section.hidden = target?.id === 'first-report' || (practice != null && section !== practice);
+  }
   if (!target) return;
   if (target.matches('.report-sheet details')) target.open = true;
-  if (target.matches('.reading-note[hidden]')) {
+  if (target.matches('.reading-note')) {
     const row = target.closest('.reading-row');
-    row.querySelector('button[aria-controls="' + target.id + '"]').click();
+    const button = row.querySelector('button[aria-controls="' + target.id + '"]');
+    if (target.hidden) button.click();
+    button.focus({preventScroll:true});
     row.scrollIntoView();
+  } else if (target.matches('.reading-row')) {
+    target.scrollIntoView();
+  } else if (target === practice) {
+    practice.scrollIntoView();
+    practice.querySelector('h3').focus({preventScroll:true});
   }
 }
 revealLinkedField();
 window.addEventListener('hashchange', revealLinkedField);
 
-const handoff = document.getElementById('alt-handoff');
-const question = handoff.querySelector('textarea');
-const worksheetLink = handoff.querySelector('a');
-const status = handoff.querySelector('[role=status]');
-handoff.querySelector('.alt-editor').hidden = false;
-worksheetLink.hidden = true;
-question.addEventListener('input', () => question.setCustomValidity(''));
-handoff.querySelector('button').addEventListener('click', () => {
-  const text = question.value.trim();
-  if (!text) {
-    question.setCustomValidity('請先寫下想問的問題。');
-    question.reportValidity();
-    return;
-  }
-  const destination = new URL(worksheetLink.href);
-  if (text !== question.defaultValue) {
-    try {
-      const id = crypto.randomUUID();
-      sessionStorage.setItem('first-report-alt/' + id, text);
-      destination.hash += '/' + id;
-    } catch {
-      status.textContent = '瀏覽器無法暫存問題。請先複製上方文字，再開啟工作表，將問題貼到 GPT 提問格。';
-      worksheetLink.hidden = false;
+// 已在同一個錨點時再選一次，瀏覽器不會觸發 hashchange。
+for (const link of document.querySelectorAll('.guide-options a[href^="#"]')) {
+  link.addEventListener('click', () => {
+    if (link.hash === location.hash) revealLinkedField();
+  });
+}
+
+for (const handoff of document.querySelectorAll('.report-handoff')) {
+  const question = handoff.querySelector('textarea');
+  const worksheetLink = handoff.querySelector('.worksheet-link');
+  const status = handoff.querySelector('[role=status]');
+  handoff.querySelector('.question-editor').hidden = false;
+  worksheetLink.hidden = true;
+  question.addEventListener('input', () => question.setCustomValidity(''));
+  handoff.querySelector('button').addEventListener('click', () => {
+    const text = question.value.trim();
+    if (!text) {
+      question.setCustomValidity('請先寫下想問的問題。');
+      question.reportValidity();
       return;
     }
-  }
-  location.assign(destination.href);
-});
+    const destination = new URL(worksheetLink.href);
+    if (text !== question.defaultValue) {
+      try {
+        const id = crypto.randomUUID();
+        sessionStorage.setItem(destination.hash.slice(1) + '/' + id, text);
+        destination.hash += '/' + id;
+      } catch {
+        status.textContent = '瀏覽器無法暫存問題。請先複製上方文字，再開啟工作表，將問題貼到該項提問格。';
+        worksheetLink.hidden = false;
+        return;
+      }
+    }
+    location.assign(destination.href);
+  });
+}
