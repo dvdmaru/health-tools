@@ -452,6 +452,9 @@ def render_block(block: dict, mf: dict) -> str:
         guide_anchor = "".join(
             f'<span class="guide-anchor" id="first-report-{key}" data-question="{esc(item["question"])}"></span>'
             for key, item in hl.FIRST_REPORT_ITEMS.items() if item["worksheet_id"] == item_id)
+        if item_id == hl.FIRST_REPORT_ITEMS["alt"]["worksheet_id"]:
+            guide_anchor += (f'<span class="guide-anchor" id="first-report-alt-reference" '
+                             f'data-question="{esc(hl.ALT_REFERENCE_QUESTION)}"></span>')
         items.append(
             f'<div class="ws-indicator" id="{esc(item_id)}">'
             f'{guide_anchor}<h3 class="{heading}">{esc(ind["label"])}</h3>'

@@ -267,6 +267,10 @@ REPORT_CSS = """
 .reading-cells button span::after { content:" ▾"; color:var(--accent); }
 .reading-cells [aria-expanded=true],.reading-cells :focus-visible { border-color:var(--accent); background:var(--accent-soft); }
 .reading-note { border-inline-start:3px solid var(--accent); padding:6px 12px; scroll-margin-top:6rem; }
+.alt-reference-guide h4 { margin:14px 0 6px; }
+.alt-reference-guide details { margin-block:8px; }
+.alt-reference-guide summary { padding:6px 0; cursor:pointer; font-weight:600; }
+.alt-reference-guide li + li { margin-top:6px; }
 .reading-source { margin-bottom:0; font-size:.9em; }
 .report-sheet details[id] { scroll-margin-top:6rem; }
 @media(max-width:600px){ .reading-cells { grid-template-columns:repeat(2,minmax(0,1fr)); } }
@@ -328,7 +332,13 @@ def render_reading_row(row, sources):
     for index, (label, value, explanation) in enumerate(row["fields"]):
         field_id = f"{row_id}-field-{index + 1}"
         cells.append(f'<a href="#{field_id}"><span>{esc(label)}</span><strong>{esc(value)}</strong></a>')
-        notes.append(f'<p class="reading-note" id="{field_id}"><strong>{esc(label)}</strong>　{esc(explanation)}</p>')
+        if row_id == "read-alt" and label == "院所參考範圍":
+            guide = (ROOT / "templates/alt-reference-guide.html").read_text(encoding="utf-8")
+            notes.append(guide.replace("{{field_id}}", field_id)
+                         .replace("{{explanation}}", esc(explanation))
+                         .replace("{{question}}", esc(hl.ALT_REFERENCE_QUESTION)))
+        else:
+            notes.append(f'<p class="reading-note" id="{field_id}"><strong>{esc(label)}</strong>　{esc(explanation)}</p>')
     url = sources[row["doc_id"]]["url"]
     if "page" in row:
         url += f'#page={row["page"]}'
