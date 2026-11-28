@@ -260,7 +260,7 @@ def render_lipid_rows(entries):
         note = f'<p>{esc(example["note"])}</p>' if "note" in example else ""
         rows.append(
             f'<details name="lipid-row" data-names="{esc("|".join(names))}">'
-            f'<summary><strong>{label}</strong> <span lang="en">{esc(example["english_name"])}</span> <span>{example["result"]} {unit}</span></summary>'
+            f'<summary><strong>{label}</strong> <span lang="en">{esc(example["english_name"])}</span> <span>{example["result"]} {unit}（虛構結果）</span></summary>'
             f'<dl><div><dt>檢驗結果</dt><dd>{example["result"]}</dd></div>'
             f'<div><dt>單位</dt><dd>{unit}</dd></div>'
             f'<div><dt>院所參考範圍</dt><dd>{esc(example["reference"])}</dd></div></dl>{note}'
