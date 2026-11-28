@@ -1,0 +1,28 @@
+<div class="reading-note alt-reference-guide" id="{{field_id}}">
+  <p><strong>院所參考範圍</strong>　{{explanation}}</p>
+  <h4>這一項的參考範圍，要看報告哪裡？</h4>
+  <p>上方範圍供這個教學範例對照。讀自己的報告時，先找到 GPT（ALT）那一列，再看院所寫的參考範圍。</p>
+  <details name="alt-reference-choice">
+    <summary>我找到參考範圍了</summary>
+    <ol>
+      <li>沿著 GPT（ALT）同一列，找到檢驗結果。依表頭或欄內的標示，把結果和單位一起讀。</li>
+      <li>找這一列的參考範圍，欄名可能寫「參考值」或「參考區間」。核對這個範圍的單位與結果的單位是否相同。</li>
+      <li>看看範圍旁有沒有註明適用條件。如果列出多組範圍，先讀各組的條件。單位對不上，或拿不準適用哪一組時，可選下方「這一列沒寫，或我不確定」。</li>
+    </ol>
+  </details>
+  <details name="alt-reference-choice">
+    <summary>這一列沒寫，或我不確定</summary>
+    <p>先看這一頁的表頭，再找報告中的註腳或附註，看看有沒有特別說明 GPT（ALT）的參考範圍與適用條件。</p>
+    <div class="report-handoff" id="alt-reference-handoff">
+      <p>仍找不到，或不確定哪一組適用，可以把這個問題留給回診時問。</p>
+      <div class="question-editor" hidden>
+        <label for="alt-reference-question">我想問的問題（可改寫）</label>
+        <textarea id="alt-reference-question" rows="3" required maxlength="500" autocomplete="off">{{question}}</textarea>
+        <button type="button">帶到回診工作表，只勾選 GPT（ALT）</button>
+        <p role="status"></p>
+      </div>
+      <a class="worksheet-link" href="/worksheet/#first-report-alt-reference">前往工作表的 GPT（ALT）提問格</a>
+      <noscript><p>回診時可以問「{{question}}」。開啟 JavaScript 可改寫問題並只列印 GPT（ALT）。</p></noscript>
+    </div>
+  </details>
+</div>
