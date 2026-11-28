@@ -81,3 +81,60 @@ for (const handoff of document.querySelectorAll('.report-handoff')) {
     location.assign(destination.href);
   });
 }
+
+const advice = document.getElementById('followup-form');
+const adviceQuestion = advice.querySelector('#advice-question');
+const adviceOriginal = advice.querySelector('#advice-original');
+const adviceChecks = [...advice.querySelectorAll('fieldset')];
+const regenerate = advice.querySelector('#advice-regenerate');
+let suggested = '';
+
+function updateAdviceQuestion() {
+  const choices = adviceChecks.map(group => group.querySelector(':checked'));
+  const ready = choices.every(Boolean);
+  advice.querySelector('#advice-editor').hidden = !ready;
+  if (!ready) return;
+  const keepEdits = adviceQuestion.value !== suggested;
+  suggested = adviceChecks.filter((_, index) => choices[index].value === 'missing')
+    .map(group => group.querySelector('legend').textContent).join(' ');
+  if (!keepEdits) adviceQuestion.value = suggested;
+  adviceQuestion.setCustomValidity('');
+  regenerate.hidden = adviceQuestion.value === suggested || !suggested;
+  advice.querySelector('#advice-note').textContent = suggested
+    ? '問題依你標為「我的報告也沒寫」的欄位整理，可在下方改寫。'
+    : '三項都找到了，沒有疑問就完成了這一步。如果想帶原文去回診，請先寫下想問的問題。';
+}
+
+advice.hidden = false;
+for (const group of adviceChecks) group.addEventListener('change', updateAdviceQuestion);
+regenerate.addEventListener('click', () => {
+  adviceQuestion.value = suggested;
+  adviceQuestion.setCustomValidity('');
+  regenerate.hidden = true;
+  adviceQuestion.focus();
+});
+adviceQuestion.addEventListener('input', () => {
+  regenerate.hidden = !suggested || adviceQuestion.value === suggested;
+});
+for (const field of [adviceOriginal, adviceQuestion]) {
+  field.addEventListener('input', () => field.setCustomValidity(''));
+}
+advice.addEventListener('submit', event => {
+  event.preventDefault();
+  if (!adviceChecks.every(group => group.querySelector(':checked'))) return;
+  for (const field of [adviceOriginal, adviceQuestion]) {
+    if (!field.value.trim()) {
+      field.setCustomValidity('請填寫這一欄。');
+      field.reportValidity();
+      return;
+    }
+  }
+  try {
+    const key = 'followup-advice/' + crypto.randomUUID();
+    sessionStorage.setItem(key, JSON.stringify({name: adviceOriginal.value, question: adviceQuestion.value}));
+    location.assign('/worksheet/#' + key);
+  } catch {
+    advice.querySelector('.advice-error').textContent = '瀏覽器無法暫存這兩欄，請先複製原文與問題留存。';
+  }
+});
+window.addEventListener('pageshow', updateAdviceQuestion);
