@@ -4,16 +4,23 @@
     <div id="report-search">
       <div id="reader-search-controls" hidden>
         <label for="report-query">查報告上的中文、英文或縮寫</label>
-        <input type="search" id="report-query" placeholder="例如 GPT、尿蛋白、Creatinine" maxlength="100" autocomplete="off" spellcheck="false" enterkeyhint="search">
+        <input type="search" id="report-query" placeholder="例如 GPT、尿蛋白、Creatinine" aria-describedby="report-line-help" autocomplete="off" spellcheck="false" enterkeyhint="search">
+        <p id="report-line-help">貼上報告的一行，幫我找項目名稱。可試貼「GPT（ALT） 48 U/L H」或「尿蛋白（試紙） ＋」（皆為虛構）。只在瀏覽器內找名稱，結果與符號照原文顯示。</p>
       </div>
       <p><a href="/adult-report/#first-report">第一次拿到健檢報告，從哪裡看起？</a></p>
       <p class="reader-status" role="status"></p>
+      <div id="report-line" hidden>
+        <p class="report-line-preview"><span class="line-before"></span><a data-kind="alt" href="/adult-report/#read-alt" aria-label="報告寫的是 GPT 或 ALT，點此開啟虛構範例" hidden><mark></mark></a><a data-kind="dipstick" href="/adult-report/#read-urine-protein-field-2" aria-label="報告寫的是尿蛋白（試紙），點此對照虛構定性範例的檢驗結果欄" hidden><mark></mark></a><span class="line-after"></span></p>
+      </div>
       <section id="search-miss" aria-labelledby="miss-title" hidden>
         <h2 id="miss-title">查不到這一項，怎麼辦？</h2>
-        <p>先看報告的項目名稱。以下是虛構範例，可用 <strong>GPT</strong> 或 <strong>ALT</strong> 查同一項。</p>
-        <dl class="miss-example">{{miss_example}}</dl>
-        <p>這列借用成大醫院 ALT 項目的女性參考上限。範例數值高於這個上限，所以教學範例標 H。讀自己的報告時，請看該院所的參考範圍和圖例。<a href="/adult-report/#read-alt">查看完整範例與出處</a></p>
-        <p>在自己的報告上找到名稱後，可以回到搜尋框再查一次。<a href="#report-query">重新搜尋</a></p>
+        <p class="liver-name-help" hidden>請找同一列的完整檢驗名稱，或看看括號內有沒有縮寫。仍找不到時，可以把這行原文帶去回診詢問。</p>
+        <div class="miss-hint">
+          <p>先看報告的項目名稱。以下是虛構範例，可用 <strong>GPT</strong> 或 <strong>ALT</strong> 查同一項。</p>
+          <dl class="miss-example">{{miss_example}}</dl>
+          <p>這列借用成大醫院 ALT 項目的女性參考上限。範例數值高於這個上限，所以教學範例標 H。讀自己的報告時，請看該院所的參考範圍和圖例。<a href="/adult-report/#read-alt">查看完整範例與出處</a></p>
+          <p>在自己的報告上找到名稱後，可以回到搜尋框再查一次。<a href="#report-query">重新搜尋</a></p>
+        </div>
         <details>
           <summary>仍查不到，照報告原文帶去問</summary>
           <form autocomplete="off">
@@ -87,6 +94,7 @@
   const feedback = miss.querySelector('[role=status]');
   const defaultQuestion = name => '我的報告寫「' + name + '」，這一項在看什麼？';
   let previousName = '';
+  let lastQuery;
   function syncQuestion() {
     if (!question.value || question.value === defaultQuestion(previousName)) {
       question.value = defaultQuestion(original.value);
@@ -138,13 +146,51 @@
     '空腹血糖', '飯前血糖', 'fpg', '空腹血糖fpg', 'fastingplasmaglucose',
     '糖化血色素', '糖化血紅素', 'hba1c', 'a1c', '糖化血色素hba1c', 'hemoglobina1c', 'glycatedhemoglobin'
   ]);
+  const linePanel = panel.querySelector('#report-line');
+  const preview = linePanel.querySelector('.report-line-preview');
+  // 只轉等長的全形 ASCII，讓比對位置仍能切回讀者原本的字串。
+  function showReportLine(raw) {
+    const folded = raw.replace(/[！-～]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0));
+    const match = /^(\s*)(GPT(?:\s*\(\s*ALT\s*\))?|ALT(?:\s*\(\s*GPT\s*\))?|尿蛋白\s*\(\s*試紙\s*\)|肝功能)/i.exec(folded);
+    let kind = '';
+    // 只接受單列的結果字元與單位；多項名稱或其他說明交回既有搜尋流程。
+    const rest = match ? folded.slice(match[0].length) : '';
+    const separated = match && (match[2].endsWith(')') || /^[\s:]/.test(rest));
+    const tail = rest.replace(/^\s*:?\s*/, '');
+    let nameStart = 0;
+    let nameEnd = 0;
+    if (separated && /^[-+±\d.<>≤≥≦≧↑↓]/.test(tail) &&
+        /^(?:[\s\d.,+±\-<>≤≥≦≧↑↓*%]|IU\/L|U\/L|H|L)+$/i.test(tail)) {
+      const name = match[2];
+      if (name === '肝功能') {
+        kind = 'liver';
+      } else if (name.startsWith('尿蛋白')) {
+        if (/^[+±\-\s]+$/.test(tail)) kind = 'dipstick';
+      } else {
+        kind = 'alt';
+      }
+      if (kind === 'alt' || kind === 'dipstick') {
+        nameStart = match[1].length;
+        nameEnd = nameStart + name.length;
+      }
+    }
+    preview.querySelector('.line-before').textContent = raw.slice(0, nameStart);
+    preview.querySelector('.line-after').textContent = kind ? raw.slice(nameEnd) : '';
+    for (const link of preview.querySelectorAll('a')) {
+      link.hidden = link.dataset.kind !== kind;
+      link.querySelector('mark').textContent = link.hidden ? '' : raw.slice(nameStart, nameEnd);
+    }
+    linePanel.hidden = !kind;
+    return kind;
+  }
   function update() {
     const query = input.value.trim();
+    const lineKind = showReportLine(input.value);
     const tokens = terms(query);
     const joined = tokens.join('');
     let count = 0;
     for (const {item, names} of entries) {
-      const matches = joined && (names.some(name => name.includes(joined)) ||
+      const matches = !lineKind && joined && (names.some(name => name.includes(joined)) ||
         tokens.every(token => names.some(name => name.includes(token))));
       item.hidden = !matches;
       if (matches) count++;
@@ -154,25 +200,31 @@
     if (glucoseGuide.hidden) {
       for (const detail of glucoseGuide.querySelectorAll('details[open]')) detail.open = false;
     }
-    miss.hidden = !query || count > 0 || !glucoseGuide.hidden || !lipidGuide.hidden;
-    if (miss.dataset.query !== input.value) {
+    const incomplete = lineKind === 'liver';
+    miss.querySelector('.miss-hint').hidden = incomplete;
+    miss.querySelector('.liver-name-help').hidden = !incomplete;
+    miss.hidden = Boolean(lineKind && !incomplete) || !query || count > 0 || !glucoseGuide.hidden || !lipidGuide.hidden;
+    if (lastQuery !== input.value) {
       miss.querySelector('details').open = false;
-      original.value = input.value;
+      original.value = miss.hidden ? '' : input.value;
       previousName = original.value;
       question.value = defaultQuestion(original.value);
       feedback.textContent = '';
-      miss.dataset.query = input.value;
+      lastQuery = input.value;
     }
     results.hidden = !count;
-    status.textContent = !query ? '' : count ? '找到 ' + count + ' 個項目' :
+    status.textContent = incomplete ? '這行的項目名稱只寫了「肝功能」。' :
+      lineKind ? '名稱和報告相符時，點選標出的文字即可開啟虛構範例。' :
+      !query ? '' : count ? '找到 ' + count + ' 個項目' :
       !glucoseGuide.hidden ? '請依報告上的寫法選擇下方說明。' :
       '找不到符合的項目名稱。';
   }
   input.addEventListener('input', update);
   input.addEventListener('keydown', event => {
     if (event.key !== 'Enter' || event.isComposing || event.keyCode === 229) return;
-    const first = lipidGuide.hidden ? results.querySelector('li:not([hidden]) a') :
-      lipidGuide.querySelector('details[open] summary') || lipidGuide.querySelector('details:not([hidden]) summary');
+    const confirm = linePanel.querySelector('a:not([hidden])');
+    const first = confirm || (lipidGuide.hidden ? results.querySelector('li:not([hidden]) a') :
+      lipidGuide.querySelector('details[open] summary') || lipidGuide.querySelector('details:not([hidden]) summary'));
     if (first) {
       event.preventDefault();
       first.focus();

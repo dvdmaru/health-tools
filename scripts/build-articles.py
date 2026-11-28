@@ -91,6 +91,10 @@ INDEX_CSS = """
   background:var(--bg); color:var(--fg); border:1px solid var(--line-2); border-radius:var(--radius-sm); }
 #search-miss button { padding:9px 14px; margin-top:10px; font:inherit; cursor:pointer;
   border:0; border-radius:var(--radius-sm); background:var(--accent); color:var(--accent-ink); }
+#report-line-help { margin:6px 0; font-size:.9em; color:var(--fg-soft); }
+.report-line-preview { white-space:pre-wrap; overflow-wrap:anywhere; margin:8px 0; }
+.report-line-preview mark { background:var(--accent-soft); color:var(--fg); font-weight:700;
+  border-block-end:2px solid var(--accent); }
 .reader-status:empty { margin:0; }
 .reader-results { margin:8px 0; padding-left:1.25em; }
 .reader-results li { padding:4px 0; }
