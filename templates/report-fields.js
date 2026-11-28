@@ -46,9 +46,29 @@ revealLinkedField();
 window.addEventListener('hashchange', revealLinkedField);
 
 // 已在同一個錨點時再選一次，瀏覽器不會觸發 hashchange。
-for (const link of document.querySelectorAll('.guide-options a[href^="#"]')) {
+for (const link of document.querySelectorAll('.guide-options a[href^="#"], .result-next')) {
   link.addEventListener('click', () => {
     if (link.hash === location.hash) revealLinkedField();
+  });
+}
+
+const resultGuide = document.querySelector('.alt-result-guide');
+const nextField = resultGuide.querySelector('.result-next');
+nextField.hidden = true;
+resultGuide.querySelector('.result-prompt').hidden = false;
+for (const cell of resultGuide.querySelectorAll('[data-answer]')) {
+  const answer = cell.dataset.answer;
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.append(...cell.childNodes);
+  cell.replaceWith(button);
+  button.addEventListener('click', () => {
+    resultGuide.querySelector('.correct')?.classList.remove('correct');
+    const correct = answer === 'current';
+    button.classList.toggle('correct', correct);
+    const message = resultGuide.querySelector('template[data-for="' + answer + '"]');
+    resultGuide.querySelector('.result-feedback').textContent = message.content.textContent;
+    nextField.hidden = !correct;
   });
 }
 

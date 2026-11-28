@@ -32,6 +32,7 @@ PUBLISHED = SITE.get("published", False) is True
 # ---------- GA4（config/site.json 的 ga_id 為空 → 不輸出 tag） ----------
 
 # 讀報告範例及工作表共用同一組提問與目的項目。
+ALT_CURRENT_QUESTION = "我這份報告的 GPT（ALT），哪一欄是這次的檢驗結果？"
 ALT_REFERENCE_QUESTION = "我這份報告的 GPT（ALT）結果，適用哪個參考範圍？"
 FIRST_REPORT_ITEMS = {
     "alt": {

@@ -1,0 +1,32 @@
+<div class="reading-note alt-result-guide" id="{{field_id}}">
+  <h4>哪一欄是我這次的結果？</h4>
+  <p>這是 GPT（ALT）的虛構報告，本次和前次數字都是教學設定。參考範圍借用成大醫院這個項目列出的女性範圍。</p>
+  <p class="result-prompt" hidden>看每一格的欄名，點選這次的檢驗結果。</p>
+  <div class="result-columns">
+    <div data-answer="previous"><span>前次結果</span><strong>52</strong></div>
+    <div data-answer="current"><span>本次結果</span><strong>{{result}}</strong></div>
+    <div class="result-unit"><span>單位</span><strong>{{unit}}</strong></div>
+    <div data-answer="reference"><span>院所參考範圍</span><strong>{{reference}}</strong></div>
+  </div>
+  <p class="result-feedback" role="status"></p>
+  <template data-for="previous">這格記的是前一次採檢的結果。再選一次，找欄名寫「本次結果」的那一格。</template>
+  <template data-for="reference">你選到的是「院所參考範圍」欄。再選一次，找這次採檢得到的數字。</template>
+  <template data-for="current">選對了。「本次結果」欄寫的是 {{result}}，和同一列的單位一起讀成 {{result}} {{unit}}。</template>
+  <noscript><p>{{explanation}}</p></noscript>
+  <a class="result-next" href="#{{reference_id}}">接著看這一列的院所參考範圍</a>
+  <details>
+    <summary>我的報告看不出哪欄是本次</summary>
+    <p>先找 GPT（ALT）那一列，再往上看欄名。若欄名寫的是日期，請對照這次的採檢日期，確認哪一欄對應這次抽血。</p>
+    <div class="report-handoff">
+      <p>如果仍看不出來，可以把問題帶去問開立報告的院所。</p>
+      <div class="question-editor" hidden>
+        <label for="alt-current-question">我想問的問題（可改寫）</label>
+        <textarea id="alt-current-question" rows="3" required maxlength="500" autocomplete="off">{{question}}</textarea>
+        <button type="button">帶到回診工作表，只勾選 GPT（ALT）</button>
+        <p role="status"></p>
+      </div>
+      <a class="worksheet-link" href="/worksheet/#first-report-alt-current">前往工作表的 GPT（ALT）提問格</a>
+      <noscript><p>回診時可以問「{{question}}」。開啟 JavaScript 可改寫問題並只列印 GPT（ALT）。</p></noscript>
+    </div>
+  </details>
+</div>
