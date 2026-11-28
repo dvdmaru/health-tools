@@ -58,6 +58,9 @@ def _datasets():
             out.append((rel, "id", "interference"))
         else:
             out.append((rel, None, "criteria"))
+    forms = ROOT / "data" / "egfr-form-versions.json"
+    if forms.exists():
+        out.append((forms.relative_to(ROOT).as_posix(), None, "form-version"))
     # 勘誤紀錄是站級的，不屬於任何指標，所以不在 data/criteria/ 底下，上面那個 glob
     # 掃不到。檔案不存在＝這個 repo 還沒有勘誤層（例如測試用的暫存 fixture 根目錄），
     # 不掃也不報錯；正式 repo 少了這個檔會被 tests/test_errata_schema.py 抓到。

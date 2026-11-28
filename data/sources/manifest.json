@@ -252,6 +252,34 @@
     "note": "原始頁面擋 curl（hpa.gov.tw 對 curl 回攔截頁）。快照為瀏覽器抽出的純文字，前 3 行是 SOURCE_URL／FETCHED_AT／METHOD 標頭，第 5 行起為正文；引句比對前正規化空白。"
   },
   {
+    "id": "hpa-adult-preventive-form-2024-12",
+    "title": "附表六之四 健康署成人預防保健服務檢查紀錄結果表單（醫事服務機構辦理預防保健服務注意事項）",
+    "org": "衛生福利部國民健康署",
+    "doc_type": "pdf",
+    "url": "https://www.hpa.gov.tw/Pages/ashx/GetFile.ashx?lang=c&type=1&sid=efc63cfcaa9042799ceafda408be8460",
+    "version_or_date": "113 年 12 月 25 日修正發布",
+    "fetched_at": "2026-11-28",
+    "sha256": "df515d1787dc031bd11f5bff91bb68acd092ecf34ec63ce3a4f53206952fb696",
+    "local_path": "data/sources/hpa-adult-preventive-form-2024-12.pdf",
+    "license_bucket": "tw-gov",
+    "retrieval": "curl",
+    "note": "附件原檔，附表六之四實驗室檢查在 PDF 第 103 頁。"
+  },
+  {
+    "id": "hpa-adult-preventive-form-2025-07",
+    "title": "附表六之四 健康署成人預防保健服務檢查紀錄結果表單（醫事服務機構辦理預防保健服務注意事項）",
+    "org": "衛生福利部國民健康署",
+    "doc_type": "pdf",
+    "url": "https://www.hpa.gov.tw/Pages/ashx/GetFile.ashx?lang=c&type=1&sid=08df428fe87b414bb7cf5a1a27afc825",
+    "version_or_date": "114 年 7 月 14 日修正發布",
+    "fetched_at": "2026-11-28",
+    "sha256": "48aee8b7e3be800bff7f6598d1b2fb30233a588327567788ef786b84f751fc1f",
+    "local_path": "data/sources/hpa-adult-preventive-form-2025-07.pdf",
+    "license_bucket": "tw-gov",
+    "retrieval": "curl",
+    "note": "附件原檔，附表六之四實驗室檢查在 PDF 第 178 頁。"
+  },
+  {
     "id": "hpa-adult-preventive-form-2026",
     "title": "附表六之四 健康署成人預防保健服務檢查紀錄結果表單（「醫事服務機構辦理預防保健服務注意事項」附表2.4、3.3、4.3、5.3、6.3、6.4、7.3、8.4、8.5 修正規定）",
     "org": "衛生福利部國民健康署",
@@ -264,6 +292,20 @@
     "license_bucket": "tw-gov",
     "retrieval": "curl",
     "note": "公告頁 https://www.hpa.gov.tw/838/20102/n （發布日期 2026/05/27，更新日期 2026/05/28）的附件「附表2.4、3.3、4.3、5.3、6.3、6.4、7.3、8.4、8.5.pdf」。整份 PDF 共 11 頁、含 9 張附表；附表六之四在第 6–7 頁（第 6 頁起頭，AST／ALT、肌酸酐、eGFR 等實驗室檢查列在第 7 頁）。第 7 頁 AST（GOT）與 ALT（GPT）兩行印為「IU/L（參考值:　）」，括號內空白、沒有數字（pdftotext 輸出與第 7 頁 render 目視一致）；同頁飯前血糖、血脂、肌酸酐各行的參考值括號同樣空白。修正發布機關為衛生福利部，org 依本站 hpa-* 各列慣例寫國健署（託管與表單名稱「健康署」）。本次 curl 未被攔截（HTTP 200、application/pdf），未加 -k。"
+  },
+  {
+    "id": "hpa-adult-preventive-form-2026-02",
+    "title": "附表六之四 健康署成人預防保健服務檢查紀錄結果表單（醫事服務機構辦理預防保健服務注意事項）",
+    "org": "衛生福利部國民健康署",
+    "doc_type": "pdf",
+    "url": "https://www.hpa.gov.tw/Pages/ashx/GetFile.ashx?lang=c&type=1&sid=b4edd73b91684e1598a42e68d3f43ed6",
+    "version_or_date": "115 年 2 月 6 日修正發布",
+    "fetched_at": "2026-11-28",
+    "sha256": "3792a6cb548663790a1d90bc6d3d1e6899520e6761d8c5fa2092e6ff57faa1ce",
+    "local_path": "data/sources/hpa-adult-preventive-form-2026-02.pdf",
+    "license_bucket": "tw-gov",
+    "retrieval": "curl",
+    "note": "附件原檔，附表六之四實驗室檢查在 PDF 第 7 頁。"
   },
   {
     "id": "hpa-blood-sugar-4-tips-2025",

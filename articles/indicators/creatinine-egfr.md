@@ -6,21 +6,21 @@ slug: creatinine-egfr
 topic_ref: "manual"
 criteria_chart_caption: eGFR 一條數線，上排是 KDIGO 2024 的區段，下排是國健署分期表的區段，兩排所列的數字端點相同
 status: draft
-updated: 2026-09-11
-sources: [hpa-adult-preventive-form-2026, mohw-ckd-press-release-2015, medlineplus-gfr-test, medlineplus-creatinine-test, kdigo-ckd-guideline-2024, hpa-ckd-stage-criteria, hpa-egfr-ckd-epi-letter-2026, kdoqi-ckd-guideline-2002, kdigo-ckd-guideline-2012, nkf-asn-egfr-task-force-2021, niddk-gfr-equations]
+updated: 2026-11-28
+sources: [hpa-adult-preventive-form-2024-12, hpa-adult-preventive-form-2025-07, hpa-adult-preventive-form-2026-02, hpa-adult-preventive-form-2026, mohw-ckd-press-release-2015, medlineplus-gfr-test, medlineplus-creatinine-test, kdigo-ckd-guideline-2024, hpa-ckd-stage-criteria, hpa-egfr-ckd-epi-letter-2026, kdoqi-ckd-guideline-2002, kdigo-ckd-guideline-2012, nkf-asn-egfr-task-force-2021, niddk-gfr-equations]
 ---
 
 # 腎功能指數 肌酸酐／eGFR
 
 ## 國健署檢查單在同一頁寫明 eGFR 用哪一條公式算
 
-國健署成人預防保健服務的檢查紀錄結果表單上，肌酸酐和腎絲球過濾率（eGFR）各佔一行。同一頁寫了 eGFR 的計算方式：「自 115 年採用 2021 CKD-EPI 公式」。
+國健署 115 年 5 月版成人預防保健服務檢查紀錄結果表單上，肌酸酐和腎絲球過濾率（eGFR）各佔一行。同一頁寫了 eGFR 的計算方式：「自 115 年採用 2021 CKD-EPI 公式」。
 
 國健署刊在衛福部網站的一篇新聞稿寫，eGFR 代表腎臟的功能，是以血中肌酸酐，再考量年齡、性別，換算估計出的腎絲球過濾率。換句話說，本頁所引的 eGFR 是估計值，肌酸酐是換算它的輸入之一。MedlinePlus 則寫，eGFR 與 GFR 檢查，都是在檢查腎臟運作得多好；直接量測的 GFR（mGFR）不常見，所以醫療人員通常用估算值，也就是 eGFR。
 
 肌酸酐本身是什麼，MedlinePlus 也有寫：它是體內正常的廢物，使用肌肉、部分肌肉組織分解時就會產生。
 
-本頁所引的檢查單，是 115 年 5 月修正發布的版本。這一版上，肌酸酐那一行印了單位 mg/dl，後面的參考值括號裡沒有預印數字。eGFR 那一行是一條填寫用的底線，接著單位 ml/min/1.73 m2，這一行沒有「參考值」字樣。參考值括號空著的不只肌酸酐：同一頁的飯前血糖、總膽固醇、GOT、GPT 也是空的，同一張表上 BMI 那一行則印了理想值。
+在這份 5 月版表單上，肌酸酐那一行印了單位 mg/dl，後面的參考值括號裡沒有預印數字。eGFR 那一行是一條填寫用的底線，接著單位 ml/min/1.73 m2，這一行沒有「參考值」字樣。參考值括號空著的不只肌酸酐：同一頁的飯前血糖、總膽固醇、GOT、GPT 也是空的，同一張表上 BMI 那一行則印了理想值。
 
 ## 兩份分期表的端點相同，但 90 以上與 60–89 這兩段都不只看 eGFR
 
@@ -32,7 +32,7 @@ KDIGO 與國健署兩份表所列的數字端點相同，從 90 以上、60–89
 
 KDIGO 2024 另外寫了 CKD 的定義：腎臟結構或功能異常，持續至少 3 個月，而且對健康有影響。定義表列了兩類條件，表題要求至少符合一類，並持續至少 3 個月。一類是 GFR 降低，原文寫 GFR <60 ml/min per 1.73 m2，也就是 G3a 到 G5；另一類是腎損傷的標記。eGFR 的數線上畫的是兩份表的分段，這條定義沒有畫進去。
 
-兩份分期表分的都是腎絲球過濾率，不是肌酸酐。肌酸酐在這一頁的角色，是換算 eGFR 的輸入之一；在本頁所引版本的檢查單上，它那一行的參考值括號沒有預印數字。
+兩份分期表分的都是腎絲球過濾率，不是肌酸酐。肌酸酐在這一頁的角色，是換算 eGFR 的輸入之一；在 115 年 5 月版檢查單上，它那一行的參考值括號沒有預印數字。
 
 ## 國健署成人預防保健的 eGFR，2026 年起從 MDRD 換成 2021 年版 CKD-EPI
 
@@ -46,7 +46,7 @@ KDIGO 2024 另外寫了 CKD 的定義：腎臟結構或功能異常，持續至�
 
 2024 年，KDIGO 改寫了公式建議。它建議採用經過驗證的公式，從血清中的過濾標記推算 eGFR，而不是只看這些標記本身。同一地區用同一條公式，地區由當地界定、盡可能大；在同一地區內，成人與兒童可以用不同的公式。計算 eGFR 時，建議避免使用種族。
 
-2026 年，國健署在 115 年 1 月 15 日的函裡寫，成人預防保健實驗室檢查項目的 eGFR，從 115 年 1 月 1 日起改採 2021 年版 CKD-EPI 計算公式，取代既行的 MDRD 4 variable 公式。本頁所引版本的檢查單上，計算方式寫的也是 2021 CKD-EPI。
+2026 年，國健署在 115 年 1 月 15 日的函裡寫，成人預防保健實驗室檢查項目的 eGFR，從 115 年 1 月 1 日起改採 2021 年版 CKD-EPI 計算公式，取代既行的 MDRD 4 variable 公式。115 年 5 月版檢查單上，計算方式寫的也是 2021 CKD-EPI。
 
 ## 肌肉量、飲食與某些藥物，可能影響肌酸酐的判讀與 eGFR 的估算
 
@@ -60,7 +60,7 @@ National Institute of Diabetes and Digestive and Kidney Diseases（NIDDK）的 G
 
 ## 報告上的 eGFR 用哪一條公式算，可以和醫師討論
 
-報告上的 eGFR 是用哪一條公式算的，可以和醫師討論。本頁所引版本的國健署成人預防保健檢查單，寫的是 2021 CKD-EPI。eGFR 落在 90 以上或 60–89 這兩段時，分期要不要搭配其他檢查一起看，可以和醫師討論。
+報告上的 eGFR 是用哪一條公式算的，可以和醫師討論。115 年 5 月版國健署成人預防保健檢查單，寫的是 2021 CKD-EPI。eGFR 落在 90 以上或 60–89 這兩段時，分期要不要搭配其他檢查一起看，可以和醫師討論。
 
 ## 來源與版本
 

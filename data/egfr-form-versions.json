@@ -1,0 +1,45 @@
+[
+  {
+    "doc_id": "hpa-adult-preventive-form-2024-12",
+    "edition": "113 年 12 月 25 日",
+    "page": 103,
+    "formula": "舊式（186 開頭）",
+    "position": "尿酸欄後，男女兩行均以 186 開頭。",
+    "quote": "◎計算方式：男性：186×（血清肌酸酐）-1.154×（年齡）-0.203",
+    "effective": "114 年 1 月 1 日生效",
+    "announcement": "https://www.hpa.gov.tw/838/18721/n"
+  },
+  {
+    "doc_id": "hpa-adult-preventive-form-2025-07",
+    "edition": "114 年 7 月 14 日",
+    "page": 178,
+    "formula": "舊式（186 開頭）",
+    "position": "尿酸欄後仍印有以 186 開頭的男女兩式。",
+    "quote": "◎計算方式：男性：186×（血清肌酸酐）-1.154×（年齡）-0.203",
+    "effective": "115 年 1 月 1 日生效",
+    "announcement": "https://www.hpa.gov.tw/838/19225/n"
+  },
+  {
+    "doc_id": "hpa-adult-preventive-form-2026-02",
+    "edition": "115 年 2 月 6 日",
+    "page": 7,
+    "formula": "新舊兩式並列",
+    "position": "eGFR 欄下方新增 2021 CKD-EPI；尿酸欄後仍有舊式。",
+    "quote": "◎計算方式：自115年採用2021 CKD-EPI 公式＝",
+    "quote_extra": [
+      "◎計算方式：男性：186×（血清肌酸酐）-1.154×（年齡）-0.203"
+    ],
+    "effective": "溯及 115 年 1 月 1 日生效",
+    "announcement": "https://www.hpa.gov.tw/838/19840/n"
+  },
+  {
+    "doc_id": "hpa-adult-preventive-form-2026",
+    "edition": "115 年 5 月 27 日",
+    "page": 7,
+    "formula": "2021 CKD-EPI",
+    "position": "eGFR 欄下方保留新式，尿酸欄後刪除舊式。",
+    "quote": "◎計算方式：自 115 年採用 2021 CKD-EPI 公式＝",
+    "effective": "115 年 1 月 1 日生效",
+    "announcement": "https://www.hpa.gov.tw/838/20102/n"
+  }
+]

@@ -336,6 +336,40 @@
     "quotes_never_verified": []
   },
   {
+    "id": "hpa-adult-preventive-form-2024-12",
+    "url": "https://www.hpa.gov.tw/Pages/ashx/GetFile.ashx?lang=c&type=1&sid=efc63cfcaa9042799ceafda408be8460",
+    "doc_type": "pdf",
+    "checked_at": "2026-11-28T00:26:47Z",
+    "http_code": "200",
+    "status": "ok",
+    "etag": null,
+    "last_modified": null,
+    "remote_sha256": "df515d1787dc031bd11f5bff91bb68acd092ecf34ec63ce3a4f53206952fb696",
+    "text_sha256": "39aa47b4eb8a04e00827444861994e9881ff76dc9eec7956ca48a5084368d180",
+    "quotes_total": 1,
+    "quotes_verified": [
+      "◎計算方式：男性：186×（血清肌酸酐）-1.154×（年齡）-0.203"
+    ],
+    "quotes_never_verified": []
+  },
+  {
+    "id": "hpa-adult-preventive-form-2025-07",
+    "url": "https://www.hpa.gov.tw/Pages/ashx/GetFile.ashx?lang=c&type=1&sid=08df428fe87b414bb7cf5a1a27afc825",
+    "doc_type": "pdf",
+    "checked_at": "2026-11-28T00:26:48Z",
+    "http_code": "200",
+    "status": "ok",
+    "etag": null,
+    "last_modified": null,
+    "remote_sha256": "48aee8b7e3be800bff7f6598d1b2fb30233a588327567788ef786b84f751fc1f",
+    "text_sha256": "eb550598689849326492d8c394e13bd0285139e9341222df0f1f0d755695f627",
+    "quotes_total": 1,
+    "quotes_verified": [
+      "◎計算方式：男性：186×（血清肌酸酐）-1.154×（年齡）-0.203"
+    ],
+    "quotes_never_verified": []
+  },
+  {
     "id": "hpa-adult-preventive-form-2026",
     "url": "https://www.hpa.gov.tw/Pages/ashx/GetFile.ashx?lang=c&type=1&sid=44a2f553a9dc43b6aeea1057b83c1e13",
     "doc_type": "pdf",
@@ -360,6 +394,24 @@
       "腎絲球過濾率（eGFR）：____________ ml/min/1.73 m2",
       "蛋白質：定性：□：－ □：+ /－ □：+ □：++ □：+++ □：++++",
       "飯前血糖: mg/dl （參考值: ）"
+    ],
+    "quotes_never_verified": []
+  },
+  {
+    "id": "hpa-adult-preventive-form-2026-02",
+    "url": "https://www.hpa.gov.tw/Pages/ashx/GetFile.ashx?lang=c&type=1&sid=b4edd73b91684e1598a42e68d3f43ed6",
+    "doc_type": "pdf",
+    "checked_at": "2026-11-28T00:26:50Z",
+    "http_code": "200",
+    "status": "ok",
+    "etag": null,
+    "last_modified": null,
+    "remote_sha256": "3792a6cb548663790a1d90bc6d3d1e6899520e6761d8c5fa2092e6ff57faa1ce",
+    "text_sha256": "0d5d04f68d26d55d3d33fc3af73d420eb57a5b7132c72fe685cced90e09c5dc3",
+    "quotes_total": 2,
+    "quotes_verified": [
+      "◎計算方式：男性：186×（血清肌酸酐）-1.154×（年齡）-0.203",
+      "◎計算方式：自115年採用2021 CKD-EPI 公式＝"
     ],
     "quotes_never_verified": []
   },
