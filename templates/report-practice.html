@@ -1,0 +1,17 @@
+<section class="report-practice" id="practice-{{key}}" aria-labelledby="practice-{{key}}-title">
+  <h3 id="practice-{{key}}-title" tabindex="-1">練習讀{{label}}這一列</h3>
+  <p>{{instruction}}</p>
+  {{row}}
+  <div class="report-handoff" id="{{key}}-handoff">
+    <h3>把{{label}}的問題帶去回診</h3>
+    <div class="question-editor" hidden>
+      <label for="{{key}}-question">我想問的問題（可修改）</label>
+      <textarea id="{{key}}-question" rows="3" required maxlength="500" autocomplete="off">{{question}}</textarea>
+      <button type="button">把{{label}}和這個問題帶到回診工作表</button>
+      <p role="status"></p>
+    </div>
+    <a class="worksheet-link" href="/worksheet/#first-report-{{key}}">前往工作表的{{label}}提問格</a>
+    <noscript><p>開啟 JavaScript 可自動勾選並帶入問題，也可以列印後在該項提問格手寫。</p></noscript>
+  </div>
+  <p><a href="#first-report">回到導覽，換個項目</a></p>
+</section>
