@@ -373,18 +373,19 @@
     "id": "hpa-adult-preventive-form-2026",
     "url": "https://www.hpa.gov.tw/Pages/ashx/GetFile.ashx?lang=c&type=1&sid=44a2f553a9dc43b6aeea1057b83c1e13",
     "doc_type": "pdf",
-    "checked_at": "2026-11-24T03:31:34Z",
+    "checked_at": "2026-11-28T02:47:28Z",
     "http_code": "200",
     "status": "ok",
     "etag": null,
     "last_modified": null,
     "remote_sha256": "59af3bd0406a7220584d7828b1123ba9bb50261956098f7274252d93b3fbb767",
     "text_sha256": "2b0dbf052d740d6981f131e2b5a5ed4c43ced3d92c5e6a6df25949f7a6c4a5aa",
-    "quotes_total": 12,
+    "quotes_total": 13,
     "quotes_verified": [
       "ALT（GPT）： IU/L （參考值: ）",
       "AST（GOT）： IU/L（參考值: ）",
       "◎計算方式：自 115 年採用 2021 CKD-EPI 公式＝",
+      "【定性或定量可擇一填寫】",
       "【理想值：18.5≦BMI＜24 】",
       "尿液檢查",
       "或定量： mg/dl （參考值: ） 【定性或定量可擇一填寫】",
@@ -1158,6 +1159,23 @@
     "quotes_verified": [
       "如血壓值超過130/80 mmHg，醫師建議積極進行飲食、運動和作息調整，再進一步諮詢是否需要接受藥物等治療。",
       "社團法人台灣高血壓學會及中華民國心臟學會最新「2022台灣高血壓指引」建議，18歲以上民眾每年至少要在家量一次血壓，並搭配722原則"
+    ],
+    "quotes_never_verified": []
+  },
+  {
+    "id": "nckuh-alt-test",
+    "url": "https://web.hosp.ncku.edu.tw/pathology/Pathology/Page/80",
+    "doc_type": "html",
+    "checked_at": "2026-11-28T02:42:50Z",
+    "http_code": "200",
+    "status": "ok",
+    "etag": null,
+    "last_modified": null,
+    "remote_sha256": "59a105f45f7df9449e1c8688a18536ec7fa768a4e4d40162eb88011b3094ecfd",
+    "text_sha256": "16a7db3fd8bfc52207cc9aeb845e47e6be9ca8d9cdd401b9fb002b821d5bbd6b",
+    "quotes_total": 1,
+    "quotes_verified": [
+      "女:≦35 U/L"
     ],
     "quotes_never_verified": []
   },

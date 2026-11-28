@@ -92,3 +92,6 @@ service_account*.json
 
 # 國健署 114 年 7 月版附件超過 5 MB，雜湊及取得位置見 manifest。
 data/sources/hpa-adult-preventive-form-2025-07.pdf
+
+# 成大醫院檢驗網頁僅節引，保留本機快照供核對。
+/data/sources/nckuh-alt-test.html

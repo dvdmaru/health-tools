@@ -1102,5 +1102,18 @@
     "license_bucket": "licensed-cite-only",
     "retrieval": "curl",
     "note": "IRIS item https://iris.who.int/handle/10665/44583 。原生文字層（非掃描）。⚠️ 內文多處用 U+2010 連字號（`cut‐off`、`sex‐specific`）與 U+2013 en dash（`waist–hip`），引句照抄不得換成 ASCII 連字號，否則 grep 不到。引句以 pdftotext -layout 輸出比對，比對前須正規化空白。"
+  },
+  {
+    "id": "nckuh-alt-test",
+    "title": "ALT(GPT) 檢驗查詢",
+    "org": "國立成功大學醫學院附設醫院病理部",
+    "doc_type": "html",
+    "url": "https://web.hosp.ncku.edu.tw/pathology/Pathology/Page/80",
+    "version_or_date": "網頁未列版本，2026-11-28 查閱",
+    "fetched_at": "2026-11-28",
+    "sha256": "59a105f45f7df9449e1c8688a18536ec7fa768a4e4d40162eb88011b3094ecfd",
+    "local_path": "data/sources/nckuh-alt-test.html",
+    "license_bucket": "licensed-cite-only",
+    "retrieval": "curl"
   }
 ]

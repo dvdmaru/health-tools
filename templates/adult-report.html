@@ -1,6 +1,7 @@
 <main>
   <h1 class="pg-h1">成人健檢報告欄位導覽</h1>
   <p class="pg-sub">依國健署成人預防保健表單的順序，節錄尿蛋白、肝酵素與腎功能三組欄位。點選報告上的名稱，可展開說明與出處。</p>
+  <p><a href="#read-alt">看肝功能範例</a> · <a href="#read-urine-protein">看尿蛋白範例</a></p>
   <p class="report-source"><a href="https://www.hpa.gov.tw/Pages/ashx/GetFile.ashx?lang=c&amp;type=1&amp;sid=44a2f553a9dc43b6aeea1057b83c1e13#page=7">國健署空白表單 · 115 年 5 月版，附表六之四，第 7 頁（PDF）</a></p>
   <section class="report-sheet" aria-label="實驗室檢查欄位節錄">
     <h2>尿液檢查</h2>
@@ -10,7 +11,7 @@
       <p><a href="/articles/urine-protein-units/">讀懂尿蛋白的加號和 UACR 的 mg/g</a> · <a href="/indicators/urine-protein-uacr/">查尿蛋白與 UACR 的來源文件</a></p>
     </details>
     <h2>生化檢查</h2>
-    <details>
+    <details id="report-ast">
       <summary>AST（GOT）</summary>
       <p>報告寫 GOT 時，可用 AST 查同一項檢驗。這一行的單位是 IU/L，參考值欄留白。</p>
       <p><a href="/articles/liver-test-names/">對照 GOT、GPT 的名稱</a> · <a href="/indicators/ast-alt/#ast-reference_interval">查 GOT 的參考區間與出處</a></p>
@@ -20,16 +21,21 @@
       <p>GPT 對應 ALT。表單把它列在 GOT 下一行，單位同為 IU/L，參考值欄也留白。</p>
       <p><a href="/articles/liver-test-names/">對照 GOT、GPT 的名稱</a> · <a href="/indicators/ast-alt/#alt-reference_interval">查 GPT 的參考區間與出處</a></p>
     </details>
-    <details>
+    <details id="report-creatinine">
       <summary>肌酸酐</summary>
       <p>這一行印有單位 mg/dl，參考值括號內留白。下一行才是估算的腎絲球過濾率。</p>
       <p><a href="/indicators/creatinine-egfr/">看肌酸酐與 eGFR 在表單上的關係</a></p>
     </details>
-    <details>
+    <details id="report-egfr">
       <summary>腎絲球過濾率（eGFR）</summary>
       <p>表單在這一欄下方列出計算公式。要查指引怎麼分級，可以另外對照 eGFR 的分級表與表註。</p>
       <p><a href="/indicators/creatinine-egfr/#egfr-form-versions">對照歷年 eGFR 公式</a> · <a href="/indicators/creatinine-egfr/#egfr-classification">查 eGFR 分級與出處</a></p>
     </details>
+  </section>
+  <section class="reading-examples" aria-labelledby="reading-title">
+    <h2 id="reading-title">讀懂一整列報告</h2>
+    <p>點選欄位看說明。以下是虛構結果的教學範例，各院所的版面和圖例可能不同。</p>
+    {{reading_rows}}
   </section>
   <p class="report-guide"><a href="/articles/reference-interval-and-classification/">閱讀指南：參考區間和指引分級，各在回答什麼問題？</a></p>
 </main>
