@@ -163,6 +163,8 @@ class TestRealData(unittest.TestCase):
             for row in json.loads((CRIT_DIR / fname).read_text(encoding="utf-8")):
                 used.add(row["doc_id"])
                 used.update(c["doc_id"] for c in row.get("corroboration", []))
+        form_versions = ROOT / "data" / "egfr-form-versions.json"
+        used.update(row["doc_id"] for row in json.loads(form_versions.read_text(encoding="utf-8")))
         unused = SOURCE_IDS - used
         self.assertEqual(EXPECTED_ORPHANS, unused,
                          "manifest 裡出現了預期外的孤兒來源（或預期的孤兒被接上了）")

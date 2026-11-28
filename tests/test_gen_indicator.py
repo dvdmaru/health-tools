@@ -156,6 +156,20 @@ class DeterministicOutput(unittest.TestCase):
             self.assertEqual(strip(dormant), strip(live))
 
 
+class EgfrFormVersions(unittest.TestCase):
+    def test_kidney_page_links_to_the_formula_page_in_each_edition(self):
+        sources = {row["id"]: row for row in gen.load_json(ROOT / "data/sources/manifest.json")}
+        expected = [("2024-12", 103), ("2025-07", 178), ("2026-02", 7), ("2026", 7)]
+        with tempfile.TemporaryDirectory() as tmp:
+            html, _, _, _, _ = build_into(pathlib.Path(tmp), True, "creatinine-egfr")
+        section = html.split('id="egfr-form-versions"', 1)[1].split("</section>", 1)[0]
+        pdf_links = re.findall(r'<a href="([^"]+)">表單第', section)
+        self.assertEqual(
+            [gen.esc(sources[f"hpa-adult-preventive-form-{edition}"]["url"]) + f"#page={page}"
+             for edition, page in expected], pdf_links)
+        self.assertIn('href="/articles/egfr-report-formula/"', section)
+
+
 class NumbersTraceBackToData(unittest.TestCase):
     def setUp(self):
         self.tmp = pathlib.Path(tempfile.mkdtemp())

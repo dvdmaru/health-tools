@@ -1169,6 +1169,43 @@ def _timeline_svg(rows: list, vb_w: int, wrap: int, dot_x: int, text_x: int, cls
             f'{axis}{"".join(entries)}</svg>')
 
 
+EGFR_FORM_CSS = """
+#egfr-form-versions { scroll-margin-top: 9rem; }
+.form-editions { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; }
+.form-edition { padding:12px; border:1px solid var(--line); border-radius:var(--radius-sm);
+  background:var(--surface); overflow-wrap:anywhere; }
+.form-edition h4 { margin:0; font-size:14px; }
+.form-edition strong { display:block; margin:.6em 0; color:var(--fg); }
+.form-edition p { margin:.5em 0; }
+@media(max-width:720px) { .form-editions { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+"""
+
+
+def render_egfr_form_versions(mf: dict) -> str:
+    editions = load_json(ROOT / "data" / "egfr-form-versions.json")
+    cards = []
+    for edition in editions:
+        doc = mf[edition["doc_id"]]
+        page = edition["page"]
+        cards.append(
+            '<div class="form-edition">'
+            f'<h4>{esc(edition["edition"])}發布</h4>'
+            f'<a href="{esc(edition["announcement"])}">{esc(edition["effective"])}</a>'
+            f'<strong>{esc(edition["formula"])}</strong><p>{esc(edition["position"])}</p>'
+            f'<a href="{esc(doc["url"])}#page={page}">表單第 {page} 頁（PDF）</a></div>')
+    letter = mf["hpa-egfr-ckd-epi-letter-2026"]["url"]
+    return (
+        '<section id="egfr-form-versions" aria-labelledby="egfr-editions-title">'
+        '<h3 id="egfr-editions-title">國健署成人健檢表單的 eGFR 公式怎麼改？</h3>'
+        '<p>四版附表六之四依發布日並排。先看「生化檢查」的 eGFR 欄正下方有沒有算式，再看尿酸欄後。</p>'
+        '<div class="form-editions">' + "".join(cards) + '</div>'
+        '<p>前兩版在算式旁沒有印公式名稱。依國健署函文，舊式是 MDRD 四變項公式，成人預防保健服務自 115 年 1 月 1 日起改採 2021 CKD-EPI。'
+        '在這四版紙本中，115 年 2 月版開始印出新式，5 月版刪除舊式。'
+        f'<a href="{esc(letter)}#page=1">國健署 115 年 1 月 15 日函，說明一（PDF）</a></p>'
+        '<p><a href="/articles/egfr-report-formula/">兩年的 eGFR 報告，怎麼查各自用了哪條公式？</a></p>'
+        '</section>')
+
+
 def history_sort_key(r: dict) -> tuple:
     """P7：(year, id 數字) 遞增——純資料鍵，不含檔案順序，重跑仍 byte-identical。
 
@@ -1411,6 +1448,8 @@ def render_page(meta: dict, h1: str, sections: list, crit: list, hist: list,
                 blocks.append(render_number_line(rows, iid, mf, slug, caption))
         else:
             blocks.extend(f"<p>{esc(p)}</p>" for p in paras)
+            if i == 0 and slug == "creatinine-egfr":
+                blocks.append(render_egfr_form_versions(mf))
             if i == 2 and hist:                      # ③ 判準什麼時候改過
                 blocks.append(render_history(hist, mf, slug))
             elif i == 3 and intf:                    # ④ 哪些情況這個數字會失真
@@ -1456,7 +1495,8 @@ def render_page(meta: dict, h1: str, sections: list, crit: list, hist: list,
                             (title, url)])])
 
     return hl.page_shell(title, desc, url, jsonld, body, "indicators",
-                         extra_css=CHART_CSS + VALUE_LOCATOR_CSS + (ERRATA_CSS if errata else ""))
+                         extra_css=CHART_CSS + VALUE_LOCATOR_CSS + (ERRATA_CSS if errata else "")
+                         + (EGFR_FORM_CSS if slug == "creatinine-egfr" else ""))
 
 
 # ---------- dormant 接線 ----------
