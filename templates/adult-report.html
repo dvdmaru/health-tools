@@ -35,7 +35,36 @@
   <section class="reading-examples" aria-labelledby="reading-title">
     <h2 id="reading-title">讀懂一整列報告</h2>
     <p>點選欄位看說明。以下是虛構結果的教學範例，各院所的版面和圖例可能不同。</p>
-    {{reading_rows}}
+    <section id="first-report" aria-labelledby="first-report-title">
+      <h2 id="first-report-title">第一次拿到健檢報告，從哪裡看起？</h2>
+      <h3>先找院所寫的建議</h3>
+      <p>翻找「總評」、「醫師建議」或「追蹤建議」這類欄名。各院所的寫法和位置可能不同。</p>
+      <details name="first-report-choice">
+        <summary>我找到院所寫的建議了</summary>
+        <p>讀一遍原文，找出提到的檢查項目。如果有寫追蹤時間，也一起記下來。</p>
+        <a href="#practice-alt">用 GPT（ALT）範例練習讀一列</a>
+      </details>
+      <details name="first-report-choice">
+        <summary>我的報告找不到這一欄</summary>
+        <p>可以先從檢驗結果讀起。想確認院所有沒有另外提供建議時，可以把這件事記成回診問題。</p>
+        <a href="#practice-alt">用 GPT（ALT）範例練習讀一列</a>
+      </details>
+      <h3 id="practice-alt" tabindex="-1">練習讀 GPT（ALT）這一列</h3>
+      <p>點選「檢驗結果」，連同單位讀出數值。再點「院所參考範圍」和「異常註記」，看看這個虛構範例為什麼標 H。讀自己的報告時，對照同一列的範圍和院所的圖例。</p>
+      {{alt_row}}
+      <h3>把想問的問題帶去回診</h3>
+      <div id="alt-handoff">
+        <div class="alt-editor" hidden>
+          <label for="alt-question">我想問的問題（可修改）</label>
+          <textarea id="alt-question" rows="3" required maxlength="500" autocomplete="off">{{alt_question}}</textarea>
+          <button type="button">把 GPT 和這個問題帶到回診工作表</button>
+          <p role="status"></p>
+        </div>
+        <a href="/worksheet/#first-report-alt">前往工作表的 GPT 提問格</a>
+        <noscript><p>開啟 JavaScript 可自動勾選並帶入問題，也可以列印後在 GPT 提問格手寫。</p></noscript>
+      </div>
+    </section>
+    {{other_reading_rows}}
     <p><a href="/worksheet/">勾選回診想問的項目，列印工作表</a></p>
   </section>
   <p class="report-guide"><a href="/articles/reference-interval-and-classification/">閱讀指南：參考區間和指引分級，各在回答什麼問題？</a></p>

@@ -167,6 +167,9 @@ WORKSHEET_CSS = """
 .ws-actions .ws-print{ color:var(--accent-ink); background:var(--accent); }
 .ws-actions button:disabled{ opacity:.5; cursor:default; }
 .ws-question{ margin:8px 0 12px; padding:6px 10px; border:1px solid var(--line-2); min-height:3.2em; font-weight:600; }
+.ws-question textarea{ display:block; box-sizing:border-box; width:100%; padding:8px; font:inherit; color:var(--fg); background:var(--surface); }
+.ws-carried-question{ display:none; white-space:pre-wrap; overflow-wrap:anywhere; font-weight:400; }
+#first-report-alt, #ws-ast-alt-alt, #worksheet-choices{ scroll-margin-top:6rem; }
 .ws-print-empty, .ws-repeat-heading{ display:none; }
 .ws-blocks{ margin:22px 0 0; }
 .ws-block{ border:1px solid var(--line); border-radius:var(--radius); background:var(--surface);
@@ -204,6 +207,7 @@ WORKSHEET_CSS = """
   .ws-field{ flex-wrap:wrap; max-width:100%; }
 }
 @media print{
+  .ws-carried-question{ display:block; }
   /* .theme-switch 的隱藏規則已搬進 healthlib.py 的共用 CSS（全站每一頁列印都受益，
      不是本頁局部蓋掉——見 2026-08-31 第三次主席裁決）。本頁的 site-header 仍是
      本頁專屬的隱藏（判準對照表不需要導覽列跟著印出來），留在這裡。 */
@@ -435,9 +439,10 @@ def render_block(block: dict, mf: dict) -> str:
     for ind in block["indicators"]:
         heading = "ws-h3 ws-repeat-heading" if ind["label"] == block["title"] else "ws-h3"
         content = render_indicator(ind, block["slug"], num_of, pop_num_of) if ind["rows"] else ""
+        guide_anchor = '<span id="first-report-alt"></span>' if (block["slug"], ind["id"]) == ("ast-alt", "alt") else ""
         items.append(
             f'<div class="ws-indicator" id="ws-{esc(block["slug"])}-{esc(ind["id"])}">'
-            f'<h3 class="{heading}">{esc(ind["label"])}</h3>'
+            f'{guide_anchor}<h3 class="{heading}">{esc(ind["label"])}</h3>'
             f'<div class="ws-question">我想問的問題</div>{content}</div>')
     return (
         f'<section class="ws-block" id="{esc(block["slug"])}">'
@@ -453,7 +458,7 @@ def render_picker(blocks: list) -> str:
         f'{esc(ind["label"])}</label>'
         for block in blocks for ind in block["indicators"])
     return (
-        '<fieldset class="ws-picker ws-noprint" hidden><legend>只列印我想問的項目</legend>'
+        '<fieldset class="ws-picker ws-noprint" id="worksheet-choices" hidden><legend>只列印我想問的項目</legend>'
         f'<p>{esc(PRINT_HELP)}</p><div class="ws-choices">{choices}</div>'
         '<label hidden><input type="checkbox" value="glucose-sampling" disabled>'
         '血糖採檢註記（回診問題）</label>'
@@ -479,7 +484,7 @@ def render_page(blocks: list, mf: dict) -> str:
         f'  <p class="ws-foot">共 {len(blocks)} 個指標區塊、{n_rows} 個切點。</p>\n'
         '  </main>')
     script = (ROOT / "templates/worksheet-selection.js").read_text(encoding="utf-8")
-    body += f'<script>{script}</script>'
+    body += f'<script data-alt-question="{esc(hl.FIRST_REPORT_ALT_QUESTION)}">{script}</script>'
 
     page_node = {
         "@type": "WebPage", "@id": f"{WORKSHEET_URL}#page",

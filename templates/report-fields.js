@@ -33,3 +33,32 @@ function revealLinkedField() {
 }
 revealLinkedField();
 window.addEventListener('hashchange', revealLinkedField);
+
+const handoff = document.getElementById('alt-handoff');
+const question = handoff.querySelector('textarea');
+const worksheetLink = handoff.querySelector('a');
+const status = handoff.querySelector('[role=status]');
+handoff.querySelector('.alt-editor').hidden = false;
+worksheetLink.hidden = true;
+question.addEventListener('input', () => question.setCustomValidity(''));
+handoff.querySelector('button').addEventListener('click', () => {
+  const text = question.value.trim();
+  if (!text) {
+    question.setCustomValidity('請先寫下想問的問題。');
+    question.reportValidity();
+    return;
+  }
+  const destination = new URL(worksheetLink.href);
+  if (text !== question.defaultValue) {
+    try {
+      const id = crypto.randomUUID();
+      sessionStorage.setItem('first-report-alt/' + id, text);
+      destination.hash += '/' + id;
+    } catch {
+      status.textContent = '瀏覽器無法暫存問題。請先複製上方文字，再開啟工作表，將問題貼到 GPT 提問格。';
+      worksheetLink.hidden = false;
+      return;
+    }
+  }
+  location.assign(destination.href);
+});
