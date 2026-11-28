@@ -114,7 +114,7 @@ def _load(name: str, rel: str):
 
 
 class WorksheetAndIndexOnSuchAPage(unittest.TestCase):
-    """工作表略過該指標的填空欄並出聲；索引頁照常出卡（兩個短標籤、判準列只數 TABLE 列）。"""
+    """工作表保留提問格並略過數值欄；索引頁照常出卡（兩個短標籤、判準列只數 TABLE 列）。"""
 
     @classmethod
     def setUpClass(cls):
@@ -134,11 +134,19 @@ class WorksheetAndIndexOnSuchAPage(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.tmp, ignore_errors=True)
 
-    def test_worksheet_skips_it_with_a_warning(self):
+    def test_worksheet_includes_only_a_question_box_for_the_indicator_without_rows(self):
         out = io.StringIO()
         with contextlib.redirect_stdout(out):
             blocks = self.ws.collect_blocks(src_dir=self.src, criteria_dir=self.crit)
-        self.assertEqual(["sbp"], [i["id"] for i in blocks[0]["indicators"]])
+        items = {ind["id"]: ind for ind in blocks[0]["indicators"]}
+        self.assertTrue(items["sbp"]["rows"])
+        self.assertEqual([], items["dbp"]["rows"])
+        rendered = self.ws.render_block(blocks[0], self.ws.gen.manifest_index())
+        start = rendered.index(f'id="ws-{blocks[0]["slug"]}-dbp"')
+        end = rendered.index('<div class="ws-sources"', start)
+        self.assertIn("我想問的問題", rendered[start:end])
+        self.assertNotIn("我的數值", rendered[start:end])
+        self.assertNotIn("<table", rendered[start:end])
         self.assertIn("dbp", out.getvalue())
 
     def test_index_card_still_lists_both_labels_and_counts_only_table_rows(self):

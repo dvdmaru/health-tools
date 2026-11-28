@@ -6,7 +6,7 @@
 data/criteria/<slug>.json，篩選條件也完全相同：indicator_id ∈ 該頁 frontmatter
 的 indicator_ids、category ∈ gen-indicator.py 的 TABLE_CATEGORIES——直接 import
 那份常數，不在這裡重列一份）。輸出＝一張可以列印、拿著紙本自己對照的表：
-每個指標一區塊，區塊裡每個 indicator_id 各留一組「我的數值」／「檢測日期」空格
+每個指標可單獨勾選列印，附手寫提問格。有判準列的項目另留「我的數值」／「檢測日期」空格
 （列印後用筆寫），旁邊列出同一批資料在各機構、各判定類別下的切點，維持資料
 原始行序（不排序成「哪個比較準」）。
 
@@ -87,9 +87,9 @@ PAGE_TITLE = "列印版判準對照工作表"
 WORKSHEET_URL = f"{hl.BASE}/worksheet/"
 
 # 說明文字只描述這張表是什麼，不暗示填完之後會得到什麼結論（措辭紅線見上）。
-INTRO = ("這張表把各指標頁上，各機構公布的判準切點，整理成同一頁、附「我的數值」與"
-         "「檢測日期」空格的版面，方便列印後手寫比對，逐項仍標明機構、判定類別與族群。")
-PRINT_HELP = "螢幕上可以直接閱讀；列印時，站頭、導覽與姊妹站連結會自動隱藏，只留內容本身。"
+INTRO = ("回診時可帶上這張工作表，手寫想問的問題。附有判準表的項目也可填寫數值與檢測日期，"
+         "並查閱各列的適用族群與出處。")
+PRINT_HELP = "勾選想帶去回診的項目，再按「列印勾選項目」。每項留一格可手寫的問題。"
 BLOCK_REF_LABEL = "完整判準表與出處："
 
 
@@ -129,19 +129,14 @@ def collect_blocks(src_dir=None, criteria_dir=None) -> list:
             irows = [r for r in all_rows
                      if r["indicator_id"] == iid and r["category"] in gen.TABLE_CATEGORIES]
             if not irows:
-                # 資料層允許同一個 slug 檔混放不屬於這頁的 indicator_id（P10 的坑，
-                # 見 gen-indicator.py），但一個 frontmatter 明講要收的 id 卻一列
-                # 判準都湊不出來，不能無聲跳過——印警告，不是 fail（跟 gen-indicator.py
-                # 的「總表非空即可」門檻不同：這裡多一層是為了不讓某個指標的填空欄
-                # 憑空出現在區塊裡卻沒有對照資料）。
-                print(f"⚠️  工作表：{slug} 的指標 {iid} 沒有 TABLE_CATEGORIES 判準列，"
-                      "已略過這一個「我的數值」子欄位。")
-                continue
+                if not any(r["indicator_id"] == iid for r in all_rows):
+                    raise SystemExit(f"❌ 工作表：{slug} 找不到 {iid} 的來源資料。")
+                print(f"工作表：{slug} 的 {iid} 無判準列，僅提供提問格。")
             label = labels[iid] if multi else meta.get("title", h1)
             unit = next((r["unit"] for r in irows if r.get("unit")), "")
             indicators.append({"id": iid, "label": label, "unit": unit, "rows": irows})
 
-        if not indicators:
+        if not any(ind["rows"] for ind in indicators):
             raise SystemExit(
                 f"❌ 工作表：{slug}（{'、'.join(ids)}）沒有任何可渲染的判準列"
                 "（TABLE_CATEGORIES 皆空），這個區塊生不出來。")
@@ -159,6 +154,18 @@ def collect_blocks(src_dir=None, criteria_dir=None) -> list:
 
 WORKSHEET_CSS = """
 .ws-intro{ font-size:15px; color:var(--fg-soft); margin:10px 0 4px; line-height:1.9; }
+.ws-picker{ margin:18px 0; padding:16px; border:1px solid var(--line-2); border-radius:var(--radius); background:var(--surface); min-width:0; }
+.ws-picker legend{ padding:0 6px; font-weight:700; }
+.ws-picker p{ margin:0 0 10px; }
+.ws-choices{ display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr)); gap:4px 10px; }
+.ws-choices label{ display:flex; align-items:center; gap:8px; padding:6px 2px; cursor:pointer; }
+.ws-picker input{ accent-color:var(--accent); width:18px; height:18px; flex:none; }
+.ws-actions{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:12px; }
+.ws-actions button{ padding:7px 12px; font:inherit; color:var(--fg); background:var(--surface); border:1px solid var(--line-2); border-radius:var(--radius-sm); cursor:pointer; }
+.ws-actions .ws-print{ color:var(--accent-ink); background:var(--accent); }
+.ws-actions button:disabled{ opacity:.5; cursor:default; }
+.ws-question{ margin:8px 0 12px; padding:6px 10px; border:1px solid var(--line-2); min-height:3.2em; font-weight:600; }
+.ws-print-empty, .ws-repeat-heading{ display:none; }
 .ws-blocks{ margin:22px 0 0; }
 .ws-block{ border:1px solid var(--line); border-radius:var(--radius); background:var(--surface);
            padding:18px 20px 16px; margin:0 0 20px; }
@@ -184,16 +191,27 @@ WORKSHEET_CSS = """
 .ws-h4{ font-size:12.5px; font-weight:700; margin:0 0 6px; color:var(--fg-soft);
         text-transform:uppercase; letter-spacing:.5px; }
 .ws-source-list{ margin:0 0 0 1.2em; padding:0; line-height:1.85; }
-.ws-source-list li{ margin-bottom:2px; }
+.ws-source-list li{ margin-bottom:2px; overflow-wrap:anywhere; }
 .ws-foot{ font-size:12.5px; color:var(--dim); border-top:1px solid var(--line);
           padding-top:10px; margin-top:14px; }
-@media (max-width:560px){ .ws-fields{ flex-direction:column; align-items:flex-start; gap:8px; } }
+@page{ margin:12mm; }
+@media screen and (max-width:560px){
+  .ws-choices{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .ws-choices label{ min-height:44px; }
+  .ws-fields{ flex-direction:column; align-items:flex-start; gap:8px; }
+  .ws-field{ flex-wrap:wrap; max-width:100%; }
+}
 @media print{
   /* .theme-switch 的隱藏規則已搬進 healthlib.py 的共用 CSS（全站每一頁列印都受益，
      不是本頁局部蓋掉——見 2026-08-31 第三次主席裁決）。本頁的 site-header 仍是
      本頁專屬的隱藏（判準對照表不需要導覽列跟著印出來），留在這裡。 */
   .site-header, .foot-links, .sister-sites, .ws-noprint{ display:none !important; }
-  body{ padding:0 !important; background:#fff !important; color:#000 !important; }
+  .ws-selective .ws-print-omit, .ws-selective .ws-h2, .ws-selective .ws-foot{ display:none !important; }
+  .ws-selective .ws-repeat-heading, .ws-print-empty:not([hidden]){ display:block; }
+  .ws-question{ color:#000; border-color:#555; min-height:16mm; break-inside:avoid; }
+  .ws-fields{ break-after:avoid; }
+  .ws-source-list{ list-style:none; }
+  body{ min-height:0; padding:0 !important; background:#fff !important; color:#000 !important; }
   a{ color:#000 !important; text-decoration:none !important; }
   .container{ max-width:100% !important; }
   .pg-h1, .ws-h2, .ws-h3, .ws-h4, .ws-intro, .ws-ref, .ws-unit, .ws-foot,
@@ -219,6 +237,7 @@ WORKSHEET_CSS = """
   thead{ display:table-header-group; }
 
   /* ⑥ 列印字級與間距收緊（螢幕版不動，只在這個 media block 裡）。 */
+  .article-footer{ margin-top:14px; padding-top:6px; }
   .ws-block{ padding:9px 12px 6px; margin:0 0 8px; }
   .ws-h2{ font-size:14px; margin:0 0 3px; }
   .ws-h3{ font-size:11.5px; margin:7px 0 3px; }
@@ -403,23 +422,42 @@ def render_indicator(ind: dict, slug: str, num_of: dict, pop_num_of: dict) -> st
         '<thead><tr><th>機構</th><th>判定類別</th><th>切點</th><th>族群</th>'
         '<th>出處</th></tr></thead>'
         f'<tbody>{rows_html}</tbody></table></div>')
-    return f'<div class="ws-indicator">{fields}{table}</div>'
+    return fields + table
 
 
 def render_block(block: dict, mf: dict) -> str:
-    multi = len(block["indicators"]) > 1
     num_of = {d: i for i, d in enumerate(block_doc_order(block), start=1)}
     pop_num_of = {p: i for i, p in enumerate(block_population_order(block), start=1)}
-    heads = "".join(
-        (f'<h3 class="ws-h3">{esc(ind["label"])}</h3>' if multi else "")
-        + render_indicator(ind, block["slug"], num_of, pop_num_of)
-        for ind in block["indicators"])
+    items = []
+    for ind in block["indicators"]:
+        heading = "ws-h3 ws-repeat-heading" if ind["label"] == block["title"] else "ws-h3"
+        content = render_indicator(ind, block["slug"], num_of, pop_num_of) if ind["rows"] else ""
+        items.append(
+            f'<div class="ws-indicator" id="ws-{esc(block["slug"])}-{esc(ind["id"])}">'
+            f'<h3 class="{heading}">{esc(ind["label"])}</h3>'
+            f'<div class="ws-question">我想問的問題</div>{content}</div>')
     return (
         f'<section class="ws-block" id="{esc(block["slug"])}">'
         f'<h2 class="ws-h2">{esc(block["title"])}</h2>'
         f'<p class="ws-ref">{esc(BLOCK_REF_LABEL)}'
         f'<a href="{esc(block["href"])}">{esc(block["href"])}</a></p>'
-        f'{heads}{render_sources(block, mf)}{render_population_refs(block)}</section>')
+        f'{"".join(items)}{render_sources(block, mf)}{render_population_refs(block)}</section>')
+
+
+def render_picker(blocks: list) -> str:
+    choices = "".join(
+        f'<label><input type="checkbox" value="ws-{esc(block["slug"])}-{esc(ind["id"])}">'
+        f'{esc(ind["label"])}</label>'
+        for block in blocks for ind in block["indicators"])
+    return (
+        '<fieldset class="ws-picker ws-noprint" hidden><legend>只列印我想問的項目</legend>'
+        f'<p>{esc(PRINT_HELP)}</p><div class="ws-choices">{choices}</div>'
+        '<div class="ws-actions"><button type="button" class="ws-select-all">全選</button>'
+        '<button type="button" class="ws-clear">清除勾選</button>'
+        '<button type="button" class="ws-print">列印勾選項目</button>'
+        '<span role="status"></span></div></fieldset>'
+        '<noscript><p class="ws-noprint">目前可列印完整工作表。開啟 JavaScript 可勾選個別項目。</p></noscript>'
+        '<p class="ws-print-empty" hidden>尚未勾選項目。回到工作表勾選後即可列印。</p>')
 
 
 def render_page(blocks: list, mf: dict) -> str:
@@ -428,10 +466,12 @@ def render_page(blocks: list, mf: dict) -> str:
         '  <main>\n'
         f'  <h1 class="pg-h1">{esc(PAGE_TITLE)}</h1>\n'
         f'  <p class="ws-intro">{esc(INTRO)}</p>\n'
-        f'  <p class="ws-intro ws-noprint">{esc(PRINT_HELP)}</p>\n'
+        f'  {render_picker(blocks)}\n'
         f'  <div class="ws-blocks">{"".join(render_block(b, mf) for b in blocks)}</div>\n'
         f'  <p class="ws-foot">共 {len(blocks)} 個指標區塊、{n_rows} 個切點。</p>\n'
         '  </main>')
+    script = (ROOT / "templates/worksheet-selection.js").read_text(encoding="utf-8")
+    body += f'<script>{script}</script>'
 
     page_node = {
         "@type": "WebPage", "@id": f"{WORKSHEET_URL}#page",
