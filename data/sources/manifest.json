@@ -1115,5 +1115,18 @@
     "local_path": "data/sources/nckuh-alt-test.html",
     "license_bucket": "licensed-cite-only",
     "retrieval": "curl"
+  },
+  {
+    "id": "mmh-taitung-lab-manual-2026",
+    "title": "檢驗手冊品保作業程序（MMH-QP-004）",
+    "org": "台東馬偕紀念醫院醫事檢驗科",
+    "doc_type": "pdf",
+    "url": "https://ttw3.mmh.org.tw/upload/doc/94/%E6%AA%A2%E9%A9%97%E6%89%8B%E5%86%8A%E5%93%81%E4%BF%9D%E4%BD%9C%E6%A5%AD%E7%A8%8B%E5%BA%8F.pdf",
+    "version_or_date": "8.22 版，2026/7/23 修訂",
+    "fetched_at": "2026-11-28",
+    "sha256": "b7204e7fdf241a0735562a13968187290f3f33a636f3dd70977f7cfc46afe399",
+    "local_path": "data/sources/mmh-taitung-lab-manual-2026.pdf",
+    "license_bucket": "licensed-cite-only",
+    "retrieval": "curl"
   }
 ]

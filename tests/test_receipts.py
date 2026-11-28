@@ -163,7 +163,7 @@ class TestRealData(unittest.TestCase):
             for row in json.loads((CRIT_DIR / fname).read_text(encoding="utf-8")):
                 used.add(row["doc_id"])
                 used.update(c["doc_id"] for c in row.get("corroboration", []))
-        for dataset in ("egfr-form-versions.json", "report-reading-examples.json"):
+        for dataset in ("egfr-form-versions.json", "report-reading-examples.json", "report-lipid-examples.json"):
             path = ROOT / "data" / dataset
             used.update(row["doc_id"] for row in json.loads(path.read_text(encoding="utf-8")))
         unused = SOURCE_IDS - used

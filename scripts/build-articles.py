@@ -83,6 +83,19 @@ INDEX_CSS = """
 .reader-results li { padding:4px 0; }
 """
 
+LIPID_GUIDE_CSS = """
+.lipid-guide { padding:12px; margin:12px 0; border:1px solid var(--accent-line); border-radius:var(--radius-sm); }
+.lipid-guide h2 { margin:0; font-size:1.1rem; }
+.lipid-guide p { margin:8px 0; }
+.lipid-guide details { border-top:1px solid var(--line); padding:0 8px; }
+.lipid-guide summary { padding:12px 0; cursor:pointer; }
+.lipid-guide summary span { display:inline-block; font-variant-numeric:tabular-nums; }
+.lipid-guide details[open] { background:var(--accent-soft); box-shadow:inset 3px 0 var(--accent); padding-bottom:10px; }
+.lipid-guide dl { display:flex; flex-wrap:wrap; gap:8px 18px; margin:0 0 10px; }
+.lipid-guide dt { font-size:.85rem; color:var(--fg-soft); }
+.lipid-guide dd { margin:0; font-weight:700; }
+"""
+
 # 首頁 FAQ（可見問答＝schema 鏡射源）。
 # ⚠️ 這幾句要通過 scripts/check-health-terms.py：不得出現招徠、療效、自我標榜、gate 語言。
 HOME_FAQ = [
@@ -229,6 +242,33 @@ REPORT_CSS = """
 """
 
 
+def render_lipid_rows(entries):
+    examples = json.loads((ROOT / "data/report-lipid-examples.json").read_text(encoding="utf-8"))
+    sources = {s["id"]: s for s in json.loads((ROOT / "data/sources/manifest.json").read_text(encoding="utf-8"))}
+    by_href = {entry["href"]: entry for entry in entries}
+    esc = html_lib.escape
+    rows = []
+    for example in examples:
+        href = "/indicators/lipids/#" + example["id"]
+        entry = by_href[href]
+        label = esc(entry["label"])
+        names = [name for name in [entry["label"], *entry["aliases"]] if name != "血脂"]
+        names.append(entry["label"].split("（")[0])
+        source = sources[example["doc_id"]]
+        unit = esc(example["unit"])
+        page = example["page"]
+        note = f'<p>{esc(example["note"])}</p>' if "note" in example else ""
+        rows.append(
+            f'<details name="lipid-row" data-names="{esc("|".join(names))}">'
+            f'<summary><strong>{label}</strong> <span lang="en">{esc(example["english_name"])}</span> <span>{example["result"]} {unit}（虛構結果）</span></summary>'
+            f'<dl><div><dt>檢驗結果</dt><dd>{example["result"]}</dd></div>'
+            f'<div><dt>單位</dt><dd>{unit}</dd></div>'
+            f'<div><dt>院所參考範圍</dt><dd>{esc(example["reference"])}</dd></div></dl>{note}'
+            f'<a href="{esc(source["url"])}#page={page}">手冊第 {page} 頁</a> · '
+            f'<a href="{esc(href)}">查看{label}的分級表</a></details>')
+    return "".join(rows)
+
+
 def render_report_search():
     entries = json.loads((ROOT / "data/report-search.json").read_text(encoding="utf-8"))
     items = []
@@ -238,6 +278,7 @@ def render_report_search():
                      f'{html_lib.escape(entry["label"])}</a></li>')
     template = (ROOT / "templates/report-search.html").read_text(encoding="utf-8")
     return (template.replace("{{search_items}}", "".join(items))
+            .replace("{{lipid_rows}}", render_lipid_rows(entries))
             .replace("{{home_title}}", html_lib.escape(SITE["home_title"])))
 
 
@@ -289,7 +330,7 @@ def render_home(articles):
     jsonld = hl.graph_ld([hl.org_node(), hl.website_node(),
                           hl.faq_node(HOME_FAQ, f"{BASE}/")])
     return hl.page_shell(SITE["home_title"], SITE["website_desc"], f"{BASE}/",
-                         jsonld, body, "home", extra_css=INDEX_CSS)
+                         jsonld, body, "home", extra_css=INDEX_CSS + LIPID_GUIDE_CSS)
 
 
 def render_articles_index(articles):

@@ -37,6 +37,13 @@
           <p><a href="https://www.niddk.nih.gov/health-information/diabetes/overview/tests-diagnosis">美國 NIDDK 的空腹與隨機血糖檢查說明（英文）</a></p>
         </details>
       </section>
+      <section class="lipid-guide" aria-labelledby="lipid-guide-title">
+        <h2 id="lipid-guide-title">血脂報告的四行，怎麼對回自己的那一行？</h2>
+        <p>在報告上找到完整的檢查名稱，點選下方同名的項目，再沿著自己報告的同一行，從名稱讀到結果、單位和院所參考範圍。</p>
+        <p>四筆結果皆為虛構。參考範圍引用台東馬偕紀念醫院醫事檢驗科《檢驗手冊品保作業程序》（MMH-QP-004，8.22 版，修訂日 2026/7/23）的血清／血漿檢驗項目。手冊註明這四項需空腹 10–12 小時。讀自己的報告時，請看出具報告的院所列出的範圍。分級表與院所參考範圍用途不同，數字不一定相同。</p>
+        <p class="lipid-choice" hidden>你搜尋了「膽固醇」。請看報告上的完整名稱：是總膽固醇（TC）、低密度脂蛋白膽固醇（LDL-C），還是高密度脂蛋白膽固醇（HDL-C）？請點選相符的項目。</p>
+        {{lipid_rows}}
+      </section>
       <ul class="reader-results" hidden>{{search_items}}</ul>
     </div>
     <section class="reader-symbols" aria-labelledby="symbol-heading">
@@ -62,6 +69,21 @@
   const entries = Array.from(results.children, item => ({
     item, names: item.dataset.names.split('|').map(compact)
   }));
+  const lipidGuide = panel.querySelector('.lipid-guide');
+  const lipidRows = Array.from(lipidGuide.querySelectorAll('details'), row => ({
+    row, names: row.dataset.names.split('|').map(compact)
+  }));
+  function updateLipidGuide(query) {
+    const cholesterol = query === '膽固醇' || query === 'cholesterol';
+    const exact = lipidRows.find(({names}) => names.includes(query));
+    lipidGuide.hidden = !exact && !cholesterol && query !== '血脂';
+    lipidGuide.querySelector('.lipid-choice').hidden = !cholesterol;
+    for (const item of lipidRows) {
+      item.row.hidden = cholesterol && !item.names.some(name => name.includes('膽固醇'));
+      item.row.open = item === exact;
+    }
+  }
+
   const glucoseNames = new Set([
     '血糖', '葡萄糖', '血糖葡萄糖', '血中葡萄糖', '血漿葡萄糖', 'glucose', 'bloodglucose',
     '空腹血糖', '飯前血糖', 'fpg', '空腹血糖fpg', 'fastingplasmaglucose',
@@ -78,6 +100,7 @@
       item.hidden = !matches;
       if (matches) count++;
     }
+    updateLipidGuide(joined);
     glucoseGuide.hidden = !glucoseNames.has(joined);
     if (glucoseGuide.hidden) {
       for (const detail of glucoseGuide.querySelectorAll('details[open]')) detail.open = false;
@@ -90,7 +113,8 @@
   input.addEventListener('input', update);
   input.addEventListener('keydown', event => {
     if (event.key !== 'Enter' || event.isComposing || event.keyCode === 229) return;
-    const first = results.querySelector('li:not([hidden]) a');
+    const first = lipidGuide.hidden ? results.querySelector('li:not([hidden]) a') :
+      lipidGuide.querySelector('details[open] summary') || lipidGuide.querySelector('details:not([hidden]) summary');
     if (first) {
       event.preventDefault();
       first.focus();

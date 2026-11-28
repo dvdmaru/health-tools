@@ -95,3 +95,6 @@ data/sources/hpa-adult-preventive-form-2025-07.pdf
 
 # 成大醫院檢驗網頁僅節引，保留本機快照供核對。
 /data/sources/nckuh-alt-test.html
+
+# 臺東馬偕檢驗手冊僅節引，保留本機快照供核對。
+/data/sources/mmh-taitung-lab-manual-2026.pdf
