@@ -155,6 +155,8 @@ def collect_blocks(src_dir=None, criteria_dir=None) -> list:
 WORKSHEET_CSS = """
 .ws-intro{ font-size:15px; color:var(--fg-soft); margin:10px 0 4px; line-height:1.9; }
 .ws-picker{ margin:18px 0; padding:16px; border:1px solid var(--line-2); border-radius:var(--radius); background:var(--surface); min-width:0; }
+.ws-sampling{ scroll-margin-top:8rem; }
+.ws-sampling:not(:target):not(.ws-added){ display:none; }
 .ws-picker legend{ padding:0 6px; font-weight:700; }
 .ws-picker p{ margin:0 0 10px; }
 .ws-choices{ display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr)); gap:4px 10px; }
@@ -209,6 +211,7 @@ WORKSHEET_CSS = """
   .ws-selective .ws-print-omit, .ws-selective .ws-h2, .ws-selective .ws-foot{ display:none !important; }
   .ws-selective .ws-repeat-heading, .ws-print-empty:not([hidden]){ display:block; }
   .ws-question{ color:#000; border-color:#555; min-height:16mm; break-inside:avoid; }
+  main:not(.ws-selective) .ws-sampling:target ~ :is(.ws-blocks, .ws-foot){ display:none; }
   .ws-fields{ break-after:avoid; }
   .ws-source-list{ list-style:none; }
   body{ min-height:0; padding:0 !important; background:#fff !important; color:#000 !important; }
@@ -452,11 +455,13 @@ def render_picker(blocks: list) -> str:
     return (
         '<fieldset class="ws-picker ws-noprint" hidden><legend>只列印我想問的項目</legend>'
         f'<p>{esc(PRINT_HELP)}</p><div class="ws-choices">{choices}</div>'
+        '<label hidden><input type="checkbox" value="glucose-sampling" disabled>'
+        '血糖採檢註記（回診問題）</label>'
         '<div class="ws-actions"><button type="button" class="ws-select-all">全選</button>'
         '<button type="button" class="ws-clear">清除勾選</button>'
         '<button type="button" class="ws-print">列印勾選項目</button>'
         '<span role="status"></span></div></fieldset>'
-        '<noscript><p class="ws-noprint">目前可列印完整工作表。開啟 JavaScript 可勾選個別項目。</p></noscript>'
+        '<noscript><p class="ws-noprint">可使用瀏覽器的列印功能。開啟 JavaScript 可勾選個別項目。</p></noscript>'
         '<p class="ws-print-empty" hidden>尚未勾選項目。回到工作表勾選後即可列印。</p>')
 
 
@@ -466,6 +471,9 @@ def render_page(blocks: list, mf: dict) -> str:
         '  <main>\n'
         f'  <h1 class="pg-h1">{esc(PAGE_TITLE)}</h1>\n'
         f'  <p class="ws-intro">{esc(INTRO)}</p>\n'
+        '  <section class="ws-sampling" id="glucose-sampling" aria-labelledby="sampling-heading">'
+        '<h2 id="sampling-heading">血糖採檢註記</h2>'
+        '<div class="ws-question">我想問的問題<br>這筆血糖有註明空腹採檢嗎？</div></section>'
         f'  {render_picker(blocks)}\n'
         f'  <div class="ws-blocks">{"".join(render_block(b, mf) for b in blocks)}</div>\n'
         f'  <p class="ws-foot">共 {len(blocks)} 個指標區塊、{n_rows} 個切點。</p>\n'

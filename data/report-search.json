@@ -5,7 +5,7 @@
   {"label":"尿液白蛋白與肌酸酐比值（UACR）","aliases":["尿白蛋白肌酸酐比","urine albumin-to-creatinine ratio","urinary albumin creatinine ratio"],"href":"/indicators/urine-protein-uacr/#uacr-classification"},
   {"label":"肌酸酐（Creatinine）","aliases":["腎功能","血清肌酸酐","serum creatinine","Scr"],"href":"/adult-report/#report-creatinine"},
   {"label":"估算腎絲球過濾率（eGFR）","aliases":["腎功能","腎絲球過濾率","estimated glomerular filtration rate"],"href":"/adult-report/#report-egfr"},
-  {"label":"空腹血糖（FPG）","aliases":["飯前血糖","fasting plasma glucose"],"href":"/indicators/hba1c/#fpg-screening_triage"},
+  {"label":"空腹血糖（FPG）","aliases":["fasting plasma glucose"],"href":"/indicators/hba1c/#fpg-screening_triage"},
   {"label":"糖化血色素（HbA1c）","aliases":["糖化血紅素","hemoglobin A1c","glycated hemoglobin"],"href":"/indicators/hba1c/"},
   {"label":"口服葡萄糖耐受試驗（OGTT，第 2 小時）","aliases":["oral glucose tolerance test"],"href":"/indicators/hba1c/#ogtt-2h-prediabetes"},
   {"label":"隨機血糖","aliases":["random glucose","random plasma glucose"],"href":"/indicators/hba1c/#random-glucose-diagnosis"},
