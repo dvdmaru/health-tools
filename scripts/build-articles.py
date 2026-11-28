@@ -227,6 +227,14 @@ REPORT_CSS = """
 .reading-row { margin:16px 0; padding:18px; background:var(--surface); border:1px solid var(--line);
   border-radius:var(--radius); scroll-margin-top:6rem; }
 .reading-row h3 { margin:0; }
+#first-report, #practice-alt { scroll-margin-top:6rem; }
+#first-report > details { padding:10px 14px; border:1px solid var(--line); border-radius:var(--radius-sm); margin:6px 0; }
+#first-report > details summary { cursor:pointer; font-weight:600; }
+#alt-handoff textarea { display:block; box-sizing:border-box; width:100%; max-width:42em; margin:6px 0 12px;
+  border:1px solid var(--line-2); background:var(--surface); color:var(--fg); padding:10px; font:inherit; }
+#alt-handoff button { border:0; border-radius:var(--radius-sm); background:var(--accent); color:var(--accent-ink);
+  padding:10px 16px; cursor:pointer; font:inherit; }
+#alt-handoff [role=status]:empty { display:none; }
 .reading-cells { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:6px; }
 .reading-cells a,.reading-cells button { padding:9px 8px; min-height:54px; text-align:start; cursor:pointer;
   background:var(--bg); border:1px solid var(--line-2); border-radius:var(--radius-sm); color:var(--fg);
@@ -305,7 +313,10 @@ def render_adult_report():
     rows = json.loads((ROOT / "data/report-reading-examples.json").read_text(encoding="utf-8"))
     manifest = json.loads((ROOT / "data/sources/manifest.json").read_text(encoding="utf-8"))
     sources = {doc["id"]: doc for doc in manifest}
-    body = body.replace("{{reading_rows}}", "".join(render_reading_row(row, sources) for row in rows))
+    alt = next(row for row in rows if row["id"] == "read-alt")
+    body = (body.replace("{{alt_row}}", render_reading_row(alt, sources))
+            .replace("{{other_reading_rows}}", "".join(render_reading_row(row, sources) for row in rows if row is not alt))
+            .replace("{{alt_question}}", html_lib.escape(hl.FIRST_REPORT_ALT_QUESTION)))
     script = (ROOT / "templates/report-fields.js").read_text(encoding="utf-8")
     body += f"<script>{script}</script>"
     url = BASE + REPORT_PATH

@@ -41,6 +41,59 @@
     document.querySelector('.ws-print-empty').hidden = selected.size !== 0;
   }
 
+  const defaultAltQuestion = document.currentScript.dataset.altQuestion;
+  function includeAltQuestion() {
+    const match = /^#first-report-alt(?:\/([a-f0-9-]{36}))?$/.exec(location.hash);
+    if (!match) return;
+    const item = document.getElementById('ws-ast-alt-alt');
+    if (!item) return;
+    const choice = choices.find(input => input.value === item.id);
+    if (!choice) return;
+    choice.checked = true;
+    const box = item.querySelector('.ws-question');
+    let editor = box.querySelector('textarea');
+    if (editor && editor.dataset.handoff === location.hash) {
+      update();
+      return;
+    }
+    if (!editor) {
+      editor = document.createElement('textarea');
+      editor.className = 'ws-noprint';
+      editor.setAttribute('aria-label', 'GPT（ALT）回診問題');
+      editor.rows = 3;
+      editor.maxLength = 500;
+      const paper = document.createElement('div');
+      paper.className = 'ws-carried-question';
+      editor.addEventListener('input', () => { paper.textContent = editor.value; });
+      const pickerLink = document.createElement('a');
+      pickerLink.href = '#worksheet-choices';
+      pickerLink.className = 'ws-noprint';
+      pickerLink.textContent = '查看勾選項目與列印';
+      pickerLink.addEventListener('click', event => {
+        event.preventDefault();
+        picker.scrollIntoView();
+        choice.focus({preventScroll:true});
+      });
+      box.append(editor, paper, pickerLink);
+    }
+    let text = defaultAltQuestion;
+    if (match[1]) {
+      text = '';
+      try {
+        text = sessionStorage.getItem('first-report-alt/' + match[1]) || '';
+      } catch { /* 工作表仍可直接填寫。 */ }
+    }
+    editor.dataset.handoff = location.hash;
+    editor.value = text;
+    editor.placeholder = '在這裡填寫回診問題';
+    box.querySelector('.ws-carried-question').textContent = text;
+    update();
+    item.scrollIntoView();
+    const heading = item.querySelector('h3');
+    heading.tabIndex = -1;
+    heading.focus({preventScroll:true});
+  }
+
   function includeLinkedQuestion() {
     if (location.hash !== '#' + sampling.id || !samplingChoice.disabled) return;
     samplingChoice.disabled = false;
@@ -51,6 +104,7 @@
     update();
   }
 
+  window.addEventListener('hashchange', includeAltQuestion);
   includeLinkedQuestion();
   window.addEventListener('hashchange', includeLinkedQuestion);
   picker.addEventListener('change', update);
@@ -66,4 +120,5 @@
   update();
   document.querySelector('main').classList.add('ws-selective');
   picker.hidden = false;
+  includeAltQuestion();
 })();

@@ -31,6 +31,8 @@ PUBLISHED = SITE.get("published", False) is True
 
 # ---------- GA4（config/site.json 的 ga_id 為空 → 不輸出 tag） ----------
 
+FIRST_REPORT_ALT_QUESTION = "我的報告上，GPT（ALT）的結果要和哪一欄的範圍對照？"
+
 def ga_snippet(site: dict = None) -> str:
     gid = (site or SITE).get("ga_id")
     if not gid:
