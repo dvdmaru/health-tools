@@ -105,6 +105,30 @@
     update();
   }
 
+  const originalSheet = document.querySelector('.ws-original');
+  function showOriginalSheet() {
+    const hash = location.hash.slice(1);
+    const active = hash.startsWith('unlisted-item/');
+    document.querySelector('main').classList.toggle('ws-original-only', active);
+    originalSheet.hidden = !active;
+    if (!active) return;
+    // 原文直接印在獨立提問格，不送入已收錄指標的搜尋或配對。
+    for (const choice of choices) choice.checked = false;
+    update();
+    let draft;
+    try {
+      draft = JSON.parse(sessionStorage.getItem(hash));
+    } catch { /* 分頁可能無法使用暫存。 */ }
+    const ready = typeof draft?.name === 'string' && draft.name.trim() &&
+                  typeof draft.question === 'string' && draft.question.trim();
+    originalSheet.querySelector('.original-content').hidden = !ready;
+    originalSheet.querySelector('.original-missing').hidden = !!ready;
+    originalSheet.querySelector('.original-name').textContent = ready ? draft.name : '';
+    originalSheet.querySelector('.original-question').textContent = ready ? draft.question : '';
+    originalSheet.querySelector('h1').focus();
+  }
+  originalSheet.querySelector('button').addEventListener('click', () => window.print());
+  window.addEventListener('hashchange', showOriginalSheet);
   window.addEventListener('hashchange', includeReportQuestion);
   includeLinkedQuestion();
   window.addEventListener('hashchange', includeLinkedQuestion);
@@ -122,4 +146,5 @@
   document.querySelector('main').classList.add('ws-selective');
   picker.hidden = false;
   includeReportQuestion();
+  showOriginalSheet();
 })();

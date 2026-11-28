@@ -78,6 +78,19 @@ INDEX_CSS = """
 .glucose-guide table { width:100%; border-collapse:collapse; font-size:.9rem; }
 .glucose-guide caption { text-align:start; }
 .glucose-guide th, .glucose-guide td { padding:5px; text-align:start; border-bottom:1px solid var(--line); }
+#search-miss { padding:14px; margin:12px 0; border:1px solid var(--line); border-radius:var(--radius-sm); }
+#search-miss h2 { margin:0; font-size:1.1rem; }
+#search-miss summary { padding:8px 0; font-weight:700; cursor:pointer; }
+.miss-example { display:flex; flex-wrap:wrap; gap:6px; margin:12px 0; }
+.miss-example div { padding:6px 10px; background:var(--bg); border-radius:var(--radius-sm); }
+.miss-example div:first-child { background:var(--accent-soft); border-inline-start:3px solid var(--accent); }
+.miss-example dt { font-size:.85rem; }
+.miss-example dd { margin:0; font-weight:700; }
+#search-miss label { margin-top:12px; }
+#search-miss textarea { display:block; width:100%; box-sizing:border-box; padding:10px; font:inherit;
+  background:var(--bg); color:var(--fg); border:1px solid var(--line-2); border-radius:var(--radius-sm); }
+#search-miss button { padding:9px 14px; margin-top:10px; font:inherit; cursor:pointer;
+  border:0; border-radius:var(--radius-sm); background:var(--accent); color:var(--accent-ink); }
 .reader-status:empty { margin:0; }
 .reader-results { margin:8px 0; padding-left:1.25em; }
 .reader-results li { padding:4px 0; }
@@ -285,8 +298,16 @@ def render_report_search():
         names = "|".join([entry["label"], *entry["aliases"]])
         items.append(f'<li data-names="{html_lib.escape(names)}"><a href="{html_lib.escape(entry["href"])}">'
                      f'{html_lib.escape(entry["label"])}</a></li>')
+    examples = json.loads((ROOT / "data/report-reading-examples.json").read_text(encoding="utf-8"))
+    alt = next(row for row in examples if row["id"] == "read-alt")
+    cells = []
+    for label, value, _ in alt["fields"]:
+        heading = {"檢查項目": "項目名稱（可搜尋）", "檢驗結果": "檢驗結果（虛構）",
+                   "異常註記": "異常註記（虛構）"}.get(label, label)
+        cells.append(f"<div><dt>{html_lib.escape(heading)}</dt><dd>{html_lib.escape(value)}</dd></div>")
     template = (ROOT / "templates/report-search.html").read_text(encoding="utf-8")
     return (template.replace("{{search_items}}", "".join(items))
+            .replace("{{miss_example}}", "".join(cells))
             .replace("{{lipid_rows}}", render_lipid_rows(entries))
             .replace("{{home_title}}", html_lib.escape(SITE["home_title"])))
 
