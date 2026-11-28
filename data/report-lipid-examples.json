@@ -1,0 +1,52 @@
+[
+  {
+    "id": "total-chol-classification",
+    "english_name": "Total Cholesterol",
+    "result": 184,
+    "unit": "mg/dL",
+    "reference": "130–200 mg/dL",
+    "page": 44,
+    "doc_id": "mmh-taitung-lab-manual-2026",
+    "quote": "66119 TOTAL CHOLESTEROL 血清/血漿 24 小時 當天 130-200 mg/dL"
+  },
+  {
+    "id": "ldl-c-classification",
+    "english_name": "LDL – Cholesterol",
+    "result": 104,
+    "unit": "mg/dL",
+    "reference": "<130 mg/dL",
+    "page": 46,
+    "doc_id": "mmh-taitung-lab-manual-2026",
+    "quote": "66154 LDL – Cholesterol 血清/血漿 24 小時 當天 <130 mg/dL",
+    "note": "這個參考值取自手冊的 LDL-Cholesterol 項目（66154）。同份手冊另列「LDL 計算值（健檢中心專用）」（661541），標示「無參考值，僅供參考」。若你的報告寫「計算值」，請看出具報告的院所對該項目的說明。",
+    "quote_extra": [
+      "LDL 計算值(健檢中心專",
+      "無參考值，僅供參",
+      "661541"
+    ]
+  },
+  {
+    "id": "hdl-c-classification",
+    "english_name": "HDL-Cholesterol",
+    "result": 56,
+    "unit": "mg/dL",
+    "reference": "男 >40 mg/dL、女 >50 mg/dL",
+    "page": 46,
+    "doc_id": "mmh-taitung-lab-manual-2026",
+    "quote": "66155 HDL-Cholesterol 血清/血漿 24 小時 當天",
+    "quote_extra": [
+      "M：>40 mg/dL",
+      "F：>50 mg/dL"
+    ]
+  },
+  {
+    "id": "tg-classification",
+    "english_name": "Triglyceride",
+    "result": 120,
+    "unit": "mg/dL",
+    "reference": "35–150 mg/dL",
+    "page": 44,
+    "doc_id": "mmh-taitung-lab-manual-2026",
+    "quote": "66120 Triglyceride 血清/血漿 24 小時 當天 35-150 mg/dL"
+  }
+]

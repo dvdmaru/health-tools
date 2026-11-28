@@ -1128,6 +1128,31 @@
     "quotes_never_verified": []
   },
   {
+    "id": "mmh-taitung-lab-manual-2026",
+    "url": "https://ttw3.mmh.org.tw/upload/doc/94/%E6%AA%A2%E9%A9%97%E6%89%8B%E5%86%8A%E5%93%81%E4%BF%9D%E4%BD%9C%E6%A5%AD%E7%A8%8B%E5%BA%8F.pdf",
+    "doc_type": "pdf",
+    "checked_at": "2026-11-28T08:12:57Z",
+    "http_code": "200",
+    "status": "ok",
+    "etag": "\"39c8cf-66023fc4fe286\"",
+    "last_modified": "Fri, 13 Nov 2026 08:12:13 GMT",
+    "remote_sha256": "b7204e7fdf241a0735562a13968187290f3f33a636f3dd70977f7cfc46afe399",
+    "text_sha256": "0aa5972fb5b587b6fc6933e19094ae81bbf0bf716ba838336ff35ed1b09c4351",
+    "quotes_total": 9,
+    "quotes_verified": [
+      "66119 TOTAL CHOLESTEROL 血清/血漿 24 小時 當天 130-200 mg/dL",
+      "66120 Triglyceride 血清/血漿 24 小時 當天 35-150 mg/dL",
+      "66154 LDL – Cholesterol 血清/血漿 24 小時 當天 <130 mg/dL",
+      "661541",
+      "66155 HDL-Cholesterol 血清/血漿 24 小時 當天",
+      "F：>50 mg/dL",
+      "LDL 計算值(健檢中心專",
+      "M：>40 mg/dL",
+      "無參考值，僅供參"
+    ],
+    "quotes_never_verified": []
+  },
+  {
     "id": "mohw-ckd-press-release-2015",
     "url": "https://www.mohw.gov.tw/fp-16-20961-1.html",
     "doc_type": "html",
