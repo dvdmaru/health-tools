@@ -89,6 +89,24 @@ def llms_block(text: str) -> list:
     return [l for l in block.split("\n") if l.startswith("- ")]
 
 
+class ReportSearchDestinations(unittest.TestCase):
+    def test_home_results_link_to_existing_report_fields_or_indicators(self):
+        builder = _load("report_articles", "scripts/build-articles.py")
+        home = builder.render_report_search()
+        report = builder.render_adult_report()
+        links = re.findall(r'<li data-names="[^"]+"><a href="([^"]+)">', home)
+        self.assertIn("/adult-report/#read-alt", links)
+        self.assertIn("/adult-report/#read-urine-protein", links)
+        with tempfile.TemporaryDirectory() as tmp:
+            _, out, *_ = build_into(pathlib.Path(tmp), published=True)
+            for href in links:
+                path, _, fragment = href.partition("#")
+                page = report if path == "/adult-report/" else (
+                    out / path.strip("/") / "index.html").read_text(encoding="utf-8")
+                if fragment:
+                    self.assertIn(f'id="{fragment}"', page, href)
+
+
 class CardsMirrorTheSourceCorpus(unittest.TestCase):
     def setUp(self):
         self.tmp = pathlib.Path(tempfile.mkdtemp())

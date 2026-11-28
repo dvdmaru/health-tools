@@ -1,0 +1,21 @@
+[
+  {"label":"丙胺酸轉胺酶 GPT（ALT）","aliases":["肝功能","肝指數","肝酵素","丙胺酸轉氨酶","alanine aminotransferase","alanine transaminase","SGPT"],"href":"/adult-report/#read-alt"},
+  {"label":"天門冬胺酸轉胺酶 GOT（AST）","aliases":["肝功能","肝指數","肝酵素","天門冬胺酸轉氨酶","aspartate aminotransferase","SGOT"],"href":"/adult-report/#report-ast"},
+  {"label":"尿蛋白（尿液蛋白質）","aliases":["urine protein","urinary protein","protein (urine)","尿液檢查"],"href":"/adult-report/#read-urine-protein"},
+  {"label":"尿液白蛋白與肌酸酐比值（UACR）","aliases":["尿白蛋白肌酸酐比","urine albumin-to-creatinine ratio","urinary albumin creatinine ratio"],"href":"/indicators/urine-protein-uacr/#uacr-classification"},
+  {"label":"肌酸酐（Creatinine）","aliases":["腎功能","血清肌酸酐","serum creatinine","Scr"],"href":"/adult-report/#report-creatinine"},
+  {"label":"估算腎絲球過濾率（eGFR）","aliases":["腎功能","腎絲球過濾率","estimated glomerular filtration rate"],"href":"/adult-report/#report-egfr"},
+  {"label":"空腹血糖（FPG）","aliases":["飯前血糖","fasting plasma glucose"],"href":"/indicators/hba1c/#fpg-screening_triage"},
+  {"label":"糖化血色素（HbA1c）","aliases":["糖化血紅素","hemoglobin A1c","glycated hemoglobin"],"href":"/indicators/hba1c/"},
+  {"label":"口服葡萄糖耐受試驗（OGTT，第 2 小時）","aliases":["oral glucose tolerance test"],"href":"/indicators/hba1c/#ogtt-2h-prediabetes"},
+  {"label":"隨機血糖","aliases":["random glucose","random plasma glucose"],"href":"/indicators/hba1c/#random-glucose-diagnosis"},
+  {"label":"總膽固醇（TC）","aliases":["血脂","total cholesterol"],"href":"/indicators/lipids/#total-chol-classification"},
+  {"label":"低密度脂蛋白膽固醇（LDL-C）","aliases":["血脂","低密度膽固醇","low density lipoprotein cholesterol"],"href":"/indicators/lipids/#ldl-c-classification"},
+  {"label":"高密度脂蛋白膽固醇（HDL-C）","aliases":["血脂","高密度膽固醇","high density lipoprotein cholesterol"],"href":"/indicators/lipids/#hdl-c-classification"},
+  {"label":"三酸甘油酯（TG）","aliases":["血脂","三酸甘油脂","triglycerides","triglyceride"],"href":"/indicators/lipids/#tg-classification"},
+  {"label":"收縮壓（SBP）","aliases":["血壓","systolic blood pressure"],"href":"/indicators/blood-pressure/#sbp-classification"},
+  {"label":"舒張壓（DBP）","aliases":["血壓","diastolic blood pressure"],"href":"/indicators/blood-pressure/#dbp-classification"},
+  {"label":"身體質量指數（BMI）","aliases":["身體質量指標","body mass index"],"href":"/indicators/bmi-waist/#bmi-classification"},
+  {"label":"腰圍","aliases":["waist circumference"],"href":"/indicators/bmi-waist/#waist-risk_threshold"},
+  {"label":"血中尿酸（Uric acid）","aliases":["血尿酸","serum uric acid"],"href":"/indicators/uric-acid/"}
+]

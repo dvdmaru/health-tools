@@ -57,6 +57,16 @@ INDEX_CSS = """
 .idx-date { font-family: var(--font-mono); font-size: 11.5px; color: var(--dim); letter-spacing: 1.2px; }
 .idx-empty { border:1px dashed var(--line-2); border-radius: var(--radius); padding: 26px 22px;
   color: var(--dim); font-size: 14.5px; background: var(--surface); }
+.reader-links { margin:18px 0 8px; }
+.reader-links a { display:inline-block; }
+.report-entry { border:1px solid var(--accent-line); border-radius:var(--radius);
+  background:var(--surface); padding:clamp(18px,4vw,32px); }
+.report-entry label { display:block; margin:18px 0 6px; font-weight:700; }
+.report-entry input { box-sizing:border-box; width:100%; padding:12px 14px; border:1px solid var(--line-2);
+  border-radius:var(--radius-sm); background:var(--bg); color:var(--fg); font:inherit; }
+.reader-status:empty { margin:0; }
+.reader-results { margin:8px 0; padding-left:1.25em; }
+.reader-results li { padding:4px 0; }
 """
 
 # 首頁 FAQ（可見問答＝schema 鏡射源）。
@@ -186,11 +196,63 @@ REPORT_CSS = """
 .report-sheet p { margin: 0; padding: 0 18px 16px; line-height: 1.8; }
 .report-source { margin: 0 0 20px; font-size: 14px; }
 .report-guide { margin-top: 24px; }
+.reading-examples { margin-top:34px; }
+.reading-row { margin:16px 0; padding:18px; background:var(--surface); border:1px solid var(--line);
+  border-radius:var(--radius); scroll-margin-top:6rem; }
+.reading-row h3 { margin:0; }
+.reading-cells { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:6px; }
+.reading-cells a,.reading-cells button { padding:9px 8px; min-height:54px; text-align:start; cursor:pointer;
+  background:var(--bg); border:1px solid var(--line-2); border-radius:var(--radius-sm); color:var(--fg);
+  font:inherit; text-decoration:none; overflow-wrap:anywhere; }
+.reading-cells span,.reading-cells strong { display:block; }
+.reading-cells span { color:var(--fg-soft); font-size:.85em; }
+.reading-cells button span::after { content:" ▾"; color:var(--accent); }
+.reading-cells [aria-expanded=true],.reading-cells :focus-visible { border-color:var(--accent); background:var(--accent-soft); }
+.reading-note { border-inline-start:3px solid var(--accent); padding:6px 12px; scroll-margin-top:6rem; }
+.reading-source { margin-bottom:0; font-size:.9em; }
+.report-sheet details[id] { scroll-margin-top:6rem; }
+@media(max-width:600px){ .reading-cells { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 """
+
+
+def render_report_search():
+    entries = json.loads((ROOT / "data/report-search.json").read_text(encoding="utf-8"))
+    items = []
+    for entry in entries:
+        names = "|".join([entry["label"], *entry["aliases"]])
+        items.append(f'<li data-names="{html_lib.escape(names)}"><a href="{html_lib.escape(entry["href"])}">'
+                     f'{html_lib.escape(entry["label"])}</a></li>')
+    template = (ROOT / "templates/report-search.html").read_text(encoding="utf-8")
+    return (template.replace("{{search_items}}", "".join(items))
+            .replace("{{home_title}}", html_lib.escape(SITE["home_title"])))
+
+
+def render_reading_row(row, sources):
+    esc = html_lib.escape
+    row_id = esc(row["id"])
+    cells, notes = [], []
+    for index, (label, value, explanation) in enumerate(row["fields"]):
+        field_id = f"{row_id}-field-{index + 1}"
+        cells.append(f'<a href="#{field_id}"><span>{esc(label)}</span><strong>{esc(value)}</strong></a>')
+        notes.append(f'<p class="reading-note" id="{field_id}"><strong>{esc(label)}</strong>　{esc(explanation)}</p>')
+    url = sources[row["doc_id"]]["url"]
+    if "page" in row:
+        url += f'#page={row["page"]}'
+    return (f'<section class="reading-row" id="{row_id}" aria-labelledby="{row_id}-title">'
+            f'<h3 id="{row_id}-title">{esc(row["title"])}</h3><p>{esc(row["intro"])}</p>'
+            f'<div class="reading-cells">{"".join(cells)}</div>{"".join(notes)}'
+            f'<p class="reading-source"><a href="{esc(url)}">{esc(row["source_label"])}</a> · '
+            f'<a href="{esc(row["more_url"])}">{esc(row["more_label"])}</a></p></section>')
 
 
 def render_adult_report():
     body = (ROOT / "templates" / "adult-report.html").read_text(encoding="utf-8")
+    rows = json.loads((ROOT / "data/report-reading-examples.json").read_text(encoding="utf-8"))
+    manifest = json.loads((ROOT / "data/sources/manifest.json").read_text(encoding="utf-8"))
+    sources = {doc["id"]: doc for doc in manifest}
+    body = body.replace("{{reading_rows}}", "".join(render_reading_row(row, sources) for row in rows))
+    script = (ROOT / "templates/report-fields.js").read_text(encoding="utf-8")
+    body += f"<script>{script}</script>"
     url = BASE + REPORT_PATH
     jsonld = hl.graph_ld([hl.org_node(), hl.website_node(),
                           hl.breadcrumb_node([("首頁", BASE + "/"), (REPORT_TITLE, url)])])
@@ -201,12 +263,11 @@ def render_adult_report():
 def render_home(articles):
     cards = "\n".join(_idx_card(a) for a in articles[:8]) or _EMPTY_HTML
     faq_sec = hl.faq_html(HOME_FAQ)
-    report_link = (f'<p><a href="{REPORT_PATH}">從成人健檢報告上的欄位開始查</a></p>'
-                   if hl.PUBLISHED else "")
+    entry = render_report_search() if hl.PUBLISHED else (
+        f'<h1 class="pg-h1">{html_lib.escape(SITE["home_title"])}</h1>'
+        f'<p class="pg-sub">{html_lib.escape(SITE["website_desc"])}</p>')
     body = f"""  <main>
-  <h1 class="pg-h1">{html_lib.escape(SITE['home_title'])}</h1>
-  <p class="pg-sub">{html_lib.escape(SITE['website_desc'])}</p>
-  {report_link}
+  {entry}
   <h2 class="sec-h">最新整理</h2>
 {cards}
   {faq_sec}
