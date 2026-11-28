@@ -267,7 +267,16 @@ REPORT_CSS = """
 .reading-cells button span::after { content:" ▾"; color:var(--accent); }
 .reading-cells [aria-expanded=true],.reading-cells :focus-visible { border-color:var(--accent); background:var(--accent-soft); }
 .reading-note { border-inline-start:3px solid var(--accent); padding:6px 12px; scroll-margin-top:6rem; }
-.alt-reference-guide h4 { margin:14px 0 6px; }
+.result-columns { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:6px; }
+.result-columns > * { padding:8px; text-align:start; overflow-wrap:anywhere; font:inherit; color:var(--fg); }
+.result-columns span,.result-columns strong { display:block; }
+.result-columns button { cursor:pointer; background:var(--surface); border:1px solid var(--line-2); border-radius:var(--radius-sm); }
+.result-columns .correct { background:var(--accent-soft); outline:2px solid var(--accent); outline-offset:-2px; }
+.result-feedback:empty { margin:0; }
+.alt-result-guide details { margin-block:12px; }
+.alt-result-guide summary { padding-block:6px; cursor:pointer; font-weight:600; }
+@media(max-width:600px){ .result-columns { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+.alt-result-guide h4,.alt-reference-guide h4 { margin:14px 0 6px; }
 .alt-reference-guide details { margin-block:8px; }
 .alt-reference-guide summary { padding:6px 0; cursor:pointer; font-weight:600; }
 .alt-reference-guide li + li { margin-top:6px; }
@@ -332,7 +341,16 @@ def render_reading_row(row, sources):
     for index, (label, value, explanation) in enumerate(row["fields"]):
         field_id = f"{row_id}-field-{index + 1}"
         cells.append(f'<a href="#{field_id}"><span>{esc(label)}</span><strong>{esc(value)}</strong></a>')
-        if row_id == "read-alt" and label == "院所參考範圍":
+        if row_id == "read-alt" and label == "檢驗結果":
+            fields = {name: (f"{row_id}-field-{i}", esc(text))
+                      for i, (name, text, _) in enumerate(row["fields"], 1)}
+            reference_id, reference = fields["院所參考範圍"]
+            guide = (ROOT / "templates/alt-current-result.html").read_text(encoding="utf-8")
+            notes.append(guide.replace("{{field_id}}", field_id).replace("{{result}}", esc(value))
+                         .replace("{{unit}}", fields["單位"][1]).replace("{{reference}}", reference)
+                         .replace("{{reference_id}}", reference_id).replace("{{explanation}}", esc(explanation))
+                         .replace("{{question}}", esc(hl.ALT_CURRENT_QUESTION)))
+        elif row_id == "read-alt" and label == "院所參考範圍":
             guide = (ROOT / "templates/alt-reference-guide.html").read_text(encoding="utf-8")
             notes.append(guide.replace("{{field_id}}", field_id)
                          .replace("{{explanation}}", esc(explanation))
