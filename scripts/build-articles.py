@@ -61,7 +61,12 @@ INDEX_CSS = """
 .reader-links a { display:inline-block; }
 .report-entry { border:1px solid var(--accent-line); border-radius:var(--radius);
   background:var(--surface); padding:clamp(18px,4vw,32px); }
-.report-entry label { display:block; margin:18px 0 6px; font-weight:700; }
+.reader-tools { display:flex; flex-wrap:wrap; align-items:flex-start; gap:18px 28px; margin-top:18px; }
+#report-search { flex:1.25 1 19rem; min-width:0; }
+.reader-symbols { flex:1 1 16rem; padding-inline-start:14px; border-inline-start:3px solid var(--accent-line); }
+.reader-symbols h2 { margin:0; font-size:1.1rem; }
+.reader-symbols p { margin:8px 0 0; }
+.report-entry label { display:block; margin:0 0 6px; font-weight:700; }
 .report-entry input { box-sizing:border-box; width:100%; padding:12px 14px; border:1px solid var(--line-2);
   border-radius:var(--radius-sm); background:var(--bg); color:var(--fg); font:inherit; }
 .reader-status:empty { margin:0; }

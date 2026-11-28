@@ -1,12 +1,20 @@
 <section class="report-entry" aria-labelledby="reader-heading">
   <h1 class="pg-h1" id="reader-heading">{{home_title}}</h1>
-  <div id="report-search" hidden>
-    <label for="report-query">查報告上的中文、英文或縮寫</label>
-    <input type="search" id="report-query" placeholder="例如 GPT、尿蛋白、Creatinine" maxlength="100" autocomplete="off" spellcheck="false" enterkeyhint="search">
-    <p class="reader-status" role="status"></p>
-    <ul class="reader-results" hidden>{{search_items}}</ul>
+  <div class="reader-tools">
+    <div id="report-search" hidden>
+      <label for="report-query">查報告上的中文、英文或縮寫</label>
+      <input type="search" id="report-query" placeholder="例如 GPT、尿蛋白、Creatinine" maxlength="100" autocomplete="off" spellcheck="false" enterkeyhint="search">
+      <p class="reader-status" role="status"></p>
+      <ul class="reader-results" hidden>{{search_items}}</ul>
+    </div>
+    <section class="reader-symbols" aria-labelledby="symbol-heading">
+      <h2 id="symbol-heading">報告符號怎麼看？</h2>
+      <p><strong>看到紅字、H、L 或箭頭（↑ ↓）？</strong><br>
+        先找自己報告上的圖例，確認院所怎麼說明這個標記，再<a href="/adult-report/#read-alt-field-5">對照 GPT 範例的「異常註記」</a>。</p>
+      <p><a href="/adult-report/#read-urine-protein-field-2">尿蛋白出現加號（＋）？看範例的「檢驗結果」</a></p>
+    </section>
   </div>
-  <p class="reader-links">照著範例報告找　<a href="/adult-report/#read-alt">肝功能（GPT）</a> · <a href="/adult-report/#read-urine-protein">尿蛋白（＋）</a> · <a href="/adult-report/#read-alt-field-5">怎麼看 H 標記？</a></p>
+  <p class="reader-links">照著範例報告找　<a href="/adult-report/#read-alt">肝功能（GPT）</a> · <a href="/adult-report/#read-urine-protein">尿蛋白（＋）</a></p>
   <a href="/indicators/">瀏覽已收錄指標</a> · <a href="/adult-report/">成人健檢報告欄位導覽</a>
 </section>
 <script>
