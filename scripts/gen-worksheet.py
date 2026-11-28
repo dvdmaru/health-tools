@@ -160,7 +160,7 @@ main.ws-original-only > :not(.ws-original){ display:none !important; }
 @page original-question { size:A4; margin:12mm; }
 @media print {
   html:has(.ws-original-only) { page:original-question; }
-  .ws-original .original-question { white-space:normal; }
+  .ws-advice .original-name, .ws-original .original-question { white-space:normal; }
 }
 .ws-intro{ font-size:15px; color:var(--fg-soft); margin:10px 0 4px; line-height:1.9; }
 .ws-picker{ margin:18px 0; padding:16px; border:1px solid var(--line-2); border-radius:var(--radius); background:var(--surface); min-width:0; }

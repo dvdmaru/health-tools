@@ -42,6 +42,25 @@
       <details name="first-report-choice">
         <summary>我找到院所寫的建議了</summary>
         <p>讀一遍原文，找出提到的檢查項目。如果有寫追蹤時間，也一起記下來。</p>
+        <details id="followup-advice">
+          <summary>報告寫「建議追蹤」，我要確認什麼？</summary>
+          <p>虛構範例：「建議追蹤肝功能」。這句提到肝功能，但沒有點名哪一項檢驗；寫了「追蹤」，但沒有寫具體做法或時間。</p>
+          <p>看看自己的報告有沒有寫出檢驗項目、要做的事和追蹤時間。在其他欄位找到的說明，也可以一併抄進原文欄。</p>
+          <form id="followup-form" autocomplete="off" hidden>
+            <label for="advice-original">我報告上的院所原文</label>
+            <textarea id="advice-original" maxlength="300" rows="2" required placeholder="請照抄自己報告上的建議"></textarea>
+            {{followup_checks}}
+            <div id="advice-editor" hidden>
+              <p id="advice-note" role="status"></p>
+              <label for="advice-question">我想問的問題（可改寫）</label>
+              <textarea id="advice-question" maxlength="500" rows="3" required></textarea>
+              <button type="button" id="advice-regenerate" hidden>依目前選項重新整理問題</button>
+              <button type="submit">把院所原文與問題帶到回診工作表</button>
+              <p class="advice-error" role="status"></p>
+            </div>
+          </form>
+          <noscript><p>可抄下院所原文，再把找不到的項目、做法或時間記成回診問題。</p></noscript>
+        </details>
         {{item_choices}}
       </details>
       <details name="first-report-choice">

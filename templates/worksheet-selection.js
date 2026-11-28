@@ -108,10 +108,13 @@
   const originalSheet = document.querySelector('.ws-original');
   function showOriginalSheet() {
     const hash = location.hash.slice(1);
-    const active = hash.startsWith('unlisted-item/');
+    const advice = hash.startsWith('followup-advice/');
+    const active = advice || hash.startsWith('unlisted-item/');
     document.querySelector('main').classList.toggle('ws-original-only', active);
     originalSheet.hidden = !active;
     if (!active) return;
+    originalSheet.classList.toggle('ws-advice', advice);
+    originalSheet.querySelector('.original-content h2').textContent = advice ? '院所建議原文' : '報告上的項目原文';
     // 原文直接印在獨立提問格，不送入已收錄指標的搜尋或配對。
     for (const choice of choices) choice.checked = false;
     update();

@@ -244,10 +244,15 @@ REPORT_CSS = """
 #first-report > details { padding:10px 14px; border:1px solid var(--line); border-radius:var(--radius-sm); margin:6px 0; }
 .guide-options a { display:inline-block; margin-inline-end:14px; padding-block:6px; }
 #first-report > details summary { cursor:pointer; font-weight:600; }
-.report-handoff textarea { display:block; box-sizing:border-box; width:100%; max-width:42em; margin:6px 0 12px;
+.report-handoff textarea, #followup-form textarea { display:block; box-sizing:border-box; width:100%; max-width:42em; margin:6px 0 12px;
   border:1px solid var(--line-2); background:var(--surface); color:var(--fg); padding:10px; font:inherit; }
-.report-handoff button { border:0; border-radius:var(--radius-sm); background:var(--accent); color:var(--accent-ink);
+.report-handoff button, #followup-form button { border:0; border-radius:var(--radius-sm); background:var(--accent); color:var(--accent-ink);
   padding:10px 16px; cursor:pointer; font:inherit; }
+#followup-advice { margin-block:12px; padding:12px; background:var(--surface); border-inline-start:3px solid var(--accent); }
+#followup-form fieldset { margin:12px 0; min-width:0; border:1px solid var(--line); }
+#followup-form legend { font-weight:600; }
+#followup-form fieldset label { display:inline-block; padding:6px; }
+#followup-form button { margin-block:4px; }
 .report-handoff [role=status]:empty { display:none; }
 .reading-cells { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:6px; }
 .reading-cells a,.reading-cells button { padding:9px 8px; min-height:54px; text-align:start; cursor:pointer;
@@ -353,7 +358,20 @@ def render_adult_report():
                         .replace("{{question}}", html_lib.escape(item["question"]))
                         .replace("{{instruction}}", html_lib.escape(instructions[key]))
                         .replace("{{row}}", render_reading_row(row, sources)))
+    checks = [
+        ("item", "院所指的是哪些檢驗項目？"),
+        ("action", "院所建議我接下來做什麼？"),
+        ("time", "院所建議我什麼時候追蹤？"),
+    ]
+    fieldsets = []
+    for key, prompt in checks:
+        options = "".join(
+            f'<label><input type="radio" name="advice-{key}" value="{value}" required> {label}</label>'
+            for value, label in [("here", "這句原文寫清楚了"), ("elsewhere", "我在別處找到了"), ("missing", "我的報告也沒寫")]
+        )
+        fieldsets.append(f"<fieldset><legend>{prompt}</legend>{options}</fieldset>")
     body = (body.replace("{{item_choices}}", choices)
+            .replace("{{followup_checks}}", "".join(fieldsets))
             .replace("{{practice_rows}}", "".join(rendered))
             .replace("{{other_reading_rows}}", "".join(render_reading_row(row, sources) for row in by_id.values())))
     script = (ROOT / "templates/report-fields.js").read_text(encoding="utf-8")
