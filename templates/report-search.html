@@ -1,10 +1,42 @@
 <section class="report-entry" aria-labelledby="reader-heading">
   <h1 class="pg-h1" id="reader-heading">{{home_title}}</h1>
   <div class="reader-tools">
-    <div id="report-search" hidden>
-      <label for="report-query">查報告上的中文、英文或縮寫</label>
-      <input type="search" id="report-query" placeholder="例如 GPT、尿蛋白、Creatinine" maxlength="100" autocomplete="off" spellcheck="false" enterkeyhint="search">
+    <div id="report-search">
+      <div id="reader-search-controls" hidden>
+        <label for="report-query">查報告上的中文、英文或縮寫</label>
+        <input type="search" id="report-query" placeholder="例如 GPT、尿蛋白、Creatinine" maxlength="100" autocomplete="off" spellcheck="false" enterkeyhint="search">
+      </div>
       <p class="reader-status" role="status"></p>
+      <section class="glucose-guide" aria-labelledby="glucose-guide-title">
+        <h2 id="glucose-guide-title">我的報告是哪一種血糖檢查？</h2>
+        <p>你那一列完整寫了什麼？</p>
+        <details name="glucose-kind">
+          <summary>空腹血糖（FPG）</summary>
+          <p>先找項目名稱裡的「空腹」或 FPG，再把同一列的結果和單位一起讀。</p>
+          <table><caption>教學範例（結果為虛構）</caption>
+            <thead><tr><th>檢查項目</th><th>結果</th><th>單位</th><th>院所參考範圍</th></tr></thead>
+            <tbody><tr><td>空腹血糖</td><td>92</td><td>mg/dL</td><td>本例留白</td></tr></tbody>
+          </table>
+          <p>這列讀作「空腹血糖 92 mg/dL」。讀自己的報告時，請對照院所印在同一列的參考範圍。</p>
+          <a href="https://www.niddk.nih.gov/health-information/diabetes/overview/tests-diagnosis">美國 NIDDK 的空腹血糖檢查說明（英文）</a>
+        </details>
+        <details name="glucose-kind">
+          <summary>糖化血色素（HbA1c）</summary>
+          <p>找找這一列有沒有「糖化血色素」或 HbA1c，再看單位。表中單位取自下方這篇國健署新聞稿。</p>
+          <table><thead><tr><th>檢查項目</th><th>該份資料使用的單位</th></tr></thead>
+            <tbody><tr><td>糖化血色素（HbA1c）</td><td>%</td></tr>
+              <tr><td>空腹血糖（FPG）</td><td>mg/dL</td></tr></tbody>
+          </table>
+          <a href="https://www.hpa.gov.tw/Pages/Detail.aspx?nodeid=4878&amp;pid=19042">國健署〈定期檢查搭配健康習慣，4招顧血糖〉</a>
+        </details>
+        <details name="glucose-kind">
+          <summary>只寫「血糖／葡萄糖」，或沒有寫明是否空腹</summary>
+          <p>先確認這是血液檢查，再找報告上的採檢註記。如果項目只寫「飯前血糖」，也請找找有沒有記錄抽血時是否空腹。只看 mg/dL 這個單位，無法分辨當時是否空腹。</p>
+          <p>如果仍不確定，回診時可以問「這筆血糖有註明空腹採檢嗎？」</p>
+          <a href="/worksheet/#glucose-sampling">把這個問題帶到回診工作表</a>
+          <p><a href="https://www.niddk.nih.gov/health-information/diabetes/overview/tests-diagnosis">美國 NIDDK 的空腹與隨機血糖檢查說明（英文）</a></p>
+        </details>
+      </section>
       <ul class="reader-results" hidden>{{search_items}}</ul>
     </div>
     <section class="reader-symbols" aria-labelledby="symbol-heading">
@@ -23,12 +55,18 @@
   const input = panel.querySelector('input');
   const results = panel.querySelector('ul');
   const status = panel.querySelector('[role=status]');
+  const glucoseGuide = panel.querySelector('.glucose-guide');
   const normalize = text => text.normalize('NFKC').toLowerCase();
   const terms = text => normalize(text).split(/[^\p{L}\p{N}]+/u).filter(Boolean);
   const compact = text => terms(text).join('');
   const entries = Array.from(results.children, item => ({
     item, names: item.dataset.names.split('|').map(compact)
   }));
+  const glucoseNames = new Set([
+    '血糖', '葡萄糖', '血糖葡萄糖', '血中葡萄糖', '血漿葡萄糖', 'glucose', 'bloodglucose',
+    '空腹血糖', '飯前血糖', 'fpg', '空腹血糖fpg', 'fastingplasmaglucose',
+    '糖化血色素', '糖化血紅素', 'hba1c', 'a1c', '糖化血色素hba1c', 'hemoglobina1c', 'glycatedhemoglobin'
+  ]);
   function update() {
     const query = input.value.trim();
     const tokens = terms(query);
@@ -40,8 +78,13 @@
       item.hidden = !matches;
       if (matches) count++;
     }
+    glucoseGuide.hidden = !glucoseNames.has(joined);
+    if (glucoseGuide.hidden) {
+      for (const detail of glucoseGuide.querySelectorAll('details[open]')) detail.open = false;
+    }
     results.hidden = !count;
     status.textContent = !query ? '' : count ? '找到 ' + count + ' 個項目' :
+      !glucoseGuide.hidden ? '請依報告上的寫法選擇下方說明。' :
       '本站尚未收錄符合的名稱。可試試報告上括號內的別名，或瀏覽下方已收錄指標。';
   }
   input.addEventListener('input', update);
@@ -53,7 +96,7 @@
       first.focus();
     }
   });
-  panel.hidden = false;
+  panel.querySelector('#reader-search-controls').hidden = false;
   update();
 })();
 </script>

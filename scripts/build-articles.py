@@ -69,6 +69,15 @@ INDEX_CSS = """
 .report-entry label { display:block; margin:0 0 6px; font-weight:700; }
 .report-entry input { box-sizing:border-box; width:100%; padding:12px 14px; border:1px solid var(--line-2);
   border-radius:var(--radius-sm); background:var(--bg); color:var(--fg); font:inherit; }
+.glucose-guide { margin:12px 0; padding:12px; border:1px solid var(--accent-line); border-radius:var(--radius-sm); }
+.glucose-guide h2 { margin:0; font-size:1.1rem; }
+.glucose-guide p { margin:8px 0; }
+.glucose-guide details { border-top:1px solid var(--line); }
+.glucose-guide details[open] { padding-bottom:10px; }
+.glucose-guide summary { padding:10px 0; font-weight:700; cursor:pointer; }
+.glucose-guide table { width:100%; border-collapse:collapse; font-size:.9rem; }
+.glucose-guide caption { text-align:start; }
+.glucose-guide th, .glucose-guide td { padding:5px; text-align:start; border-bottom:1px solid var(--line); }
 .reader-status:empty { margin:0; }
 .reader-results { margin:8px 0; padding-left:1.25em; }
 .reader-results li { padding:4px 0; }

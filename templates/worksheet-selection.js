@@ -1,6 +1,8 @@
 (() => {
   const picker = document.querySelector('.ws-picker');
-  const choices = [...picker.querySelectorAll('input[type=checkbox]')];
+  const sampling = document.getElementById('glucose-sampling');
+  const samplingChoice = picker.querySelector('input[value="glucose-sampling"]');
+  const choices = [...picker.querySelectorAll('input[type=checkbox]:enabled')];
   const printButton = picker.querySelector('.ws-print');
   const selectAll = picker.querySelector('.ws-select-all');
   const clear = picker.querySelector('.ws-clear');
@@ -9,6 +11,7 @@
 
   function update() {
     const selected = new Set(choices.filter(choice => choice.checked).map(choice => choice.value));
+    sampling.classList.toggle('ws-print-omit', !samplingChoice.checked);
     for (const block of blocks) {
       let count = 0;
       const references = new Set();
@@ -38,6 +41,18 @@
     document.querySelector('.ws-print-empty').hidden = selected.size !== 0;
   }
 
+  function includeLinkedQuestion() {
+    if (location.hash !== '#' + sampling.id || !samplingChoice.disabled) return;
+    samplingChoice.disabled = false;
+    samplingChoice.checked = true;
+    samplingChoice.parentElement.hidden = false;
+    sampling.classList.add('ws-added');
+    choices.push(samplingChoice);
+    update();
+  }
+
+  includeLinkedQuestion();
+  window.addEventListener('hashchange', includeLinkedQuestion);
   picker.addEventListener('change', update);
   for (const button of [selectAll, clear]) {
     button.addEventListener('click', () => {
