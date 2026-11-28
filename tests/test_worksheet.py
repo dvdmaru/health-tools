@@ -493,6 +493,17 @@ class TestWorksheetBlocks(unittest.TestCase):
         block_count = len(re.findall(r'<section class="ws-block"', self.html))
         self.assertEqual(block_count, len(slugs))
 
+    def test_each_choice_targets_one_print_item_with_one_question_box(self):
+        choices = re.findall(r'<input type="checkbox" value="([^"]+)">', self.html)
+        items = re.findall(r'<div class="ws-indicator" id="([^"]+)">(.*?)(?=<div class="ws-indicator"|<div class="ws-sources")',
+                           self.html, re.S)
+        self.assertTrue(choices)
+        self.assertEqual(len(choices), len(set(choices)))
+        self.assertEqual(choices, [target for target, _ in items])
+        for target, item in items:
+            with self.subTest(target=target):
+                self.assertEqual(1, item.count('<div class="ws-question">我想問的問題</div>'))
+
     def test_required_five_indicator_topics_present(self):
         """題目點名的五個指標主題（糖化血色素／血壓／血脂／尿酸／BMI 與腰圍）都要有
         對應區塊。用主題關鍵字比對區塊標題，不假設 slug 拼法。"""
